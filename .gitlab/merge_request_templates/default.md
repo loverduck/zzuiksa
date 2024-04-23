@@ -1,6 +1,6 @@
 ## 연관된 이슈
 
-> Jira: [#S10P22A308-{num}](https://ssafy.atlassian.net/browse/S10P22A308-{num})
+> Jira: [#S10P31A202-{num}](https://ssafy.atlassian.net/browse/S10P31A202-{num})
 
 
 ## 📝작업 내용
