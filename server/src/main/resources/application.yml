@@ -1,3 +1,11 @@
+server:
+  port: ${SERVER_PORT:8080}
+
 spring:
   application:
     name: zzuiksa
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
