@@ -27,3 +27,8 @@ management:
   endpoint:
     health:
       show-details: always
+
+token:
+  issuer: zzuiksa
+  secret: ${TOKEN_SECRET}
+  time-to-live: 1209600 # 2 weeks
