@@ -13,12 +13,12 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Text(
-            'Calendar Page'
-        )
+    return Scaffold(
+      appBar: AppBar(title: Text(CalendarScreen.title)),
+      body: Center(child: Text('Calendar Page')),
     );
   }
 }

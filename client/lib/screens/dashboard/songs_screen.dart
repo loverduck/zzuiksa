@@ -3,12 +3,18 @@
 // found in the LICENSE file.
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'song_detail_tab.dart';
 import 'utils.dart';
 import 'widgets.dart';
+
+import '../../widgets/footer.dart';
+import '../calendar/calendar_screen.dart';
+import '../gifticon/gifticon_screen.dart';
+import '../profile/profile_screen.dart';
+
+List test = <Widget>[SongsScreen(), CalendarScreen(), GifticonScreen(), ProfileScreen()];
 
 class SongsScreen extends StatefulWidget {
   static const title = 'DashBoard';
@@ -22,6 +28,8 @@ class SongsScreen extends StatefulWidget {
 }
 
 class _SongsScreenState extends State<SongsScreen> {
+
+
   static const _itemsLength = 6;
 
   late List<MaterialColor> colors;
