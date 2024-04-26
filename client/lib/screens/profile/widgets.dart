@@ -128,6 +128,8 @@ class HeroAnimatingSongCard extends StatelessWidget {
 
   @override
   Widget build(context) {
+    final textTheme = Theme.of(context).textTheme;
+
     // This is an inefficient usage of AnimatedBuilder since it's rebuilding
     // the entire subtree instead of passing in a non-changing child and
     // building a transition widget in between.
@@ -158,13 +160,10 @@ class HeroAnimatingSongCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text(
                       song,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                      style: textTheme.displayMedium
                       ),
                     ),
                   ),
-                ),
                 // The play button grows in the hero animation.
                 Padding(
                   padding: const EdgeInsets.only(bottom: 45) *
