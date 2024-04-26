@@ -20,3 +20,10 @@ springdoc:
     paths-to-match:
       - /api/**
 
+management:
+  endpoints:
+    web:
+      base-path: /api
+  endpoint:
+    health:
+      show-details: always
