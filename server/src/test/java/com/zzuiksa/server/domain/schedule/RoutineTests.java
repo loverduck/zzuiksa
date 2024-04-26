@@ -1,0 +1,391 @@
+package com.zzuiksa.server.domain.schedule;
+
+import com.zzuiksa.server.domain.schedule.entity.Routine;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+public class RoutineTests {
+
+    @Test
+    public void setTitle__success() {
+        // given
+        String title = "저녁 먹기";
+        Routine routine = new Routine();
+
+        // when
+        routine.setTitle(title);
+
+        // then
+        assertThat(routine.getTitle()).isEqualTo(title);
+    }
+
+    @Test
+    public void setTitle_null_throwIllegalArgumentException() {
+        // given
+        String title = null;
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setTitle(title)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "   ", "\n", "\t", "\t \n   \n"})
+    public void setTitle_empty_throwIllegalArgumentException(String title) {
+        // given
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setTitle(title)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void setTitle_lengthGreaterThan100_throwIllegalArgumentException() {
+        // given
+        String title = StringUtils.repeat("a", 101);
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setTitle(title)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void setStartDate__success() {
+        // given
+        LocalDate startDate = LocalDate.of(2024, 4, 26);
+        Routine routine = new Routine();
+
+        // when
+        routine.setStartDate(startDate);
+
+        // then
+        assertThat(routine.getStartDate()).isEqualTo(startDate);
+    }
+
+    @Test
+    public void setStartDate_null_throwIllegalArgumentException() {
+        // given
+        LocalDate startDate = null;
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setStartDate(startDate)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void setEndDate__success() {
+        // given
+        LocalDate EndDate = LocalDate.of(2024, 4, 26);
+        Routine routine = new Routine();
+
+        // when
+        routine.setEndDate(EndDate);
+
+        // then
+        assertThat(routine.getEndDate()).isEqualTo(EndDate);
+    }
+
+    @Test
+    public void setEndDate_null_throwIllegalArgumentException() {
+        // given
+        LocalDate EndDate = null;
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setEndDate(EndDate)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void removeEndDate__success() {
+        // given
+        Routine routine = new Routine();
+        routine.setEndDate(LocalDate.of(2024, 4, 26));
+
+        // when
+        routine.removeEndDate();
+
+        // then
+        assertThat(routine.getEndDate()).isNull();
+    }
+
+    @Test
+    public void setTime__success() {
+        // given
+        LocalTime startTime = LocalTime.of(9, 0);
+        LocalTime endTime = LocalTime.of(18, 0);
+        Routine routine = new Routine();
+
+        // when
+        routine.setTime(startTime, endTime);
+
+        // then
+        assertThat(routine.getStartTime()).isEqualTo(startTime);
+        assertThat(routine.getEndTime()).isEqualTo(endTime);
+    }
+
+    @Test
+    public void setTime_anyNull_throwIllegalArgumentException() {
+        // given
+        LocalTime startTime = LocalTime.of(9, 0);
+        LocalTime endTime = LocalTime.of(18, 0);
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setTime(null, null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> routine.setTime(startTime, null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> routine.setTime(null, endTime)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void setAllDay__success() {
+        // given
+        Routine routine = new Routine();
+        routine.setTime(LocalTime.of(9, 0), LocalTime.of(18, 0));
+
+        // when
+        routine.setAllDay();
+
+        // then
+        assertThat(routine.getStartTime()).isNull();
+        assertThat(routine.getEndTime()).isNull();
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1, 10, 50, /* 일주일 */ 60 * 24 * 7})
+    public void setAlertBefore__success(long minutes) {
+        // given
+        Duration alertBefore = Duration.ofMinutes(minutes);
+        Routine routine = new Routine();
+
+        // when
+        routine.setAlertBefore(alertBefore);
+
+        // then
+        assertThat(routine.getAlertBefore()).isEqualTo(alertBefore);
+    }
+
+    @Test
+    public void setAlertBefore_null_throwIllegalArgumentException() {
+        // given
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setAlertBefore(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void setAlertBefore_greaterThan7Days_throwIllegalArgumentException() {
+        // given
+        Duration alertBefore = Duration.ofDays(7).plus(Duration.ofMinutes(1));
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setAlertBefore(alertBefore)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {59, 0, -30, -999999})
+    public void setAlertBefore_lessThan1minute_throwIllegalArgumentException(long seconds) {
+        // given
+        Duration alertBefore = Duration.ofSeconds(seconds);
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setAlertBefore(alertBefore)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void removeAlert__success() {
+        // given
+        Routine routine = new Routine();
+        routine.setAlertBefore(Duration.ofMinutes(30));
+
+        // when
+        routine.removeAlert();
+
+        // then
+        assertThat(routine.getAlertBefore()).isNull();
+    }
+
+    @Test
+    public void setMemo_notEmpty_success() {
+        // given
+        String memo = "Hello";
+        Routine routine = new Routine();
+
+        // when
+        routine.setMemo(memo);
+
+        // then
+        assertThat(routine.getMemo()).isEqualTo(memo);
+    }
+
+    @Test
+    public void setMemo_empty_success() {
+        // given
+        String empty = "";
+        Routine routine = new Routine();
+        routine.setMemo("Before.");
+
+        // when
+        routine.setMemo(empty);
+
+        // then
+        assertThat(routine.getMemo()).isEqualTo(empty);
+    }
+
+    @Test
+    public void setMemo_null_throwIllegalArgumentException() {
+        // given
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setMemo(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void setToPlace_nameOnly_success() {
+        // given
+        String toPlaceName = "Seoul";
+        Routine routine = new Routine();
+
+        // when
+        routine.setToPlace(toPlaceName);
+
+        // then
+        assertThat(routine.getToPlaceName()).isEqualTo(toPlaceName);
+        assertThat(routine.getFromPlaceLat()).isNull();
+        assertThat(routine.getFromPlaceLng()).isNull();
+    }
+
+    @Test
+    public void setToPlace_nameAndLatLng_success() {
+        // given
+        String toPlaceName = "Seoul";
+        float lat = 123.4567f;
+        float lng = 35.79f;
+        Routine routine = new Routine();
+
+        // when
+        routine.setToPlace(toPlaceName, lat, lng);
+
+        // then
+        assertThat(routine.getToPlaceName()).isEqualTo(toPlaceName);
+        assertThat(routine.getToPlaceLat()).isEqualTo(lat);
+        assertThat(routine.getToPlaceLng()).isEqualTo(lng);
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    public void setToPlace_nullOrEmpty_throwIllegalArgumentException(String toPlaceName) {
+        // given
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setToPlace(toPlaceName)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> routine.setToPlace(toPlaceName, 1.0f, 1.0f)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void setToPlace_lengthGreaterThan100_throwIllegalArgumentException() {
+        // given
+        String toPlaceName = StringUtils.repeat("a", 101);
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setToPlace(toPlaceName)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void removeToPlace__success() {
+        // given
+        Routine routine = new Routine();
+        routine.setToPlace("Seoul", 1.0f, 2.0f);
+
+        // when
+        routine.removeToPlace();
+
+        // then
+        assertThat(routine.getToPlaceName()).isNull();
+        assertThat(routine.getToPlaceLat()).isNull();
+        assertThat(routine.getToPlaceLng()).isNull();
+    }
+
+    @Test
+    public void setFromPlace_nameOnly_success() {
+        // given
+        String fromPlaceName = "Seoul";
+        Routine routine = new Routine();
+
+        // when
+        routine.setFromPlace(fromPlaceName);
+
+        // then
+        assertThat(routine.getFromPlaceName()).isEqualTo(fromPlaceName);
+        assertThat(routine.getFromPlaceLat()).isNull();
+        assertThat(routine.getFromPlaceLng()).isNull();
+    }
+
+    @Test
+    public void setFromPlace_nameAndLatLng_success() {
+        // given
+        String fromPlaceName = "Seoul";
+        float lat = 123.4567f;
+        float lng = 35.79f;
+        Routine routine = new Routine();
+
+        // when
+        routine.setFromPlace(fromPlaceName, lat, lng);
+
+        // then
+        assertThat(routine.getFromPlaceName()).isEqualTo(fromPlaceName);
+        assertThat(routine.getFromPlaceLat()).isEqualTo(lat);
+        assertThat(routine.getFromPlaceLng()).isEqualTo(lng);
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    public void setFromPlace_nullOrEmpty_throwIllegalArgumentException(String fromPlaceName) {
+        // given
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setFromPlace(fromPlaceName)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> routine.setFromPlace(fromPlaceName, 1.0f, 1.0f)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void setFromPlace_lengthGreaterThan100_throwIllegalArgumentException() {
+        // given
+        String fromPlaceName = StringUtils.repeat("a", 101);
+        Routine routine = new Routine();
+
+        // when & then
+        assertThatThrownBy(() -> routine.setFromPlace(fromPlaceName)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void removeFromPlace__success() {
+        // given
+        Routine routine = new Routine();
+        routine.setFromPlace("Seoul", 1.0f, 2.0f);
+
+        // when
+        routine.removeFromPlace();
+
+        // then
+        assertThat(routine.getFromPlaceName()).isNull();
+        assertThat(routine.getFromPlaceLat()).isNull();
+        assertThat(routine.getFromPlaceLng()).isNull();
+    }
+}
