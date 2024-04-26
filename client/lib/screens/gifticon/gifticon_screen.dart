@@ -16,9 +16,10 @@ class _GifticonScreenState extends State<GifticonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(GifticonScreen.title)),
-      body: Center(child: Text('Gifticon Page')),
+    return Center(
+        child: Text(
+            'Gifticon Page'
+        )
     );
   }
 }
