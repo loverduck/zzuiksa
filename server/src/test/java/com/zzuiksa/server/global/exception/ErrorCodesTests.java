@@ -7,6 +7,8 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.zzuiksa.server.global.exception.custom.ErrorCodes;
+
 public class ErrorCodesTests {
 
     @Test
