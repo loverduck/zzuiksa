@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'settings_tab.dart';
-import '../dashboard//widgets.dart';
+import '../dashboard/widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const title = 'Profile';

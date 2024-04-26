@@ -13,7 +13,6 @@ class GifticonScreen extends StatefulWidget {
 }
 
 class _GifticonScreenState extends State<GifticonScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Center(
