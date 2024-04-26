@@ -22,6 +22,15 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+  fonts:
+    - family: OwnglyphChongchong
+      fonts:
+        - asset: assets/fonts/OwnglyphChongchong.ttf
+    - family: BMJua
+      fonts:
+        - asset: assets/fonts/BMJUA.ttf
 
 flutter_native_splash:
   color: "#FFBB70"

@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'settings_tab.dart';
-import '../dashboard/widgets.dart';
+import 'widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const title = 'Profile';
@@ -159,7 +159,7 @@ class LogOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: const Text('LOG OUT', style: TextStyle(color: Colors.red)),
+      child: const Text('LOGOUT'),
       onPressed: () {
         // You should do something with the result of the dialog prompt in a
         // real app but this is just a demo.
