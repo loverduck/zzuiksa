@@ -34,7 +34,7 @@ public class AddScheduleRequest {
 
     private LocalTime endTime;
 
-    @DurationUnit(ChronoUnit.SECONDS)
+    @DurationUnit(ChronoUnit.MINUTES)
     private Duration alertBefore;
 
     @NotNull
