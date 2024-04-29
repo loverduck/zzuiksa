@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../constants.dart';
+
 class GifticonSelectScreen extends StatefulWidget {
   static const title = 'Gifticon';
   static const androidIcon = Icon(Icons.card_giftcard);
@@ -31,9 +33,34 @@ class _GifticonSelectScreenState extends State<GifticonSelectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gifticon Select'),
+        title: Center(
+          child: Text('이미지 선택', style: textTheme.displayLarge),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        backgroundColor: Constants.main200,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/gifticon_add_screen');
+            },
+            child: Text(
+              '다음',
+              style: TextStyle(
+                fontSize: 24,
+                color: Constants.textColor,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: Column(

@@ -1,3 +1,4 @@
+import 'package:client/screens/gifticon/gifticon_add_screen.dart';
 import 'package:client/screens/gifticon/gifticon_detail_screen.dart';
 import 'package:client/screens/gifticon/gifticon_select_screen.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
         '/calendar': (context) => CalendarScreen(),
         '/gifticon': (context) => GifticonListScreen(),
         '/gifticon_select_screen': (context) => GifticonSelectScreen(),
-        '/gifticon_detail_screen': (context) => GifticonDetailScreen(),
+        '/gifticon_add_screen': (context) => GifticonAddScreen(),
+        '/gifticon_detail_screen': (context) => GifticonDetailScreen(data: ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>),
         '/profile': (context) => ProfileScreen(),
       },
       home: HomeScreen(),

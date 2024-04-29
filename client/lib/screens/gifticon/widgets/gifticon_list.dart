@@ -5,7 +5,7 @@ class GifticonList extends StatelessWidget {
   final List<Map<String, dynamic>> tempGifticonsList = [
     {
       'gifticonId': 1,
-      'url': '/assets/images/tempGifticon.jpg',
+      'url': '/assets/images/tempGifticon.jpeg',
       'name': 'Gifticon 1',
       'store': 'Store A',
       'endDate': '2024-05-31',
@@ -13,7 +13,7 @@ class GifticonList extends StatelessWidget {
     },
     {
       'gifticonId': 2,
-      'url': '/assets/images/tempGifticon.jpg',
+      'url': '/assets/images/tempGifticon.jpeg',
       'name': 'Gifticon 2',
       'store': 'Store B',
       'endDate': '2024-06-30',
@@ -21,7 +21,7 @@ class GifticonList extends StatelessWidget {
     },
     {
       'gifticonId': 3,
-      'url': '/assets/images/tempGifticon.jpg',
+      'url': '/assets/images/tempGifticon.jpeg',
       'name': 'Gifticon 3',
       'store': 'Store C',
       'endDate': '2024-07-31',
