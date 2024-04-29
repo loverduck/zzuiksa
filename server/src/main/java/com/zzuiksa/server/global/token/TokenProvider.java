@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.zzuiksa.server.global.config.TokenConfig;
 import com.zzuiksa.server.global.exception.AuthenticationException;
 import com.zzuiksa.server.global.exception.custom.ErrorCodes;
+import com.zzuiksa.server.global.token.data.Jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -29,17 +30,22 @@ public class TokenProvider {
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
 
-	public String generateToken(long memberId) {
+	public Jwt generateToken(long memberId) {
 		Instant issuedAt = Instant.now();
 		Instant expiresAt = issuedAt.plus(tokenConfig.getTimeToLive());
 
-		return Jwts.builder()
+		String token = Jwts.builder()
 			.issuer(tokenConfig.getIssuer())
 			.subject(String.valueOf(memberId))
 			.expiration(Date.from(expiresAt))
 			.issuedAt(Date.from(issuedAt))
 			.signWith(getSigningKey())
 			.compact();
+
+		return Jwt.builder()
+			.token(token)
+			.expiresIn(tokenConfig.getTimeToLive().toSeconds())
+			.build();
 	}
 
 	public Claims getTokenClaims(String token) {

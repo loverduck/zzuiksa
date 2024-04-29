@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.zzuiksa.server.global.exception.AuthenticationException;
+import com.zzuiksa.server.global.token.data.Jwt;
 
 @SpringBootTest
-public class TokenProviderTest {
+public class TokenProviderTests {
 
 	@Autowired
 	public TokenProvider tokenProvider;
@@ -19,10 +20,10 @@ public class TokenProviderTest {
 		long memberId = 1L;
 
 		// when
-		String token = tokenProvider.generateToken(memberId);
+		Jwt token = tokenProvider.generateToken(memberId);
 
 		// then
-		Assertions.assertThat(token).isNotBlank();
+		Assertions.assertThat(token.getToken()).isNotBlank();
 	}
 
 	@Test
