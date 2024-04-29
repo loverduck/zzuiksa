@@ -4,6 +4,9 @@ import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.global.entity.BaseEntity;
 import com.zzuiksa.server.global.util.Utils;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.Duration;
@@ -13,7 +16,6 @@ import java.time.LocalTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
 public class Schedule extends BaseEntity {
@@ -22,6 +24,7 @@ public class Schedule extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -34,12 +37,17 @@ public class Schedule extends BaseEntity {
     @JoinColumn(name = "routine_id")
     private Routine routine;
 
+    @NotBlank
+    @Size(max = 100)
     @Column(length = 100, nullable = false)
     private String title;
 
+    @NotNull
     @Column(nullable = false)
     private LocalDate startDate;
 
+    @NotNull
+    @Column(nullable = false)
     private LocalDate endDate;
 
     private LocalTime startTime;
@@ -48,9 +56,12 @@ public class Schedule extends BaseEntity {
 
     private Duration alertBefore;
 
+    @NotNull
+    @Size(max = 1000)
     @Column(length = 1000, nullable = false)
     private String memo;
 
+    @Size(max = 100)
     @Column(name = "to_place", length = 100)
     private String toPlaceName;
 
@@ -60,6 +71,7 @@ public class Schedule extends BaseEntity {
     @Column(name = "to_lng")
     private Float toPlaceLng;
 
+    @Size(max = 100)
     @Column(name = "from_place", length = 100)
     private String fromPlaceName;
 
@@ -69,9 +81,38 @@ public class Schedule extends BaseEntity {
     @Column(name = "from_lng")
     private Float fromPlaceLng;
 
+    @NotNull
     @Column(nullable = false)
     @Setter
     private boolean isDone;
+
+    @Builder
+    Schedule(Long id, Member member, Category category, Routine routine, String title, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, Duration alertBefore, String memo, String toPlaceName, Float toPlaceLat, Float toPlaceLng, String fromPlaceName, Float fromPlaceLat, Float fromPlaceLng, boolean isDone) {
+        this.id = id;
+        if (member == null) {
+            throw new IllegalArgumentException("Member is null");
+        }
+        this.member = member;
+        this.category = category;
+        this.routine = routine;
+        setTitle(title);
+        setStartDate(startDate);
+        setEndDate(endDate);
+        setTime(startTime, endTime);
+        setAlertBefore(alertBefore);
+        setMemo(memo);
+        if (toPlaceLat != null && toPlaceLng != null) {
+            setToPlace(toPlaceName, toPlaceLat, toPlaceLng);
+        } else {
+            setToPlace(toPlaceName);
+        }
+        if (fromPlaceLat != null && fromPlaceLng != null) {
+            setFromPlace(fromPlaceName, fromPlaceLat, fromPlaceLng);
+        } else {
+            setFromPlace(fromPlaceName);
+        }
+        this.isDone = isDone;
+    }
 
     public void setTitle(String title) {
         if (!Utils.hasTextAndLengthBetween(title, 1, 100)) {
