@@ -15,6 +15,8 @@ dependencies:
   english_words: ^4.0.0
   flutter_lorem: ^2.0.0
 
+  image_picker: ^0.8.3+2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
