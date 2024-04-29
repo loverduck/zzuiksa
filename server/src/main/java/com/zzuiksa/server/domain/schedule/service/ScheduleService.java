@@ -67,7 +67,7 @@ public class ScheduleService {
             .fromPlaceLat(request.getFromPlace().getLat())
             .fromPlaceLng(request.getFromPlace().getLng())
             .repeatCycle(request.getRepeat().getCycle())
-            .repeatStartDate(request.getRepeat().getStartDate())
+            .repeatStartDate(request.getStartDate())
             .repeatEndDate(request.getRepeat().getEndDate())
             .repeatTerm(request.getRepeat().getRepeatTerm())
             .repeatAt(request.getRepeat().getRepeatAt())

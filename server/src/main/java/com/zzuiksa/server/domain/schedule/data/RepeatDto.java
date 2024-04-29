@@ -17,9 +17,6 @@ public class RepeatDto {
     @NotNull
     private RoutineCycle cycle;
 
-    @NotNull
-    private LocalDate startDate;
-
     private LocalDate endDate;
 
     private Integer repeatTerm;

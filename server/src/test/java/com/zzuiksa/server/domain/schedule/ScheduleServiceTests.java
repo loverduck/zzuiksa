@@ -71,7 +71,6 @@ public class ScheduleServiceTests {
             .fromPlace(new PlaceDto("From place", 132.4f, 43.5f));
         repeatDtoBuilder = RepeatDto.builder()
             .cycle(RoutineCycle.WEEKLY)
-            .startDate(LocalDate.of(2024, 4, 15))
             .endDate(LocalDate.of(2024, 4, 29))
             .repeatTerm(1)
             .repeatAt(Routine.getWeeklyRepeatAtOf(DayOfWeek.MONDAY, DayOfWeek.FRIDAY));

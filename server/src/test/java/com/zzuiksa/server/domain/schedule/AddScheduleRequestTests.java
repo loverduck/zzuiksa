@@ -65,7 +65,6 @@ public class AddScheduleRequestTests {
             new PlaceDto("From place", 132.4567f, 43.567f),
             new RepeatDto(
                 RoutineCycle.WEEKLY,
-                LocalDate.of(2024, 4, 15),
                 LocalDate.of(2024, 4, 22),
                 1,
                 7
