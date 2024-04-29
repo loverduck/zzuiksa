@@ -15,12 +15,13 @@ import java.time.temporal.ChronoUnit;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @ToString
 @EqualsAndHashCode
 public class AddScheduleRequest {
 
     @NotNull
-    private Integer categoryId;
+    private Long categoryId;
 
     @NotBlank
     private String title;
@@ -28,6 +29,7 @@ public class AddScheduleRequest {
     @NotNull
     private LocalDate startDate;
 
+    @NotNull
     private LocalDate endDate;
 
     private LocalTime startTime;
@@ -45,4 +47,8 @@ public class AddScheduleRequest {
     private PlaceDto fromPlace;
 
     private RepeatDto repeat;
+
+    public boolean isRepeat() {
+        return repeat != null;
+    }
 }

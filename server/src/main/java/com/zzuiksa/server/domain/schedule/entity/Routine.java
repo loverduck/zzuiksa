@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -245,5 +246,13 @@ public class Routine extends BaseEntity {
     public void setRepeat(RoutineCycle cycle, LocalDate startDate, LocalDate endDate, int repeatTerm, int repeatAt) {
         // TODO: Routine 관련 필드 setter 추가
         throw new UnsupportedOperationException();
+    }
+
+    public static int getWeeklyRepeatAtOf(DayOfWeek ...days) {
+        int repeatAt = 0;
+        for (DayOfWeek day : days) {
+            repeatAt |= 1 << day.getValue();
+        }
+        return repeatAt;
     }
 }

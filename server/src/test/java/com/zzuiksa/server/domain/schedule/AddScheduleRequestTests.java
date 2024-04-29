@@ -22,7 +22,7 @@ public class AddScheduleRequestTests {
     private JacksonTester<AddScheduleRequest> json;
 
     @Test
-    public void deserialize_allPropertiesSet_success() throws Exception {
+    public void deserialize_withAllProperties_success() throws Exception {
         // given
         String raw = """
             {
@@ -54,7 +54,7 @@ public class AddScheduleRequestTests {
             }""";
         // @formatter:off
         AddScheduleRequest addScheduleRequest = new AddScheduleRequest(
-            1,
+            1L,
             "Title",
             LocalDate.of(2024, 4, 15),
             LocalDate.of(2024, 4, 19),

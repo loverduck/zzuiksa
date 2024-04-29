@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @ToString
 @EqualsAndHashCode(callSuper = true)
 public class Category extends BaseEntity {
