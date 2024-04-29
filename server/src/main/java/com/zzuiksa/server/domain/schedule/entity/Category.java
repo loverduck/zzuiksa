@@ -2,15 +2,15 @@ package com.zzuiksa.server.domain.schedule.entity;
 
 import com.zzuiksa.server.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "category")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public class Category extends BaseEntity {
 
     @Id

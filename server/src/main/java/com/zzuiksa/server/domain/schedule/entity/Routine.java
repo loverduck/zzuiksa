@@ -5,9 +5,7 @@ import com.zzuiksa.server.domain.schedule.constant.RoutineCycle;
 import com.zzuiksa.server.global.entity.BaseEntity;
 import com.zzuiksa.server.global.util.Utils;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -17,6 +15,8 @@ import java.time.LocalTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public class Routine extends BaseEntity {
 
     @Id
