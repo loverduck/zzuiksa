@@ -1,11 +1,12 @@
-import 'package:client/screens/calendar/calendar_place_search_screen.dart';
 import 'package:client/screens/calendar/widgets/date_time_input.dart';
 import 'package:client/screens/calendar/widgets/input_container.dart';
-import 'package:client/screens/calendar/widgets/input_delete_icon.dart';
+import 'package:client/screens/calendar/widgets/routine_input.dart';
 import 'package:client/screens/calendar/widgets/switch_button.dart';
+import 'package:client/screens/calendar/widgets/type_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
+import 'package:flutter/widgets.dart';
 
 class CalendarAddScreen extends StatefulWidget {
   const CalendarAddScreen({
@@ -23,8 +24,15 @@ class _CalendarAddScreenState extends State<CalendarAddScreen> {
   TextEditingController titleEditConteroller = TextEditingController();
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
+  TextEditingController placeController = TextEditingController();
+
   bool isAllDay = false;
   bool isRoutine = false;
+
+  String selectedCategory = "일정";
+  String placeName = "";
+  String selectedType = "";
+  String selectedCycle = "";
 
   @override
   void initState() {
@@ -48,38 +56,42 @@ class _CalendarAddScreenState extends State<CalendarAddScreen> {
       "업무": Constants.blue600,
     };
 
-    String selectedCategory = categoryColor.keys.first;
-
     TextField titleInputField = TextField(
       controller: titleEditConteroller,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: "제목",
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
+          fontSize: 24.0,
           color: Constants.main500,
         ),
-        suffixIcon:
-            InputDeleteIcon(textEditingController: titleEditConteroller),
         border: InputBorder.none,
         isDense: true,
       ),
       style: const TextStyle(
-        fontSize: 20,
+        fontSize: 20.0,
       ),
     );
 
     DropdownButton categoryDropdown = DropdownButton(
+      isExpanded: true,
       value: selectedCategory,
       onChanged: (value) {
+        setState(() {
+          selectedCategory = value;
+        });
         print(value);
       },
+      underline: Container(),
       selectedItemBuilder: (context) {
         return categoryColor.values.map<Widget>((Color color) {
-          return Container(
-            padding: const EdgeInsets.symmetric(vertical: 6.0),
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: color,
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 9.25, horizontal: 6.0),
+            child: Container(
+              constraints: const BoxConstraints(maxHeight: 15.0),
+              decoration: BoxDecoration(
+                color: color,
+              ),
             ),
           );
         }).toList();
@@ -102,7 +114,7 @@ class _CalendarAddScreenState extends State<CalendarAddScreen> {
               Text(
                 item,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.0,
                 ),
               ),
             ],
@@ -118,15 +130,32 @@ class _CalendarAddScreenState extends State<CalendarAddScreen> {
       );
     }
 
-    void moveToSearch() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return const CalendarPlaceSearchScreen();
-          },
-        ),
-      );
+    SizedBox marginBox = const SizedBox(
+      height: 12.0,
+    );
+
+    void moveToSearch() async {
+      // 사용자가 검색한 위치 저장
+      final place = await Navigator.pushNamed(context, "/calendar/search",
+          arguments: placeName);
+
+      setState(() {
+        placeName = place.toString();
+      });
+    }
+
+    void setType(type) {
+      print(type);
+      setState(() {
+        selectedType = type.toString();
+      });
+    }
+
+    void setCycle(cycle) {
+      print(cycle);
+      setState(() {
+        selectedCycle = cycle;
+      });
     }
 
     return Scaffold(
@@ -142,48 +171,51 @@ class _CalendarAddScreenState extends State<CalendarAddScreen> {
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          children: [
-            // 제목
-            InputContainer(
-              child: SizedBox(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // 제목
+              InputContainer(
+                child: SizedBox(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        flex: 4,
+                        child: titleInputField,
+                      ),
+                      const SizedBox(
+                        width: 16.0,
+                      ),
+                      Expanded(
+                        // flex: 1,
+                        child: categoryDropdown,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              marginBox,
+              // 종일 여부
+              InputContainer(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(
-                      flex: 4,
-                      child: titleInputField,
-                    ),
-                    const SizedBox(
-                      width: 16.0,
-                    ),
-                    Flexible(
-                      child: categoryDropdown,
+                    inputTitleText("종일"),
+                    SwitchButton(
+                      value: isAllDay,
+                      onChanged: (val) {
+                        setState(() {
+                          isAllDay = val;
+                        });
+                      },
                     ),
                   ],
                 ),
               ),
-            ),
-            // 종일 여부
-            InputContainer(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  inputTitleText("종일"),
-                  SwitchButton(
-                    value: isAllDay,
-                    onChanged: (val) {
-                      setState(() {
-                        isAllDay = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            // 종일이 아닐 경우 날짜 및 시간 선택
-            if (!isAllDay)
-              Expanded(
-                child: Column(
+              // 종일이 아닐 경우 날짜 및 시간 선택
+              marginBox,
+              if (!isAllDay)
+                Column(
                   children: [
                     InputContainer(
                       child: Expanded(
@@ -193,11 +225,13 @@ class _CalendarAddScreenState extends State<CalendarAddScreen> {
                             inputTitleText("시작"),
                             DateTimeInput(
                               dateController: startDateController,
+                              requiredTime: true,
                             )
                           ],
                         ),
                       ),
                     ),
+                    marginBox,
                     InputContainer(
                       child: Expanded(
                         child: Row(
@@ -206,6 +240,7 @@ class _CalendarAddScreenState extends State<CalendarAddScreen> {
                             inputTitleText("종료"),
                             DateTimeInput(
                               dateController: startDateController,
+                              requiredTime: true,
                             )
                           ],
                         ),
@@ -213,54 +248,109 @@ class _CalendarAddScreenState extends State<CalendarAddScreen> {
                     ),
                   ],
                 ),
-              ),
-            // 장소 입력
-            InputContainer(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  inputTitleText("장소"),
-                  GestureDetector(
-                    onTap: moveToSearch,
-                    child: Container(
-                      width: 230.0,
-                      constraints: const BoxConstraints(
-                        minHeight: 40.0,
+              marginBox,
+              // 장소 입력
+              InputContainer(
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      inputTitleText("장소"),
+                      GestureDetector(
+                        onTap: moveToSearch,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 230.0,
+                          constraints: const BoxConstraints(
+                            minHeight: 40.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                          child: Text(
+                            placeName,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 24.0,
+                            ),
+                          ),
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: const Text(""),
-                    ),
+                    ],
                   ),
-                ],
+                  // 도착지가 있는 경우 출발지 선택 및 이동 방법 선택
+                  if (placeName.isNotEmpty)
+                    TypeButtons(
+                      inputTitleText: inputTitleText("출발지"),
+                      selectedType: selectedType,
+                      marginBox: marginBox,
+                      setType: setType,
+                    ),
+                ]),
               ),
-            ),
-            // 알림
-            InputContainer(
-              child: Row(
-                children: [
-                  inputTitleText("알림"),
-                ],
-              ),
-            ),
-            InputContainer(
+              marginBox,
+              // 알림
+              InputContainer(
                 child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                inputTitleText("반복"),
-                SwitchButton(
-                  value: isRoutine,
-                  onChanged: (val) {
-                    setState(() {
-                      isRoutine = val;
-                    });
-                  },
+                  children: [
+                    inputTitleText("알림"),
+                  ],
                 ),
-              ],
-            ))
-          ],
+              ),
+              marginBox,
+              // 반복 여부
+              InputContainer(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    inputTitleText("반복"),
+                    SwitchButton(
+                      value: isRoutine,
+                      onChanged: (val) {
+                        setState(() {
+                          isRoutine = val;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              marginBox,
+              if (isRoutine)
+                RoutineInput(
+                  inputTitleText: inputTitleText,
+                  marginBox: marginBox,
+                  setCycle: setCycle,
+                ),
+              // 메모
+              InputContainer(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    inputTitleText("메모"),
+                    const Divider(
+                      thickness: 1.0,
+                    ),
+                    const SizedBox(
+                      height: 200.0,
+                      child: TextField(
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                        expands: true,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -3,9 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DateTimeInput extends StatefulWidget {
-  const DateTimeInput({super.key, required this.dateController});
+  const DateTimeInput({
+    super.key,
+    required this.dateController,
+    required this.requiredTime,
+  });
 
   final TextEditingController dateController;
+  final bool requiredTime;
 
   @override
   State<DateTimeInput> createState() => _DateTimeInputState();
@@ -55,12 +60,14 @@ class _DateTimeInputState extends State<DateTimeInput> {
             },
           ),
         ),
-        const SizedBox(
-          width: 10.0,
-        ),
-        const TimePicker(
-          textStyle: TextStyle(fontSize: 24.0),
-        ),
+        if (widget.requiredTime) ...[
+          const SizedBox(
+            width: 10.0,
+          ),
+          const TimePicker(
+            textStyle: TextStyle(fontSize: 24.0),
+          ),
+        ]
       ],
     );
   }
