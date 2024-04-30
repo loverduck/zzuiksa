@@ -1,6 +1,5 @@
-package com.zzuiksa.server.domain.schedule;
+package com.zzuiksa.server.domain.schedule.entity;
 
-import com.zzuiksa.server.domain.schedule.entity.Routine;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

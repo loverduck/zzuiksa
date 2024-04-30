@@ -1,4 +1,4 @@
-package com.zzuiksa.server.domain.schedule;
+package com.zzuiksa.server.domain.schedule.service;
 
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.schedule.constant.RoutineCycle;
@@ -12,7 +12,6 @@ import com.zzuiksa.server.domain.schedule.entity.Schedule;
 import com.zzuiksa.server.domain.schedule.repository.CategoryRepository;
 import com.zzuiksa.server.domain.schedule.repository.RoutineRepository;
 import com.zzuiksa.server.domain.schedule.repository.ScheduleRepository;
-import com.zzuiksa.server.domain.schedule.service.ScheduleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

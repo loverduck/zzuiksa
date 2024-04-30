@@ -1,9 +1,8 @@
-package com.zzuiksa.server.domain.schedule;
+package com.zzuiksa.server.domain.schedule.data.request;
 
 import com.zzuiksa.server.domain.schedule.constant.RoutineCycle;
 import com.zzuiksa.server.domain.schedule.data.PlaceDto;
 import com.zzuiksa.server.domain.schedule.data.RepeatDto;
-import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
