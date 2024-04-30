@@ -9,10 +9,10 @@ import com.zzuiksa.server.domain.schedule.entity.Schedule;
 import com.zzuiksa.server.domain.schedule.repository.CategoryRepository;
 import com.zzuiksa.server.domain.schedule.repository.RoutineRepository;
 import com.zzuiksa.server.domain.schedule.repository.ScheduleRepository;
-import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,23 +24,22 @@ public class ScheduleService {
 
     @Transactional
     public AddScheduleResponse add(@NotNull AddScheduleRequest request, @NotNull Member member) {
-        if (request.isRepeat()) {
-            return addRoutine(request, member);
-        } else {
-            return addSchedule(request, member);
-        }
-    }
-
-    private AddScheduleResponse addSchedule(AddScheduleRequest request, Member member) {
-        Schedule schedule = convertToSchedule(request, member);
-        schedule = scheduleRepository.save(schedule);
+        Schedule schedule = request.isRepeat() ? addScheduleAndRoutine(request, member) : addSchedule(request, member);
         return AddScheduleResponse.of(schedule.getId());
     }
 
-    private AddScheduleResponse addRoutine(AddScheduleRequest request, Member member) {
+    private Schedule addSchedule(AddScheduleRequest request, Member member) {
+        Schedule schedule = convertToSchedule(request, member, null);
+        schedule = scheduleRepository.save(schedule);
+        return schedule;
+    }
+
+    private Schedule addScheduleAndRoutine(AddScheduleRequest request, Member member) {
         Routine routine = convertToRoutine(request, member);
         routine = routineRepository.save(routine);
-        return AddScheduleResponse.of(routine.getId());
+        Schedule schedule = convertToSchedule(request, member, routine);
+        schedule = scheduleRepository.save(schedule);
+        return schedule;
     }
 
     protected Routine convertToRoutine(AddScheduleRequest request, Member member) {
@@ -74,17 +73,14 @@ public class ScheduleService {
             .build();
     }
 
-    protected Schedule convertToSchedule(AddScheduleRequest request, Member member) {
-        if (request.isRepeat()) {
-            throw new IllegalArgumentException("AddScheduleRequest with repeat cannot be converted to Schedule");
-        }
+    protected Schedule convertToSchedule(AddScheduleRequest request, Member member, Routine routine) {
         Category category = categoryRepository.findById(request.getCategoryId())
             .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
 
         return Schedule.builder()
             .member(member)
             .category(category)
-            .routine(null)
+            .routine(routine)
             .title(request.getTitle())
             .startDate(request.getStartDate())
             .endDate(request.getEndDate())

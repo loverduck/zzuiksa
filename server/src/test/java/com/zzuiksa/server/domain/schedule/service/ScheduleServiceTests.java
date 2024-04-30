@@ -29,6 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class ScheduleServiceTests {
@@ -54,6 +56,8 @@ public class ScheduleServiceTests {
 
     private AddScheduleRequest.AddScheduleRequestBuilder requestBuilder;
     private RepeatDto.RepeatDtoBuilder repeatDtoBuilder;
+    private Schedule.ScheduleBuilder scheduleBuilder;
+    private Routine.RoutineBuilder routineBuilder;
 
     @BeforeEach
     public void setUp() {
@@ -73,6 +77,45 @@ public class ScheduleServiceTests {
             .endDate(LocalDate.of(2024, 4, 29))
             .repeatTerm(1)
             .repeatAt(Routine.getWeeklyRepeatAtOf(DayOfWeek.MONDAY, DayOfWeek.FRIDAY));
+        scheduleBuilder = Schedule.builder()
+            .category(categoryMock)
+            .member(memberMock)
+            .routine(null)
+            .title("Title")
+            .startDate(LocalDate.of(2024, 4, 15))
+            .endDate(LocalDate.of(2024, 4, 19))
+            .startTime(LocalTime.of(17, 30, 50))
+            .endTime(LocalTime.of(17, 50, 20))
+            .alertBefore(Duration.ofMinutes(20))
+            .memo("")
+            .toPlaceName("To place")
+            .toPlaceLat(123.4f)
+            .toPlaceLng(34.5f)
+            .fromPlaceName("From place")
+            .fromPlaceLat(132.4f)
+            .fromPlaceLng(43.5f)
+            .isDone(false);
+        routineBuilder = Routine.builder()
+            .category(categoryMock)
+            .member(memberMock)
+            .title("Title")
+            .startDate(LocalDate.of(2024, 4, 15))
+            .endDate(LocalDate.of(2024, 4, 19))
+            .startTime(LocalTime.of(17, 30, 50))
+            .endTime(LocalTime.of(17, 50, 20))
+            .alertBefore(Duration.ofMinutes(20))
+            .memo("")
+            .toPlaceName("To place")
+            .toPlaceLat(123.4f)
+            .toPlaceLng(34.5f)
+            .fromPlaceName("From place")
+            .fromPlaceLat(132.4f)
+            .fromPlaceLng(43.5f)
+            .repeatCycle(RoutineCycle.WEEKLY)
+            .repeatStartDate(LocalDate.of(2024, 4, 15))
+            .repeatEndDate(LocalDate.of(2024, 4, 29))
+            .repeatTerm(1)
+            .repeatAt(Routine.getWeeklyRepeatAtOf(DayOfWeek.MONDAY, DayOfWeek.FRIDAY));
     }
 
     @Test
@@ -89,6 +132,7 @@ public class ScheduleServiceTests {
 
         // then
         assertThat(response.getScheduleId()).isEqualTo(scheduleId);
+        verify(scheduleRepositoryMock, times(1)).save(any());
     }
 
     @Test
@@ -105,17 +149,20 @@ public class ScheduleServiceTests {
     @Test
     public void add_routine_success() {
         // given
-        Long routineId = 3L;
+        Long scheduleId = 3L;
         given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
+        given(scheduleMock.getId()).willReturn(scheduleId);
+        given(scheduleRepositoryMock.save(any())).willReturn(scheduleMock);
         given(routineRepositoryMock.save(any())).willReturn(routineMock);
-        given(routineMock.getId()).willReturn(routineId);
         AddScheduleRequest request = requestBuilder.repeat(repeatDtoBuilder.build()).build();
 
         // when
         AddScheduleResponse response = scheduleService.add(request, memberMock);
 
         // then
-        assertThat(response.getScheduleId()).isEqualTo(routineId);
+        assertThat(response.getScheduleId()).isEqualTo(scheduleId);
+        verify(scheduleRepositoryMock, times(1)).save(any());
+        verify(routineRepositoryMock, times(1)).save(any());
     }
 
     @Test
@@ -126,6 +173,58 @@ public class ScheduleServiceTests {
 
         // when & then
         assertThatThrownBy(() -> scheduleService.add(request, memberMock))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void convertToSchedule_repeatIsNull_success() {
+        // given
+        Schedule schedule = scheduleBuilder.build();
+        given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
+        AddScheduleRequest request = requestBuilder.build();
+
+        // when
+        Schedule converted = scheduleService.convertToSchedule(request, memberMock, null);
+
+        // then
+        assertThat(converted).isEqualTo(schedule);
+    }
+
+    @Test
+    public void convertToSchedule_repeatIsNotNull_success() {
+        // given
+        Schedule schedule = scheduleBuilder.build();
+        given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
+        AddScheduleRequest request = requestBuilder.repeat(repeatDtoBuilder.build()).build();
+
+        // when
+        Schedule converted = scheduleService.convertToSchedule(request, memberMock, null);
+
+        // then
+        assertThat(converted).isEqualTo(schedule);
+    }
+
+    @Test
+    public void convertToRoutine_repeatIsNotNull_success() {
+        // given
+        Routine routine = routineBuilder.build();
+        given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
+        AddScheduleRequest request = requestBuilder.repeat(repeatDtoBuilder.build()).build();
+
+        // when
+        Routine converted = scheduleService.convertToRoutine(request, memberMock);
+
+        // then
+        assertThat(converted).isEqualTo(routine);
+    }
+
+    @Test
+    public void convertToRoutine_repeatIsNull_throwIllegalArgumentException() {
+        // given
+        AddScheduleRequest request = requestBuilder.build();
+
+        // when & then
+        assertThatThrownBy(() -> scheduleService.convertToRoutine(request, memberMock))
             .isInstanceOf(IllegalArgumentException.class);
     }
 }
