@@ -1,11 +1,11 @@
 package com.zzuiksa.server.domain.auth.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.zzuiksa.server.domain.auth.data.request.LoginRequest;
 import com.zzuiksa.server.domain.auth.data.response.LoginResponse;
@@ -14,7 +14,7 @@ import com.zzuiksa.server.domain.auth.service.LoginService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Controller
+@RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
@@ -31,5 +31,10 @@ public class AuthController {
 	public ResponseEntity<LoginResponse> guestLogin() {
 		LoginResponse loginResponse = loginService.guestLogin();
 		return ResponseEntity.ok(loginResponse);
+	}
+
+	@GetMapping("/test")
+	public ResponseEntity<String> test() {
+		return ResponseEntity.ok("test");
 	}
 }
