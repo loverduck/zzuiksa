@@ -1,33 +1,32 @@
 package com.zzuiksa.server.domain.schedule.service;
 
 import com.zzuiksa.server.domain.member.entity.Member;
-import com.zzuiksa.server.domain.schedule.constant.RoutineCycle;
-import com.zzuiksa.server.domain.schedule.data.PlaceDto;
+import com.zzuiksa.server.domain.schedule.ScheduleSource;
 import com.zzuiksa.server.domain.schedule.data.RepeatDto;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
+import com.zzuiksa.server.domain.schedule.data.response.GetScheduleResponse;
 import com.zzuiksa.server.domain.schedule.entity.Category;
 import com.zzuiksa.server.domain.schedule.entity.Routine;
 import com.zzuiksa.server.domain.schedule.entity.Schedule;
 import com.zzuiksa.server.domain.schedule.repository.CategoryRepository;
 import com.zzuiksa.server.domain.schedule.repository.RoutineRepository;
 import com.zzuiksa.server.domain.schedule.repository.ScheduleRepository;
+import com.zzuiksa.server.global.exception.custom.CustomException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -52,80 +51,39 @@ public class ScheduleServiceTests {
     @Mock
     private Routine routineMock;
     @Mock
-    private Member memberMock;
+    private Member memberMock, otherMemberMock;
 
-    private AddScheduleRequest.AddScheduleRequestBuilder requestBuilder;
-    private RepeatDto.RepeatDtoBuilder repeatDtoBuilder;
+    private Long categoryId;
     private Schedule.ScheduleBuilder scheduleBuilder;
     private Routine.RoutineBuilder routineBuilder;
+    private AddScheduleRequest.AddScheduleRequestBuilder addScheduleRequestBuilder;
+    private GetScheduleResponse.GetScheduleResponseBuilder getScheduleResponseBuilder;
+    private RepeatDto repeatDto;
 
     @BeforeEach
     public void setUp() {
-        requestBuilder = AddScheduleRequest.builder()
-            .categoryId(1L)
-            .title("Title")
-            .startDate(LocalDate.of(2024, 4, 15))
-            .endDate(LocalDate.of(2024, 4, 19))
-            .startTime(LocalTime.of(17, 30, 50))
-            .endTime(LocalTime.of(17, 50, 20))
-            .alertBefore(Duration.ofMinutes(20))
-            .memo("")
-            .toPlace(new PlaceDto("To place", 123.4f, 34.5f))
-            .fromPlace(new PlaceDto("From place", 132.4f, 43.5f));
-        repeatDtoBuilder = RepeatDto.builder()
-            .cycle(RoutineCycle.WEEKLY)
-            .endDate(LocalDate.of(2024, 4, 29))
-            .repeatTerm(1)
-            .repeatAt(Routine.getWeeklyRepeatAtOf(DayOfWeek.MONDAY, DayOfWeek.FRIDAY));
-        scheduleBuilder = Schedule.builder()
+        categoryId = 4L;
+        addScheduleRequestBuilder = ScheduleSource.getTestAddScheduleRequestBuilder()
+            .categoryId(categoryId);
+        getScheduleResponseBuilder = ScheduleSource.getTestGetScheduleResponseBuilder()
+            .categoryId(categoryId);
+        repeatDto = ScheduleSource.getTestRepeatDto();
+        scheduleBuilder = ScheduleSource.getTestScheduleBuilder()
             .category(categoryMock)
-            .member(memberMock)
-            .routine(null)
-            .title("Title")
-            .startDate(LocalDate.of(2024, 4, 15))
-            .endDate(LocalDate.of(2024, 4, 19))
-            .startTime(LocalTime.of(17, 30, 50))
-            .endTime(LocalTime.of(17, 50, 20))
-            .alertBefore(Duration.ofMinutes(20))
-            .memo("")
-            .toPlaceName("To place")
-            .toPlaceLat(123.4f)
-            .toPlaceLng(34.5f)
-            .fromPlaceName("From place")
-            .fromPlaceLat(132.4f)
-            .fromPlaceLng(43.5f)
-            .isDone(false);
-        routineBuilder = Routine.builder()
+            .member(memberMock);
+        routineBuilder = ScheduleSource.getTestRoutineBuilder()
             .category(categoryMock)
-            .member(memberMock)
-            .title("Title")
-            .startDate(LocalDate.of(2024, 4, 15))
-            .endDate(LocalDate.of(2024, 4, 19))
-            .startTime(LocalTime.of(17, 30, 50))
-            .endTime(LocalTime.of(17, 50, 20))
-            .alertBefore(Duration.ofMinutes(20))
-            .memo("")
-            .toPlaceName("To place")
-            .toPlaceLat(123.4f)
-            .toPlaceLng(34.5f)
-            .fromPlaceName("From place")
-            .fromPlaceLat(132.4f)
-            .fromPlaceLng(43.5f)
-            .repeatCycle(RoutineCycle.WEEKLY)
-            .repeatStartDate(LocalDate.of(2024, 4, 15))
-            .repeatEndDate(LocalDate.of(2024, 4, 29))
-            .repeatTerm(1)
-            .repeatAt(Routine.getWeeklyRepeatAtOf(DayOfWeek.MONDAY, DayOfWeek.FRIDAY));
+            .member(memberMock);
     }
 
     @Test
     public void add_schedule_success() {
         // given
-        Long scheduleId = 3L;
+        Long scheduleId = 7L;
         given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
         given(scheduleRepositoryMock.save(any())).willReturn(scheduleMock);
         given(scheduleMock.getId()).willReturn(scheduleId);
-        AddScheduleRequest request = requestBuilder.build();
+        AddScheduleRequest request = addScheduleRequestBuilder.build();
 
         // when
         AddScheduleResponse response = scheduleService.add(request, memberMock);
@@ -139,7 +97,7 @@ public class ScheduleServiceTests {
     public void add_scheduleTitleIsBlank_throwIllegalArgumentException() {
         // given
         given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
-        AddScheduleRequest request = requestBuilder.title("  ").build();
+        AddScheduleRequest request = addScheduleRequestBuilder.title("  ").build();
 
         // when & then
         assertThatThrownBy(() -> scheduleService.add(request, memberMock))
@@ -154,7 +112,7 @@ public class ScheduleServiceTests {
         given(scheduleMock.getId()).willReturn(scheduleId);
         given(scheduleRepositoryMock.save(any())).willReturn(scheduleMock);
         given(routineRepositoryMock.save(any())).willReturn(routineMock);
-        AddScheduleRequest request = requestBuilder.repeat(repeatDtoBuilder.build()).build();
+        AddScheduleRequest request = addScheduleRequestBuilder.repeat(repeatDto).build();
 
         // when
         AddScheduleResponse response = scheduleService.add(request, memberMock);
@@ -169,7 +127,7 @@ public class ScheduleServiceTests {
     public void add_routineTitleIsBlank_throwIllegalArgumentException() {
         // given
         given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
-        AddScheduleRequest request = requestBuilder.title("  ").repeat(repeatDtoBuilder.build()).build();
+        AddScheduleRequest request = addScheduleRequestBuilder.title("  ").repeat(repeatDto).build();
 
         // when & then
         assertThatThrownBy(() -> scheduleService.add(request, memberMock))
@@ -177,54 +135,107 @@ public class ScheduleServiceTests {
     }
 
     @Test
-    public void convertToSchedule_repeatIsNull_success() {
+    public void get_byScheduleOwner_success() {
         // given
-        Schedule schedule = scheduleBuilder.build();
-        given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
-        AddScheduleRequest request = requestBuilder.build();
+        Long memberId = 12L;
+        Long scheduleId = 3L;
+        GetScheduleResponse getScheduleResponse = getScheduleResponseBuilder.build();
+        given(memberMock.getId()).willReturn(memberId);
+        given(categoryMock.getId()).willReturn(categoryId);
+        Schedule schedule = scheduleBuilder.id(scheduleId).build();
+        given(scheduleRepositoryMock.findById(anyLong())).willReturn(Optional.of(schedule));
 
         // when
-        Schedule converted = scheduleService.convertToSchedule(request, memberMock, null);
+        GetScheduleResponse got = scheduleService.get(scheduleId, memberMock);
 
         // then
-        assertThat(converted).isEqualTo(schedule);
+        assertThat(got).isEqualTo(getScheduleResponse);
     }
 
     @Test
-    public void convertToSchedule_repeatIsNotNull_success() {
+    public void get_routineIsNotNull_repeatIsNotNull() {
         // given
-        Schedule schedule = scheduleBuilder.build();
-        given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
-        AddScheduleRequest request = requestBuilder.repeat(repeatDtoBuilder.build()).build();
-
-        // when
-        Schedule converted = scheduleService.convertToSchedule(request, memberMock, null);
-
-        // then
-        assertThat(converted).isEqualTo(schedule);
-    }
-
-    @Test
-    public void convertToRoutine_repeatIsNotNull_success() {
-        // given
+        Long memberId = 12L;
+        Long scheduleId = 3L;
+        GetScheduleResponse getScheduleResponse = getScheduleResponseBuilder.repeat(repeatDto).build();
+        given(memberMock.getId()).willReturn(memberId);
+        given(categoryMock.getId()).willReturn(categoryId);
         Routine routine = routineBuilder.build();
-        given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
-        AddScheduleRequest request = requestBuilder.repeat(repeatDtoBuilder.build()).build();
+        Schedule schedule = scheduleBuilder.id(scheduleId).routine(routine).build();
+        given(scheduleRepositoryMock.findById(anyLong())).willReturn(Optional.of(schedule));
 
         // when
-        Routine converted = scheduleService.convertToRoutine(request, memberMock);
+        GetScheduleResponse got = scheduleService.get(scheduleId, memberMock);
+
+        // then
+        assertThat(got).isEqualTo(getScheduleResponse);
+    }
+
+    @Test
+    public void get_byNotScheduleOwner_throwCustomExceptionWithStatus404() {
+        // given
+        Long memberId = 12L;
+        Long otherMemberId = 13L;
+        Long scheduleId = 3L;
+        given(memberMock.getId()).willReturn(memberId);
+        given(otherMemberMock.getId()).willReturn(otherMemberId);
+        Schedule schedule = scheduleBuilder.id(scheduleId).build();
+        given(scheduleRepositoryMock.findById(anyLong())).willReturn(Optional.of(schedule));
+
+        // when & then
+        assertThatThrownBy(() -> scheduleService.get(scheduleId, otherMemberMock))
+            .isInstanceOfSatisfying(CustomException.class, ex -> ex.getStatus().isSameCodeAs(HttpStatus.NOT_FOUND));
+    }
+
+    @Test
+    public void convertAddScheduleRequestToSchedule_repeatIsNull_success() {
+        // given
+        Schedule schedule = scheduleBuilder.id(null).build();
+        given(categoryRepositoryMock.findById(anyLong())).willReturn(Optional.of(categoryMock));
+        AddScheduleRequest request = addScheduleRequestBuilder.build();
+
+        // when
+        Schedule converted = scheduleService.convertAddScheduleRequestToSchedule(request, memberMock, null);
+
+        // then
+        assertThat(converted).isEqualTo(schedule);
+    }
+
+    @Test
+    public void convertAddScheduleRequestToSchedule_repeatIsNotNull_success() {
+        // given
+        Schedule schedule = scheduleBuilder.id(null).build();
+        given(categoryRepositoryMock.findById(anyLong())).willReturn(Optional.of(categoryMock));
+        AddScheduleRequest request = addScheduleRequestBuilder.repeat(repeatDto).build();
+
+        // when
+        Schedule converted = scheduleService.convertAddScheduleRequestToSchedule(request, memberMock, null);
+
+        // then
+        assertThat(converted).isEqualTo(schedule);
+    }
+
+    @Test
+    public void convertAddScheduleRequestToRoutine_repeatIsNotNull_success() {
+        // given
+        Routine routine = routineBuilder.id(null).build();
+        given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
+        AddScheduleRequest request = addScheduleRequestBuilder.repeat(repeatDto).build();
+
+        // when
+        Routine converted = scheduleService.convertAddScheduleRequestToRoutine(request, memberMock);
 
         // then
         assertThat(converted).isEqualTo(routine);
     }
 
     @Test
-    public void convertToRoutine_repeatIsNull_throwIllegalArgumentException() {
+    public void convertAddScheduleRequestToRoutine_repeatIsNull_throwIllegalArgumentException() {
         // given
-        AddScheduleRequest request = requestBuilder.build();
+        AddScheduleRequest request = addScheduleRequestBuilder.build();
 
         // when & then
-        assertThatThrownBy(() -> scheduleService.convertToRoutine(request, memberMock))
+        assertThatThrownBy(() -> scheduleService.convertAddScheduleRequestToRoutine(request, memberMock))
             .isInstanceOf(IllegalArgumentException.class);
     }
 }

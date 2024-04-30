@@ -22,4 +22,8 @@ public class RepeatDto {
     private Integer repeatTerm;
 
     private Integer repeatAt;
+
+    public static RepeatDto of(RoutineCycle cycle, LocalDate endDate, Integer repeatTerm, Integer repeatAt) {
+        return new RepeatDto(cycle, endDate, repeatTerm, repeatAt);
+    }
 }

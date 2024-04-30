@@ -16,4 +16,8 @@ public class PlaceDto {
     private Float lat;
 
     private Float lng;
+
+    public static PlaceDto of(String name, Float lat, Float lng) {
+        return new PlaceDto(name, lat, lng);
+    }
 }
