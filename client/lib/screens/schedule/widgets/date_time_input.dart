@@ -7,10 +7,12 @@ class DateTimeInput extends StatefulWidget {
     super.key,
     required this.dateController,
     required this.requiredTime,
+    this.timeEditController,
   });
 
   final TextEditingController dateController;
   final bool requiredTime;
+  final TextEditingController? timeEditController;
 
   @override
   State<DateTimeInput> createState() => _DateTimeInputState();
@@ -64,8 +66,9 @@ class _DateTimeInputState extends State<DateTimeInput> {
           const SizedBox(
             width: 10.0,
           ),
-          const TimePicker(
-            textStyle: TextStyle(fontSize: 24.0),
+          TimePicker(
+            textStyle: const TextStyle(fontSize: 24.0),
+            timeEditController: widget.timeEditController!,
           ),
         ]
       ],
