@@ -17,7 +17,10 @@ class SpotPickButton extends StatelessWidget {
           padding: MaterialStateProperty.all<EdgeInsets>(
             EdgeInsets.symmetric(horizontal: 80, vertical: 10),
           )),
-      child: Text('이 장소를 선택하기', style: textTheme.displaySmall,),
+      child: Text(
+        '이 장소를 선택하기',
+        style: textTheme.displaySmall,
+      ),
       onPressed: () => Navigator.pop(context),
     );
   }

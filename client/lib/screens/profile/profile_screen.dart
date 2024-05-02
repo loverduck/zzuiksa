@@ -82,20 +82,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case 2:
         return Column(
           children: [
-            Container(height: 124*2, child: MyPlace()),
+            Container(height: 124 * 2, child: MyPlace()),
             Container(
               width: 344,
               height: 100,
-              margin: EdgeInsets.only(top: 12, bottom:36),
+              margin: EdgeInsets.only(top: 12, bottom: 36),
               decoration: BoxDecoration(
                   border: Border.all(width: 3, color: Constants.main600),
                   borderRadius: BorderRadius.circular(30)),
               child: TextButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddPlace()));
-                },
-                child: Icon(Icons.add, size: 32,)
-              ),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AddPlace()));
+                  },
+                  child: Icon(
+                    Icons.add,
+                    size: 32,
+                  )),
             ),
           ],
         );

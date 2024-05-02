@@ -28,11 +28,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Container(
             margin: EdgeInsets.only(top: 80.0),
             padding: EdgeInsets.all(20.0),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Today(),
-                CompleteRate(),
+                ChartPage(),
               ],
             )),
         Container(

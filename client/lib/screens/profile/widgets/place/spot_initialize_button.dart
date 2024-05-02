@@ -17,7 +17,10 @@ class SpotInitializeButton extends StatelessWidget {
           padding: MaterialStateProperty.all<EdgeInsets>(
             EdgeInsets.symmetric(horizontal: 64, vertical: 10),
           )),
-      child: Text('현재 위치로 초기화하기', style: textTheme.displaySmall,),
+      child: Text(
+        '현재 위치로 초기화하기',
+        style: textTheme.displaySmall,
+      ),
       onPressed: () => Navigator.pop(context),
     );
   }

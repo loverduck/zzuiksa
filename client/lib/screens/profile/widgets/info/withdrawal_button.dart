@@ -38,7 +38,10 @@ class WithdrawalButton extends StatelessWidget {
           padding: MaterialStateProperty.all<EdgeInsets>(
             EdgeInsets.symmetric(horizontal: 120, vertical: 10),
           )),
-      child: Text('탈퇴하기', style: textTheme.displaySmall,),
+      child: Text(
+        '탈퇴하기',
+        style: textTheme.displaySmall,
+      ),
     );
   }
 }

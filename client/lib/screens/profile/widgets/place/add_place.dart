@@ -61,11 +61,15 @@ class _AddPlaceState extends State<AddPlace> {
                                   builder: (context) {
                                     return AlertDialog(
                                       title: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children:[
-                                        Text('지도에서 주소 찾기', style: textTheme.displayMedium,),
-                                        Icon(Icons.close)
-                                      ]),
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              '지도에서 주소 찾기',
+                                              style: textTheme.displayMedium,
+                                            ),
+                                            Icon(Icons.close)
+                                          ]),
                                       content: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [

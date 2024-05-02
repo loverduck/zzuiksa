@@ -1,10 +1,11 @@
 import 'package:client/screens/dashboard/dashboard_screen.dart';
-import 'package:client/screens/calendar/calendar_screen.dart';
+import 'package:client/screens/schedule/schedule_calendar_screen.dart';
 import 'package:client/screens/gifticon/gifticon_screen.dart';
 import 'package:client/screens/profile/profile_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:client/widgets/footer.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
