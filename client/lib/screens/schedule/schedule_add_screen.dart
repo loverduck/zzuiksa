@@ -1,12 +1,15 @@
+import 'package:client/screens/schedule/service/schedule_api.dart';
+import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/widgets/date_time_input.dart';
 import 'package:client/screens/schedule/widgets/input_container.dart';
 import 'package:client/screens/schedule/widgets/routine_input.dart';
 import 'package:client/screens/schedule/widgets/switch_button.dart';
-import 'package:client/screens/schedule/widgets/type_buttons.dart';
+import 'package:client/screens/schedule/widgets/transport_type_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 class ScheduleAddScreen extends StatefulWidget {
   const ScheduleAddScreen({
@@ -22,22 +25,33 @@ class ScheduleAddScreen extends StatefulWidget {
 
 class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
   TextEditingController titleEditConteroller = TextEditingController();
-  TextEditingController startDateController = TextEditingController();
-  TextEditingController endDateController = TextEditingController();
-  TextEditingController placeController = TextEditingController();
+  TextEditingController startDateEditController = TextEditingController();
+  TextEditingController endDateEditController = TextEditingController();
+  TextEditingController startTimeEditController = TextEditingController();
+  TextEditingController endTimeEditController = TextEditingController();
+  TextEditingController placeEditController = TextEditingController();
+  TextEditingController memoEditController = TextEditingController();
 
   bool isAllDay = false;
   bool isRoutine = false;
 
   String selectedCategory = "일정";
-  String placeName = "";
+  Place toPlace = Place(name: "");
+  Place fromPlace = Place(name: "");
   String selectedType = "";
   String selectedCycle = "";
 
   @override
   void initState() {
     super.initState();
-    startDateController.text = widget.selectedDay.toString().split(" ")[0];
+    // 기본 시작/종료 날짜 = 선택한 날짜
+    // 기본 시작/종료 시간 = 현재 시간 + 1 / + 2
+    startDateEditController.text = widget.selectedDay.toString().split(" ")[0];
+    endDateEditController.text = widget.selectedDay.toString().split(" ")[0];
+    startTimeEditController.text =
+        "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 10)))}:00";
+    endTimeEditController.text =
+        "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 11)))}:00";
     titleEditConteroller.addListener(() {
       setState(() {});
     });
@@ -51,9 +65,10 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, Color> categoryColor = <String, Color>{
-      "일정": Constants.green300,
-      "업무": Constants.blue600,
+    Map<String, List> categoryColor = <String, List>{
+      "일정": [1, Constants.green300],
+      "업무": [2, Constants.blue600],
+      "기념일": [3, Constants.pink300],
     };
 
     TextField titleInputField = TextField(
@@ -79,18 +94,17 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
         setState(() {
           selectedCategory = value;
         });
-        print(value);
       },
       underline: Container(),
       selectedItemBuilder: (context) {
-        return categoryColor.values.map<Widget>((Color color) {
+        return categoryColor.values.map<Widget>((List item) {
           return Padding(
             padding:
                 const EdgeInsets.symmetric(vertical: 9.25, horizontal: 6.0),
             child: Container(
               constraints: const BoxConstraints(maxHeight: 15.0),
               decoration: BoxDecoration(
-                color: color,
+                color: item[1],
               ),
             ),
           );
@@ -105,7 +119,7 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                 width: 18,
                 height: 18,
                 decoration: BoxDecoration(
-                  color: categoryColor[item],
+                  color: categoryColor[item]?[1],
                 ),
               ),
               const SizedBox(
@@ -137,35 +151,55 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
     void moveToSearch() async {
       // 사용자가 검색한 위치 저장
       final place = await Navigator.pushNamed(context, "/schedule/search",
-          arguments: placeName);
+          arguments: toPlace.name);
 
       setState(() {
-        placeName = place.toString();
+        toPlace.name = place.toString();
       });
     }
 
     void setType(type) {
-      print(type);
       setState(() {
         selectedType = type.toString();
       });
     }
 
     void setCycle(cycle) {
-      print(cycle);
       setState(() {
         selectedCycle = cycle;
       });
+    }
+
+    void createSchedule() {
+      Schedule schedule = Schedule(
+        categoryId: categoryColor[selectedCategory]![0],
+        title: titleEditConteroller.text,
+        startDate: startDateEditController.text,
+        endDate: endDateEditController.text,
+        startTime: startTimeEditController.text,
+        endTime: endTimeEditController.text,
+        alertBefore: 0,
+        memo: memoEditController.text,
+        toPlace: toPlace,
+        fromPlace: fromPlace,
+        repeat: isRoutine,
+        isDone: false,
+      );
+
+      postSchedule(schedule);
     }
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Constants.main200,
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: Text("저장"),
+            padding: const EdgeInsets.only(right: 16.0),
+            child: GestureDetector(
+              onTap: () => createSchedule(),
+              child: const Text("저장"),
+            ),
           ),
         ],
       ),
@@ -224,8 +258,9 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                           children: [
                             inputTitleText("시작"),
                             DateTimeInput(
-                              dateController: startDateController,
+                              dateController: startDateEditController,
                               requiredTime: true,
+                              timeEditController: startTimeEditController,
                             )
                           ],
                         ),
@@ -239,16 +274,17 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                           children: [
                             inputTitleText("종료"),
                             DateTimeInput(
-                              dateController: startDateController,
+                              dateController: startDateEditController,
                               requiredTime: true,
+                              timeEditController: endTimeEditController,
                             )
                           ],
                         ),
                       ),
                     ),
+                    marginBox,
                   ],
                 ),
-              marginBox,
               // 장소 입력
               InputContainer(
                 child: Column(children: [
@@ -269,7 +305,7 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                             borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Text(
-                            placeName,
+                            toPlace.name ?? "",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 24.0,
@@ -280,12 +316,13 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                     ],
                   ),
                   // 도착지가 있는 경우 출발지 선택 및 이동 방법 선택
-                  if (placeName.isNotEmpty)
-                    TypeButtons(
+                  if (toPlace.name!.isNotEmpty)
+                    TransportTypeButtons(
                       inputTitleText: inputTitleText("출발지"),
                       selectedType: selectedType,
                       marginBox: marginBox,
                       setType: setType,
+                      fromPlace: fromPlace,
                     ),
                 ]),
               ),
@@ -310,6 +347,12 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                       onChanged: (val) {
                         setState(() {
                           isRoutine = val;
+
+                          // 종일이면
+                          if (val) {
+                            startTimeEditController.text = "00:00";
+                            endTimeEditController.text = "23:59";
+                          }
                         });
                       },
                     ),
@@ -332,15 +375,16 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                     const Divider(
                       thickness: 1.0,
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 200.0,
                       child: TextField(
-                        style: TextStyle(
+                        controller: memoEditController,
+                        style: const TextStyle(
                           fontSize: 20.0,
                         ),
                         expands: true,
                         maxLines: null,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           isDense: true,
                           border: InputBorder.none,
                         ),

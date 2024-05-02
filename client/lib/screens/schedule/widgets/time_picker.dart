@@ -1,27 +1,39 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TimePicker extends StatefulWidget {
-  const TimePicker({super.key, required this.textStyle});
+  const TimePicker({
+    super.key,
+    required this.textStyle,
+    required this.timeEditController,
+  });
 
   final TextStyle textStyle;
+  final TextEditingController timeEditController;
 
   @override
   State<TimePicker> createState() => _TimePickerState();
 }
 
 class _TimePickerState extends State<TimePicker> {
-  TimeOfDay initialTime = TimeOfDay(hour: TimeOfDay.now().hour + 1, minute: 0);
-
   void onChange() async {
     final TimeOfDay? timeOfDay = await showTimePicker(
       context: context,
-      initialTime: initialTime,
+      initialTime: TimeOfDay(
+          hour: int.parse(widget.timeEditController.text.split(":")[0]),
+          minute: int.parse(widget.timeEditController.text.split(":")[1])),
     );
 
     if (timeOfDay != null) {
+      DateTime changedTime =
+          DateFormat("HH:mm").parse(timeOfDay.format(context));
+
       setState(() {
-        initialTime = timeOfDay;
+        widget.timeEditController.text =
+            DateFormat("HH:mm").format(changedTime);
       });
     }
   }
@@ -39,7 +51,7 @@ class _TimePickerState extends State<TimePicker> {
           onTap: onChange,
           child: Text(
             textAlign: TextAlign.center,
-            "${initialTime.hour}:${initialTime.minute}",
+            "${widget.timeEditController.text.split(":")[0]}:${widget.timeEditController.text.split(":")[1]}",
             style: widget.textStyle,
           )),
     );
