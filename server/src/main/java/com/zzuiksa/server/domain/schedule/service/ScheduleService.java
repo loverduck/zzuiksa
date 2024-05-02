@@ -123,7 +123,6 @@ public class ScheduleService {
             .repeatCycle(request.getRepeat().getCycle())
             .repeatStartDate(request.getStartDate())
             .repeatEndDate(request.getRepeat().getEndDate())
-            .repeatTerm(request.getRepeat().getRepeatTerm())
             .repeatAt(request.getRepeat().getRepeatAt())
             .build();
     }

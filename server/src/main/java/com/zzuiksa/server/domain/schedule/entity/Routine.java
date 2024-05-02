@@ -93,12 +93,10 @@ public class Routine extends BaseEntity {
 
     @NotNull
     @Column(nullable = false)
-    private Integer repeatTerm;
-
     private Integer repeatAt;
 
     @Builder
-    Routine(Long id, Member member, Category category, String title, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, Duration alertBefore, String memo, String toPlaceName, Float toPlaceLat, Float toPlaceLng, String fromPlaceName, Float fromPlaceLat, Float fromPlaceLng, RoutineCycle repeatCycle, LocalDate repeatStartDate, LocalDate repeatEndDate, Integer repeatTerm, Integer repeatAt) {
+    Routine(Long id, Member member, Category category, String title, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, Duration alertBefore, String memo, String toPlaceName, Float toPlaceLat, Float toPlaceLng, String fromPlaceName, Float fromPlaceLat, Float fromPlaceLng, RoutineCycle repeatCycle, LocalDate repeatStartDate, LocalDate repeatEndDate, Integer repeatAt) {
         this.id = id;
         if (member == null) {
             throw new IllegalArgumentException("Member is null");
@@ -121,11 +119,18 @@ public class Routine extends BaseEntity {
         } else {
             setFromPlace(fromPlaceName);
         }
-        // TODO: repeat 입력값 검증
+        if (repeatCycle == null) {
+            throw new IllegalArgumentException("Repeat Cycle is null");
+        }
         this.repeatCycle = repeatCycle;
+        if (repeatStartDate == null) {
+            throw new IllegalArgumentException("Repeat Start Date is null");
+        }
         this.repeatStartDate = repeatStartDate;
         this.repeatEndDate = repeatEndDate;
-        this.repeatTerm = repeatTerm;
+        if (repeatAt == null) {
+            throw new IllegalArgumentException("Repeat at is null");
+        }
         this.repeatAt = repeatAt;
     }
 

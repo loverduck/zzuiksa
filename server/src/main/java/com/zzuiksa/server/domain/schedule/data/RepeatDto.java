@@ -19,11 +19,9 @@ public class RepeatDto {
 
     private LocalDate endDate;
 
-    private Integer repeatTerm;
-
     private Integer repeatAt;
 
-    public static RepeatDto of(RoutineCycle cycle, LocalDate endDate, Integer repeatTerm, Integer repeatAt) {
-        return new RepeatDto(cycle, endDate, repeatTerm, repeatAt);
+    public static RepeatDto of(RoutineCycle cycle, LocalDate endDate, Integer repeatAt) {
+        return new RepeatDto(cycle, endDate, repeatAt);
     }
 }
