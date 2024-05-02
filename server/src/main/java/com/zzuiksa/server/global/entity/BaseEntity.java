@@ -3,6 +3,8 @@ package com.zzuiksa.server.global.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,12 +15,15 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Getter
+@EqualsAndHashCode
 public abstract class BaseEntity {
 
+    @NotNull
     @CreatedDate
     @Column(updatable = false, nullable = false)
     protected LocalDateTime createdAt;
 
+    @NotNull
     @LastModifiedDate
     @Column(nullable = false)
     protected LocalDateTime updatedAt;
