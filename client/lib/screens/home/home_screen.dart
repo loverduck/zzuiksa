@@ -1,7 +1,7 @@
 import 'package:client/screens/dashboard/dashboard_screen.dart';
-import 'package:client/screens/calendar/calendar_screen.dart';
 import 'package:client/screens/gifticon/gifticon_screen.dart';
 import 'package:client/screens/profile/profile_screen.dart';
+import 'package:client/screens/schedule/schedule_calendar_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:client/widgets/footer.dart';
@@ -33,13 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget renderBody(int index) {
     switch (index) {
       case 1:
-        return CalendarScreen();
+        return const CalendarScreen();
       case 2:
-        return GifticonScreen();
+        return const GifticonScreen();
       case 3:
-        return ProfileScreen();
+        return const ProfileScreen();
       default:
-        return DashboardScreen();
+        return const DashboardScreen();
     }
   }
 }

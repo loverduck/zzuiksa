@@ -7,8 +7,8 @@ class Schedule {
   String? endTime;
   int? alertBefore;
   String? memo;
-  String? toPlace;
-  String? fromPlace;
+  Place? toPlace;
+  Place? fromPlace;
   bool? repeat;
   bool? isDone;
 
@@ -35,11 +35,11 @@ class Schedule {
     endTime = json['endTime'];
     alertBefore = json['alertBefore'];
     memo = json['memo'];
-    toPlace = json['toPlace'];
-    fromPlace = json['fromPlace'];
-    // toPlace = json['toPlace'] != null ? Place.fromJson(json['toPlace']) : null;
-    // fromPlace =
-    //     json['fromPlace'] != null ? Place.fromJson(json['fromPlace']) : null;
+    // toPlace = json['toPlace'];
+    // fromPlace = json['fromPlace'];
+    toPlace = json['toPlace'] != null ? Place.fromJson(json['toPlace']) : null;
+    fromPlace =
+        json['fromPlace'] != null ? Place.fromJson(json['fromPlace']) : null;
     // repeat = json['repeat'] != null ? repeat.fromJson(json['repeat']) : null;
     repeat = json['repeat'];
     isDone = json['isDone'];
@@ -55,14 +55,14 @@ class Schedule {
     data['endTime'] = endTime;
     data['alertBefore'] = alertBefore;
     data['memo'] = memo;
-    data['toPlace'] = toPlace;
-    data['fromPlace'] = fromPlace;
-    // if (toPlace != null) {
-    //   data['toPlace'] = toPlace!.toJson();
-    // }
-    // if (fromPlace != null) {
-    //   data['fromPlace'] = fromPlace!.toJson();
-    // }
+    // data['toPlace'] = toPlace;
+    // data['fromPlace'] = fromPlace;
+    if (toPlace != null) {
+      data['toPlace'] = toPlace!.toJson();
+    }
+    if (fromPlace != null) {
+      data['fromPlace'] = fromPlace!.toJson();
+    }
     // if (repeat != null) {
     //   data['repeat'] = repeat!.toJson();
     // }

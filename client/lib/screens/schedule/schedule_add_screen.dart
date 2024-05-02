@@ -1,9 +1,10 @@
+import 'package:client/screens/schedule/service/schedule_api.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/widgets/date_time_input.dart';
 import 'package:client/screens/schedule/widgets/input_container.dart';
 import 'package:client/screens/schedule/widgets/routine_input.dart';
 import 'package:client/screens/schedule/widgets/switch_button.dart';
-import 'package:client/screens/schedule/widgets/type_buttons.dart';
+import 'package:client/screens/schedule/widgets/transport_type_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
@@ -35,7 +36,8 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
   bool isRoutine = false;
 
   String selectedCategory = "일정";
-  String placeName = "";
+  Place toPlace = Place(name: "");
+  Place fromPlace = Place(name: "");
   String selectedType = "";
   String selectedCycle = "";
 
@@ -149,10 +151,10 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
     void moveToSearch() async {
       // 사용자가 검색한 위치 저장
       final place = await Navigator.pushNamed(context, "/schedule/search",
-          arguments: placeName);
+          arguments: toPlace.name);
 
       setState(() {
-        placeName = place.toString();
+        toPlace.name = place.toString();
       });
     }
 
@@ -178,13 +180,13 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
         endTime: endTimeEditController.text,
         alertBefore: 0,
         memo: memoEditController.text,
-        toPlace: "",
-        fromPlace: "",
+        toPlace: toPlace,
+        fromPlace: fromPlace,
         repeat: isRoutine,
         isDone: false,
       );
 
-      print(schedule.toString());
+      postSchedule(schedule);
     }
 
     return Scaffold(
@@ -303,7 +305,7 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                             borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Text(
-                            placeName,
+                            toPlace.name ?? "",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 24.0,
@@ -314,12 +316,13 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                     ],
                   ),
                   // 도착지가 있는 경우 출발지 선택 및 이동 방법 선택
-                  if (placeName.isNotEmpty)
-                    TypeButtons(
+                  if (toPlace.name!.isNotEmpty)
+                    TransportTypeButtons(
                       inputTitleText: inputTitleText("출발지"),
                       selectedType: selectedType,
                       marginBox: marginBox,
                       setType: setType,
+                      fromPlace: fromPlace,
                     ),
                 ]),
               ),
@@ -344,6 +347,12 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                       onChanged: (val) {
                         setState(() {
                           isRoutine = val;
+
+                          // 종일이면
+                          if (val) {
+                            startTimeEditController.text = "00:00";
+                            endTimeEditController.text = "23:59";
+                          }
                         });
                       },
                     ),
