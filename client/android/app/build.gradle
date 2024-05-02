@@ -12,6 +12,11 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def kakao_Sdk_Appkey = properties.getProperty('kakao.sdk.appkey')
+//def application_Name = properties.getProperty('application.name')
+
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
@@ -45,10 +50,12 @@ android {
         applicationId "com.example.client"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+//        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders += [kakaoSdkAppkey: kakao_Sdk_Appkey]
     }
 
     buildTypes {
