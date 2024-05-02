@@ -1,6 +1,5 @@
-package com.zzuiksa.server.domain.member;
+package com.zzuiksa.server.domain.member.entity;
 
-import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.global.exception.InvalidMemberNameException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
