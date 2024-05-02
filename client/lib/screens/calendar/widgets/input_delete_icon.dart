@@ -25,11 +25,13 @@ class _InputDeleteIconState extends State<InputDeleteIcon> {
             icon: const Icon(
               Icons.cancel,
               color: Colors.black87,
+              size: 24.0,
             ),
           )
         : const Icon(
             Icons.cancel,
             color: Colors.black38,
+            size: 24.0,
           );
   }
 }
