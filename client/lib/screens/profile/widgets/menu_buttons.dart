@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:client/constants.dart';
-import '../../utils/highlight_text.dart';
+import '../utils/highlight_text.dart';
 
 class MenuButtons extends StatefulWidget {
   const MenuButtons({Key? key, required this.setIndex}) : super(key: key);
@@ -12,12 +12,28 @@ class MenuButtons extends StatefulWidget {
 }
 
 class _MenuButtonsState extends State<MenuButtons> {
+  Text myStatistic =
+      Text('달성 통계', style: TextStyle(fontSize: 22, color: Constants.textColor));
+  Text myInfo =
+      Text('내 정보', style: TextStyle(fontSize: 22, color: Constants.textColor));
+  Text myPlace =
+      Text('내 주소', style: TextStyle(fontSize: 22, color: Constants.textColor));
+  HighLightedText htStatistic =
+      HighLightedText('달성 통계', color: Constants.main400);
+  HighLightedText htInfo = HighLightedText('내 정보', color: Constants.main400);
+  HighLightedText htPlace = HighLightedText('내 주소', color: Constants.main400);
+
   @override
   Widget build(BuildContext context) {
-    int selectedIndex = 0;
     final textTheme = Theme.of(context).textTheme;
+    int selectedIndex = 0;
+
+    Widget _statisticText = selectedIndex == 0 ? htStatistic : myStatistic;
+    Widget _infoText = selectedIndex == 1 ? htInfo : myInfo;
+    Widget _placeText = selectedIndex == 2 ? htPlace : myPlace;
 
     return Container(
+        height: 60,
         margin: EdgeInsets.all(16),
         padding: EdgeInsets.only(top: 2, bottom: 2, left: 8, right: 8),
         decoration: BoxDecoration(
@@ -36,7 +52,7 @@ class _MenuButtonsState extends State<MenuButtons> {
                     widget.setIndex(selectedIndex);
                   });
                 },
-                child: MyStatisticText(isHighlighted: selectedIndex == 0)),
+                child: _statisticText),
             TextButton(
                 onPressed: () {
                   setState(() {
@@ -44,7 +60,7 @@ class _MenuButtonsState extends State<MenuButtons> {
                     widget.setIndex(selectedIndex);
                   });
                 },
-                child: MyInfoText(isHighlighted: selectedIndex == 1)),
+                child: _infoText),
             TextButton(
                 onPressed: () {
                   setState(() {
@@ -52,54 +68,8 @@ class _MenuButtonsState extends State<MenuButtons> {
                     widget.setIndex(selectedIndex);
                   });
                 },
-                child: MyPlaceText(isHighlighted: selectedIndex == 2)),
+                child: _placeText),
           ],
         ));
-  }
-}
-
-class MyStatisticText extends StatelessWidget {
-  const MyStatisticText({Key? key, required this.isHighlighted})
-      : super(key: key);
-  final bool isHighlighted;
-
-  @override
-  Widget build(BuildContext context) {
-    if (isHighlighted) {
-      return HighLightedText('달성 통계', color: Constants.main400);
-    } else {
-      return Text('달성 통계',
-          style: TextStyle(fontSize: 22, color: Constants.textColor));
-    }
-  }
-}
-
-class MyInfoText extends StatelessWidget {
-  const MyInfoText({Key? key, required this.isHighlighted}) : super(key: key);
-  final isHighlighted;
-
-  @override
-  Widget build(BuildContext context) {
-    if (isHighlighted) {
-      return HighLightedText('내 정보', color: Constants.main400);
-    } else {
-      return Text('내 정보',
-          style: TextStyle(fontSize: 22, color: Constants.textColor));
-    }
-  }
-}
-
-class MyPlaceText extends StatelessWidget {
-  const MyPlaceText({Key? key, required this.isHighlighted}) : super(key: key);
-  final isHighlighted;
-
-  @override
-  Widget build(BuildContext context) {
-    if (isHighlighted) {
-      return HighLightedText('내 주소', color: Constants.main400);
-    } else {
-      return Text('내 주소',
-          style: TextStyle(fontSize: 22, color: Constants.textColor));
-    }
   }
 }

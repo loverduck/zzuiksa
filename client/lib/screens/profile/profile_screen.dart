@@ -1,9 +1,11 @@
-import 'package:client/screens/profile/widgets/my_staticstic.dart';
+import 'package:client/screens/profile/widgets/place/add_place.dart';
+import 'package:client/screens/profile/widgets/statistic/my_staticstic.dart';
 import 'package:flutter/material.dart';
 
-import 'widgets/buttons/menu_buttons.dart';
-import 'widgets/my_info.dart';
-import 'widgets/my_place.dart';
+import 'widgets/menu_buttons.dart';
+import 'widgets/info/my_info.dart';
+import 'widgets/place/my_place.dart';
+import 'package:client/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const title = 'Profile';
@@ -42,7 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 iconSize: 32.0,
                 padding: EdgeInsets.all(24),
                 onPressed: () {
-                  print('Search button is clicked');
+                  print('setting button clicked');
                 },
               ),
             ],
@@ -75,9 +77,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget renderBody(int index) {
     switch (index) {
-      case 1: return MyInfo();
-      case 2: return Container(height: 400, child: MyPlace());
-      default: return MyStatistic();
+      case 1:
+        return MyInfo();
+      case 2:
+        return Column(
+          children: [
+            Container(height: 124 * 2, child: MyPlace()),
+            Container(
+              width: 344,
+              height: 100,
+              margin: EdgeInsets.only(top: 12, bottom: 36),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 3, color: Constants.main600),
+                  borderRadius: BorderRadius.circular(30)),
+              child: TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AddPlace()));
+                  },
+                  child: Icon(
+                    Icons.add,
+                    size: 32,
+                  )),
+            ),
+          ],
+        );
+      default:
+        return MyStatistic();
     }
   }
 }

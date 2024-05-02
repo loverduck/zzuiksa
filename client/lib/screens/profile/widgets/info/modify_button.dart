@@ -12,25 +12,7 @@ class ModifyButton extends StatelessWidget {
 
     return ElevatedButton(
         onPressed: () {
-          showDialog<void>(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('회원 탈퇴'),
-                content: _confirmMessage,
-                actions: [
-                  TextButton(
-                    child: const Text('예'),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  TextButton(
-                    child: const Text('아니오'),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              );
-            },
-          );
+          print('modify button clicked');
         },
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Constants.main300),
