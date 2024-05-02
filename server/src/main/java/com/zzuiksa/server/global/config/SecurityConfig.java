@@ -23,7 +23,13 @@ public class SecurityConfig {
 	private final TokenProvider tokenProvider;
 	private static final String[] AUTH_WHITE_LIST = {
 		"/api/health",
-		"/auth/login/**"
+		"/h2-console/**",
+		"/favicon.ico",
+		"/error",
+        "/swagger-ui/**",
+		"/swagger-resources/**",
+		"/api-docs/**",
+		"/v3/api-docs/**",
 	};
 
 	@Bean
@@ -35,7 +41,9 @@ public class SecurityConfig {
 				authorizeRequest
 					.requestMatchers(
 						"/h2-console/**",
-						"/error"
+						"/error",
+						"/auth/login/**"
+
 					).permitAll()
 					.anyRequest().authenticated()
 			)
