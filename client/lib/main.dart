@@ -1,4 +1,7 @@
+import 'package:client/screens/calendar/calendar_place_search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
@@ -13,6 +16,7 @@ import 'styles.dart' as style;
 
 void main() async {
   await dotenv.load(fileName: 'local.env');
+  await initializeDateFormatting();
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -33,12 +37,13 @@ class MyApp extends StatelessWidget {
       title: 'ZZUIKSA',
       theme: style.myTheme,
       routes: {
-        '/dashboard': (context) => DashboardScreen(),
-        '/calendar': (context) => CalendarScreen(),
-        '/gifticon': (context) => GifticonScreen(),
-        '/profile': (context) => ProfileScreen(),
+        '/dashboard': (context) => const DashboardScreen(),
+        '/calendar': (context) => const CalendarScreen(),
+        '/calendar/search': (context) => const CalendarPlaceSearchScreen(),
+        '/gifticon': (context) => const GifticonScreen(),
+        '/profile': (context) => const ProfileScreen(),
       },
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }

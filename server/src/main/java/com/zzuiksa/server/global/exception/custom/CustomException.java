@@ -1,4 +1,4 @@
-package com.zzuiksa.server.global.exception;
+package com.zzuiksa.server.global.exception.custom;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

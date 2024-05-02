@@ -1,7 +1,7 @@
 package com.zzuiksa.server.global.exception.handler;
 
 import com.zzuiksa.server.global.api.ErrorResponse;
-import com.zzuiksa.server.global.exception.CustomException;
+import com.zzuiksa.server.global.exception.custom.CustomException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

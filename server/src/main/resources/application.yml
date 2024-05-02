@@ -20,3 +20,15 @@ springdoc:
     paths-to-match:
       - /api/**
 
+management:
+  endpoints:
+    web:
+      base-path: /api
+  endpoint:
+    health:
+      show-details: always
+
+token:
+  issuer: zzuiksa
+  secret: ${TOKEN_SECRET}
+  time-to-live: 1209600 # 2 weeks
