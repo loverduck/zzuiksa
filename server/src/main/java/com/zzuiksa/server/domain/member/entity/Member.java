@@ -5,6 +5,7 @@ import com.zzuiksa.server.global.exception.InvalidMemberNameException;
 import com.zzuiksa.server.global.util.Utils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
@@ -21,7 +22,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 10, nullable = false)
+    @Column(length = 20, nullable = false)
     private String name;
 
     @Column(length = 100)
@@ -48,5 +49,13 @@ public class Member extends BaseEntity {
             throw new InvalidMemberNameException("닉네임에는 영문 대소문자, 숫자, 한글, 공백만 포함할 수 있습니다.");
         }
         this.name = name;
+    }
+
+    @Builder
+    public Member(String name, String kakaoId, Date birthday, String profileImage) {
+        this.name = name;
+        this.kakaoId = kakaoId;
+        this.birthday = birthday;
+        this.profileImage = profileImage;
     }
 }
