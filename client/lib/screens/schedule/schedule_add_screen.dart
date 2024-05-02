@@ -1,15 +1,15 @@
-import 'package:client/screens/calendar/widgets/date_time_input.dart';
-import 'package:client/screens/calendar/widgets/input_container.dart';
-import 'package:client/screens/calendar/widgets/routine_input.dart';
-import 'package:client/screens/calendar/widgets/switch_button.dart';
-import 'package:client/screens/calendar/widgets/type_buttons.dart';
+import 'package:client/screens/schedule/widgets/date_time_input.dart';
+import 'package:client/screens/schedule/widgets/input_container.dart';
+import 'package:client/screens/schedule/widgets/routine_input.dart';
+import 'package:client/screens/schedule/widgets/switch_button.dart';
+import 'package:client/screens/schedule/widgets/type_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
 import 'package:flutter/widgets.dart';
 
-class CalendarAddScreen extends StatefulWidget {
-  const CalendarAddScreen({
+class ScheduleAddScreen extends StatefulWidget {
+  const ScheduleAddScreen({
     super.key,
     required this.selectedDay,
   });
@@ -17,10 +17,10 @@ class CalendarAddScreen extends StatefulWidget {
   final DateTime selectedDay;
 
   @override
-  State<CalendarAddScreen> createState() => _CalendarAddScreenState();
+  State<ScheduleAddScreen> createState() => _ScheduleAddScreenState();
 }
 
-class _CalendarAddScreenState extends State<CalendarAddScreen> {
+class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
   TextEditingController titleEditConteroller = TextEditingController();
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
@@ -136,7 +136,7 @@ class _CalendarAddScreenState extends State<CalendarAddScreen> {
 
     void moveToSearch() async {
       // 사용자가 검색한 위치 저장
-      final place = await Navigator.pushNamed(context, "/calendar/search",
+      final place = await Navigator.pushNamed(context, "/schedule/search",
           arguments: placeName);
 
       setState(() {

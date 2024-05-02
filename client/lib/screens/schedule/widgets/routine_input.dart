@@ -1,5 +1,5 @@
-import 'package:client/screens/calendar/widgets/date_time_input.dart';
-import 'package:client/screens/calendar/widgets/input_container.dart';
+import 'package:client/screens/schedule/widgets/date_time_input.dart';
+import 'package:client/screens/schedule/widgets/input_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
