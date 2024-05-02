@@ -2,7 +2,6 @@ package com.zzuiksa.server.domain.member.entity;
 
 import com.zzuiksa.server.global.entity.BaseEntity;
 import com.zzuiksa.server.global.exception.InvalidMemberNameException;
-import com.zzuiksa.server.global.oauth.data.OauthUserDto;
 import com.zzuiksa.server.global.util.Utils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

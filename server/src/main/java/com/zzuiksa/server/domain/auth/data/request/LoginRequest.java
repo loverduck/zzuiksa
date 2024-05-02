@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 public class LoginRequest {
 
-	@NotNull
-	private String accessToken;
+    @NotNull
+    private String accessToken;
 }

@@ -19,50 +19,50 @@ import java.io.IOException;
 
 public class JwtFilter extends OncePerRequestFilter {
 
-	private final TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
-	public JwtFilter(TokenProvider tokenProvider) {
-		this.tokenProvider = tokenProvider;
-	}
+    public JwtFilter(TokenProvider tokenProvider) {
+        this.tokenProvider = tokenProvider;
+    }
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-		FilterChain filterChain) throws ServletException, IOException {
-		try {
-			if ("OPTIONS".equals(request.getMethod())) {
-				filterChain.doFilter(request, response);
-				return;
-			}
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        try {
+            if ("OPTIONS".equals(request.getMethod())) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-			String authorizationHeader = request.getHeader("Authorization");
-			 if(!StringUtils.hasText(authorizationHeader)) {
-				 filterChain.doFilter(request, response);
-				 return;
-			 }
+            String authorizationHeader = request.getHeader("Authorization");
+            if (!StringUtils.hasText(authorizationHeader)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-			String[] authorizations = authorizationHeader.split(" ");
-			 if(authorizations.length < 2 || (!"Bearer".equals(authorizations[0]))) {
-			 	throw new AuthenticationException(ErrorCodes.NOT_VALID_BEARER_TYPE);
-			 }
+            String[] authorizations = authorizationHeader.split(" ");
+            if (authorizations.length < 2 || (!"Bearer".equals(authorizations[0]))) {
+                throw new AuthenticationException(ErrorCodes.NOT_VALID_BEARER_TYPE);
+            }
 
-			String token = authorizationHeader.split(" ")[1];
-			tokenProvider.validateToken(token);
+            String token = authorizationHeader.split(" ")[1];
+            tokenProvider.validateToken(token);
 
-			Authentication authentication = tokenProvider.authenticate(new UsernamePasswordAuthenticationToken(tokenProvider.getMemberId(token), ""));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+            Authentication authentication = tokenProvider.authenticate(new UsernamePasswordAuthenticationToken(tokenProvider.getMemberId(token), ""));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-			filterChain.doFilter(request, response);
-		} catch (AuthenticationException e) {
-			handleException(response, e);
-		}
-	}
+            filterChain.doFilter(request, response);
+        } catch (AuthenticationException e) {
+            handleException(response, e);
+        }
+    }
 
-	public void handleException(HttpServletResponse response, AuthenticationException ex) throws
-		IOException {
-		response.setStatus(ex.getStatus().value());
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		String json = new ObjectMapper().writeValueAsString(new ErrorResponse(ex.getErrorCode(), ex.getMessage()));
-		response.getWriter().write(json);
-	}
+    public void handleException(HttpServletResponse response, AuthenticationException ex) throws
+            IOException {
+        response.setStatus(ex.getStatus().value());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        String json = new ObjectMapper().writeValueAsString(new ErrorResponse(ex.getErrorCode(), ex.getMessage()));
+        response.getWriter().write(json);
+    }
 }

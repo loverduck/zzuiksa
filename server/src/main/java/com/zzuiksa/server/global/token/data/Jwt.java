@@ -7,6 +7,6 @@ import lombok.Getter;
 @Builder
 public class Jwt {
 
-	private String token;
-	private long expiresIn;
+    private String token;
+    private long expiresIn;
 }

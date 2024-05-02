@@ -1,32 +1,31 @@
 package com.zzuiksa.server.global.oauth.data.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 
 @Getter
 public class KakaoUserInfoResponse {
 
-	private long id;
+    private long id;
 
-	@JsonProperty("kakao_account")
-	private KakaoAccount kakaoAccount;
+    @JsonProperty("kakao_account")
+    private KakaoAccount kakaoAccount;
 
-	@Getter
-	public static class KakaoAccount {
+    @Getter
+    public static class KakaoAccount {
 
-		private Profile profile;
-		private String name;
-		private String email;
+        private Profile profile;
+        private String name;
+        private String email;
 
-		@Getter
-		public static class Profile {
+        @Getter
+        public static class Profile {
 
-			private String nickname;
+            private String nickname;
 
-			@JsonProperty("profile_image_url")
-			private String profileImageUrl;
-		}
-	}
+            @JsonProperty("profile_image_url")
+            private String profileImageUrl;
+        }
+    }
 
 }

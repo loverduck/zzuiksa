@@ -1,6 +1,5 @@
 package com.zzuiksa.server.domain.auth.data.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -10,6 +9,6 @@ import lombok.ToString;
 @ToString
 public class LoginResponse {
 
-	private String accessToken;
-	private long expiresIn;
+    private String accessToken;
+    private long expiresIn;
 }

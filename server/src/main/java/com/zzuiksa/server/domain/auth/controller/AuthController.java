@@ -13,22 +13,22 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-	private final LoginService loginService;
+    private final LoginService loginService;
 
-	@PostMapping("/login/kakao")
-	public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-		LoginResponse loginResponse = loginService.oauthLogin(loginRequest.getAccessToken());
-		return ResponseEntity.ok(loginResponse);
-	}
+    @PostMapping("/login/kakao")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse = loginService.oauthLogin(loginRequest.getAccessToken());
+        return ResponseEntity.ok(loginResponse);
+    }
 
-	@PostMapping("/login/guest")
-	public ResponseEntity<LoginResponse> guestLogin() {
-		LoginResponse loginResponse = loginService.guestLogin();
-		return ResponseEntity.ok(loginResponse);
-	}
+    @PostMapping("/login/guest")
+    public ResponseEntity<LoginResponse> guestLogin() {
+        LoginResponse loginResponse = loginService.guestLogin();
+        return ResponseEntity.ok(loginResponse);
+    }
 
-	@GetMapping("/test")
-	public ResponseEntity<String> test() {
-		return ResponseEntity.ok("test");
-	}
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("test");
+    }
 }
