@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'buttons/modify_button.dart';
-import 'buttons/withdrawal_button.dart';
+import 'modify_button.dart';
+import 'withdrawal_button.dart';
 import 'package:client/constants.dart';
 
 class MyInfo extends StatelessWidget {

@@ -35,8 +35,9 @@ class _MyPlaceState extends State<MyPlace> {
         return Container(
           // width: MediaQuery.of(context).size.width,
           height: 100,
+          margin: EdgeInsets.all(12),
           child: Container(
-            width: 200,
+              width: 200,
               height: 80,
               decoration: BoxDecoration(
                   color: Constants.main100,
@@ -46,15 +47,25 @@ class _MyPlaceState extends State<MyPlace> {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Icon(Icons.shopping_bag, size: 32),
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Constants.main400,
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Icon(Icons.shopping_bag,
+                          size: 28, color: Constants.main100),
+                    ),
                     Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(postList[index]["title"].toString(),style: textTheme.displaySmall),
-                          Text(postList[index]["address1"].toString(),style: textTheme.displaySmall),
+                          Text(postList[index]["title"].toString(),
+                              style: textTheme.displaySmall),
+                          Text(postList[index]["address1"].toString(),
+                              style: textTheme.displaySmall),
                         ]),
-                    Icon(Icons.zoom_in, size: 40),
+                    Icon(Icons.zoom_in, size: 40, color: Constants.main600),
                   ])),
         );
       },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:client/constants.dart';
-import '../../utils/highlight_text.dart';
+import '../utils/highlight_text.dart';
 
 class MenuButtons extends StatefulWidget {
   const MenuButtons({Key? key, required this.setIndex}) : super(key: key);
