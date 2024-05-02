@@ -47,15 +47,15 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleSummaryDto> getList(@NotNull LocalDate from, @NotNull LocalDate to, Long categoryId) {
+    public List<ScheduleSummaryDto> getList(@NotNull LocalDate from, @NotNull LocalDate to, Long categoryId, @NotNull Member member) {
         if (categoryId == null) {
-            return scheduleRepository.findAllSummaryByDateBetween(from, to);
+            return scheduleRepository.findAllSummaryByMemberAndDateBetween(member, from, to);
         }
 
         Category category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
 
-        return scheduleRepository.findAllSummaryByDateBetweenAndCategory(from, to, category);
+        return scheduleRepository.findAllSummaryByMemberAndDateBetweenAndCategory(member, from, to, category);
     }
 
     private Schedule addSchedule(AddScheduleRequest request, Member member) {

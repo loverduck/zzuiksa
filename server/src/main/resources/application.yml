@@ -18,11 +18,11 @@ springdoc:
     path: /api-docs
     groups:
       enabled: true
-    swagger-ui:
-      path: /swagger-ui.html
-      disable-swagger-default-url: true
-    paths-to-match:
-      - /api/**
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+  paths-to-match:
+    - /api/**
 
 management:
   endpoints:

@@ -89,7 +89,7 @@ public class TokenProvider implements AuthenticationProvider {
         MemberDetail memberDetail = (MemberDetail) memberDetailService.loadUserByUsername((String) authentication.getPrincipal());
 
         return new UsernamePasswordAuthenticationToken(
-                memberDetail.getUsername(),
+                memberDetail,
                 memberDetail.getPassword(),
                 memberDetail.getAuthorities()
         );
