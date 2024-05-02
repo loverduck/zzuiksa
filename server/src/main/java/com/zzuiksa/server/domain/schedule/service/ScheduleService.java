@@ -4,6 +4,7 @@ import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.GetScheduleResponse;
+import com.zzuiksa.server.domain.schedule.data.response.ScheduleSummaryDto;
 import com.zzuiksa.server.domain.schedule.entity.Category;
 import com.zzuiksa.server.domain.schedule.entity.Routine;
 import com.zzuiksa.server.domain.schedule.entity.Schedule;
@@ -16,6 +17,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +44,18 @@ public class ScheduleService {
             throw new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND);
         }
         return GetScheduleResponse.from(schedule);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ScheduleSummaryDto> getList(@NotNull LocalDate from, @NotNull LocalDate to, Long categoryId) {
+        if (categoryId == null) {
+            return scheduleRepository.findAllSummaryByDateBetween(from, to);
+        }
+
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
+
+        return scheduleRepository.findAllSummaryByDateBetweenAndCategory(from, to, category);
     }
 
     private Schedule addSchedule(AddScheduleRequest request, Member member) {
