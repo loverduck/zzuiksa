@@ -1,10 +1,10 @@
+import 'package:client/screens/schedule/schedule_add_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:client/constants.dart';
-import 'package:client/screens/calendar/calendar_add_screen.dart';
-import 'package:client/screens/calendar/widgets/calendar.dart';
+import 'package:client/screens/schedule/widgets/calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -17,7 +17,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? selectedDay;
 
   void moveToDetail() {
-    Navigator.pushNamed(context, '/calendar/detail');
+    Navigator.pushNamed(context, '/schedule/detail');
   }
 
   @override
@@ -87,7 +87,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return CalendarAddScreen(
+                                  return ScheduleAddScreen(
                                     selectedDay: selectedDay,
                                   );
                                 },

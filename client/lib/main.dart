@@ -1,12 +1,12 @@
-import 'package:client/screens/calendar/calendar_detail_screen.dart';
-import 'package:client/screens/calendar/calendar_place_search_screen.dart';
+import 'package:client/screens/schedule/schedule_detail_screen.dart';
+import 'package:client/screens/schedule/schedule_place_search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
-import 'screens/calendar/calendar_screen.dart';
+import 'screens/schedule/schedule_calendar_screen.dart';
 import 'screens/gifticon/gifticon_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
@@ -40,8 +40,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/dashboard': (context) => const DashboardScreen(),
         '/calendar': (context) => const CalendarScreen(),
-        '/calendar/search': (context) => const CalendarPlaceSearchScreen(),
-        '/calendar/detail': (context) => const CalendarDetail(),
+        '/schedule/search': (context) => const SchedulePlaceSearchScreen(),
+        '/schedule/detail': (context) => const ScheduleDetailScreen(),
         '/gifticon': (context) => const GifticonScreen(),
         '/profile': (context) => const ProfileScreen(),
       },

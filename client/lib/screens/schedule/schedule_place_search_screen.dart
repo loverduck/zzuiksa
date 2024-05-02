@@ -1,18 +1,18 @@
 import 'package:client/constants.dart';
-import 'package:client/screens/calendar/widgets/input_delete_icon.dart';
+import 'package:client/screens/schedule/widgets/input_delete_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class CalendarPlaceSearchScreen extends StatefulWidget {
-  const CalendarPlaceSearchScreen({super.key});
+class SchedulePlaceSearchScreen extends StatefulWidget {
+  const SchedulePlaceSearchScreen({super.key});
 
   @override
-  State<CalendarPlaceSearchScreen> createState() =>
-      _CalendarPlaceSearchScreenState();
+  State<SchedulePlaceSearchScreen> createState() =>
+      _SchedulePlaceSearchScreenState();
 }
 
-class _CalendarPlaceSearchScreenState extends State<CalendarPlaceSearchScreen> {
+class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
   TextEditingController searchEditingController = TextEditingController();
 
   void moveToBack() {

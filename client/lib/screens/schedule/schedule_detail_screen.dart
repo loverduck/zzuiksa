@@ -1,5 +1,5 @@
 import 'package:client/constants.dart';
-import 'package:client/screens/calendar/widgets/detail/calendar_detail_container.dart';
+import 'package:client/screens/schedule/widgets/detail/detail_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -7,14 +7,14 @@ import 'dart:math' as math;
 const double fontSizeMedium = 24.0;
 const double fontSizeSmall = 20.0;
 
-class CalendarDetail extends StatefulWidget {
-  const CalendarDetail({super.key});
+class ScheduleDetailScreen extends StatefulWidget {
+  const ScheduleDetailScreen({super.key});
 
   @override
-  State<CalendarDetail> createState() => _CalendarDetailState();
+  State<ScheduleDetailScreen> createState() => _ScheduleDetailScreenState();
 }
 
-class _CalendarDetailState extends State<CalendarDetail> {
+class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
   SizedBox textMargin = const SizedBox(
     width: 10.0,
   );
@@ -46,7 +46,7 @@ class _CalendarDetailState extends State<CalendarDetail> {
           child: Column(
             children: [
               // 제목
-              CalendarDetailContainer(
+              DetailContainer(
                 child: Row(
                   children: [
                     Container(
@@ -70,7 +70,7 @@ class _CalendarDetailState extends State<CalendarDetail> {
               ),
               containerMargin,
               // 날짜
-              CalendarDetailContainer(
+              DetailContainer(
                 child: Row(
                   children: [
                     const Icon(Icons.alarm),
@@ -88,7 +88,7 @@ class _CalendarDetailState extends State<CalendarDetail> {
               ),
               containerMargin,
               // 반복 여부
-              CalendarDetailContainer(
+              DetailContainer(
                 child: Row(
                   children: [
                     Transform(
@@ -107,7 +107,7 @@ class _CalendarDetailState extends State<CalendarDetail> {
               ),
               containerMargin,
               // 알림 여부
-              CalendarDetailContainer(
+              DetailContainer(
                 child: Row(
                   children: [
                     const Icon(Icons.notifications_none),
@@ -121,7 +121,7 @@ class _CalendarDetailState extends State<CalendarDetail> {
               ),
               containerMargin,
               // 위치
-              CalendarDetailContainer(
+              DetailContainer(
                 child: Row(
                   children: [
                     const Icon(Icons.place_outlined),
@@ -134,7 +134,7 @@ class _CalendarDetailState extends State<CalendarDetail> {
                 ),
               ),
               containerMargin,
-              CalendarDetailContainer(
+              DetailContainer(
                 child: Column(
                   children: [
                     Row(

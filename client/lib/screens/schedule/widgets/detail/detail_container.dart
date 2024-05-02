@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CalendarDetailContainer extends StatefulWidget {
-  const CalendarDetailContainer({
+class DetailContainer extends StatefulWidget {
+  const DetailContainer({
     super.key,
     required this.child,
   });
@@ -10,11 +10,10 @@ class CalendarDetailContainer extends StatefulWidget {
   final Widget child;
 
   @override
-  State<CalendarDetailContainer> createState() =>
-      _CalendarDetailContainerState();
+  State<DetailContainer> createState() => _DetailContainerState();
 }
 
-class _CalendarDetailContainerState extends State<CalendarDetailContainer> {
+class _DetailContainerState extends State<DetailContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
