@@ -23,9 +23,4 @@ public class AuthController {
     public LoginResponse guestLogin() {
         return loginService.guestLogin();
     }
-
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
 }

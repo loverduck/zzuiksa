@@ -16,6 +16,7 @@ public enum ErrorCodes implements ErrorCode {
     NOT_VALID_TOKEN(HttpStatus.UNAUTHORIZED, "ZAE004", "token이 유효하지 않습니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "ZAE005", "token이 만료되었습니다."),
     MEMBER_NOT_FOUND(HttpStatus.UNAUTHORIZED, "ZAE006", "해당하는 사용자가 없습니다."),
+    KAKAO_MEMBER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "ZAE007", "이미 가입되어있는 kakao 계정입니다."),
 
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "ZSE001", "해당하는 일정이 없습니다."),
     ;
