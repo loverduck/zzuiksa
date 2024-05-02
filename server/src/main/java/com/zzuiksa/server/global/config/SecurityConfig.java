@@ -1,6 +1,5 @@
 package com.zzuiksa.server.global.config;
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.zzuiksa.server.global.filter.JwtFilter;
 import com.zzuiksa.server.global.token.TokenProvider;
 
-import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -23,6 +21,10 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 	private final TokenProvider tokenProvider;
+	private static final String[] AUTH_WHITE_LIST = {
+		"/api/health",
+		"/auth/login/**"
+	};
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -32,8 +34,6 @@ public class SecurityConfig {
 			.authorizeHttpRequests(authorizeRequest ->
 				authorizeRequest
 					.requestMatchers(
-						"/auth/login/**",
-						"/api/health",
 						"/h2-console/**",
 						"/error"
 					).permitAll()
@@ -55,8 +55,6 @@ public class SecurityConfig {
 		return (web) ->
 			web
 				.ignoring()
-				.requestMatchers(
-					PathRequest.toStaticResources().atCommonLocations()
-				);
+				.requestMatchers(AUTH_WHITE_LIST);
 	}
 }
