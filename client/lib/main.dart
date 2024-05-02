@@ -1,3 +1,4 @@
+import 'package:client/screens/calendar/calendar_detail_screen.dart';
 import 'package:client/screens/calendar/calendar_place_search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => const DashboardScreen(),
         '/calendar': (context) => const CalendarScreen(),
         '/calendar/search': (context) => const CalendarPlaceSearchScreen(),
+        '/calendar/detail': (context) => const CalendarDetail(),
         '/gifticon': (context) => const GifticonScreen(),
         '/profile': (context) => const ProfileScreen(),
       },

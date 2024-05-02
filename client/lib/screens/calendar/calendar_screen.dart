@@ -16,6 +16,10 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? selectedDay;
 
+  void moveToDetail() {
+    Navigator.pushNamed(context, '/calendar/detail');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,41 +67,45 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           content: SizedBox(
             height: 300,
-            child: Column(
-              children: [
-                const Expanded(
-                  child: Text("할일 1"),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("할 일을 입력해주세요"),
-                    Transform.translate(
-                      offset: const Offset(8, 0),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return CalendarAddScreen(
-                                  selectedDay: selectedDay,
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.add_circle,
-                          color: Constants.main600,
-                          size: 36.0,
+            child: Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  GestureDetector(
+                    onTap: moveToDetail,
+                    child: const Text("할일 1"),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("할 일을 입력해주세요"),
+                      Transform.translate(
+                        offset: const Offset(8, 0),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return CalendarAddScreen(
+                                    selectedDay: selectedDay,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.add_circle,
+                            color: Constants.main600,
+                            size: 36.0,
+                          ),
+                          padding: const EdgeInsets.all(0),
                         ),
-                        padding: const EdgeInsets.all(0),
                       ),
-                    ),
-                  ],
-                )
-              ],
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         );
