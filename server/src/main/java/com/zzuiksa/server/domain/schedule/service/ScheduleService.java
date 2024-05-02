@@ -28,7 +28,7 @@ public class ScheduleService {
     @Transactional
     public AddScheduleResponse add(@NotNull AddScheduleRequest request, @NotNull Member member) {
         Schedule schedule = request.isRepeat() ? addScheduleAndRoutine(request, member) : addSchedule(request, member);
-        return AddScheduleResponse.of(schedule.getId());
+        return AddScheduleResponse.from(schedule.getId());
     }
 
     @Transactional(readOnly = true)
@@ -39,7 +39,7 @@ public class ScheduleService {
         if (!member.getId().equals(schedule.getMember().getId())) {
             throw new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND);
         }
-        return GetScheduleResponse.of(schedule);
+        return GetScheduleResponse.from(schedule);
     }
 
     private Schedule addSchedule(AddScheduleRequest request, Member member) {

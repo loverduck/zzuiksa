@@ -51,7 +51,7 @@ public class GetScheduleResponse {
 
     private Boolean isDone;
 
-    public static GetScheduleResponse of(Schedule schedule) {
+    public static GetScheduleResponse from(Schedule schedule) {
         return GetScheduleResponse.builder()
             .categoryId(schedule.getCategory().getId())
             .title(schedule.getTitle())

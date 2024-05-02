@@ -103,21 +103,21 @@ public class GetScheduleResponseTests {
     }
 
     @Test
-    public void of_repeatIsNull_equals() {
+    public void from_repeatIsNull_equals() {
         // given
         Long categoryId = 4L;
         GetScheduleResponse getScheduleResponse = responseBuilder.categoryId(categoryId).build();
         Schedule schedule = scheduleBuilder.category(categoryBuilder.id(categoryId).build()).member(member).build();
 
         // when
-        GetScheduleResponse of = GetScheduleResponse.of(schedule);
+        GetScheduleResponse of = GetScheduleResponse.from(schedule);
 
         // then
         assertThat(of).isEqualTo(getScheduleResponse);
     }
 
     @Test
-    public void of_repeatIsNotNull_equals() {
+    public void from_repeatIsNotNull_equals() {
         // given
         Long categoryId = 4L;
         GetScheduleResponse getScheduleResponse = responseBuilder.categoryId(categoryId).repeat(repeatDto).build();
@@ -125,7 +125,7 @@ public class GetScheduleResponseTests {
         Schedule schedule = scheduleBuilder.category(categoryBuilder.id(categoryId).build()).member(member).routine(routine).build();
 
         // when
-        GetScheduleResponse of = GetScheduleResponse.of(schedule);
+        GetScheduleResponse of = GetScheduleResponse.from(schedule);
 
         // then
         assertThat(of).isEqualTo(getScheduleResponse);

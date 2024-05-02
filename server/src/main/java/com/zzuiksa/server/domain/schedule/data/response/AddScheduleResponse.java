@@ -11,7 +11,7 @@ public class AddScheduleResponse {
 
     private Long scheduleId;
 
-    public static AddScheduleResponse of(Long scheduleId) {
+    public static AddScheduleResponse from(Long scheduleId) {
         return new AddScheduleResponse(scheduleId);
     }
 }
