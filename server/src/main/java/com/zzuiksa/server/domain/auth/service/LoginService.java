@@ -3,6 +3,8 @@ package com.zzuiksa.server.domain.auth.service;
 import com.zzuiksa.server.domain.auth.data.response.LoginResponse;
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.member.repository.MemberRepository;
+import com.zzuiksa.server.global.exception.custom.CustomException;
+import com.zzuiksa.server.global.exception.custom.ErrorCodes;
 import com.zzuiksa.server.global.oauth.data.OauthUserDto;
 import com.zzuiksa.server.global.oauth.service.KakaoLoginApiService;
 import com.zzuiksa.server.global.token.TokenProvider;
@@ -42,6 +44,9 @@ public class LoginService {
     @Transactional
     public LoginResponse connectKakaoAccount(String accessToken, Member member) {
         OauthUserDto oauthUserDto = kakaoLoginApiService.getUserInfo(accessToken);
+        if (getKakaoMember(oauthUserDto).isPresent()) {
+            throw new CustomException(ErrorCodes.KAKAO_MEMBER_ALREADY_EXIST);
+        }
         member.setKakaoAccount(oauthUserDto);
         Member newMember = memberRepository.save(member);
         return getAccessToken(newMember.getId());
