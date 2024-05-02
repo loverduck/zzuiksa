@@ -21,7 +21,8 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private static final String[] AUTH_WHITE_LIST = {
             "/api/health",
-            "/auth/**",
+            "/auth/login/**",
+            "/auth/test/**",
             "/h2-console/**",
             "/favicon.ico",
             "/error",
