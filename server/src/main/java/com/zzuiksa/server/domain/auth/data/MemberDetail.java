@@ -6,7 +6,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.util.StringUtils;
 
-@Getter
 public class MemberDetail extends User {
     public MemberDetail(Member member) {
         super(String.valueOf(member.getId()), String.valueOf(member.getId()),

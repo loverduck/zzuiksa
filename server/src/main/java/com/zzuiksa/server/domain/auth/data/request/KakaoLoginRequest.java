@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class LoginRequest {
+public class KakaoLoginRequest {
 
     @NotNull
     private String accessToken;

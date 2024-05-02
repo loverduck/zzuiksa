@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KakaoLoginApiService {
 
-    private final String CONTENT_TYPE = "application/x-www-form-urlencoded;charset=utf8";
     private final KakaoTokenClient kakaoTokenClient;
     private final KakaoUserInfoClient kakaoUserInfoClient;
 
@@ -33,12 +32,12 @@ public class KakaoLoginApiService {
                 .code(code)
                 .build();
 
-        KakaoTokenResponse kakaoTokenResponse = kakaoTokenClient.getKakaoToken(CONTENT_TYPE, kakaoTokenRequest);
+        KakaoTokenResponse kakaoTokenResponse = kakaoTokenClient.getKakaoToken(kakaoTokenRequest);
         return kakaoTokenResponse.getAccessToken();
     }
 
     public OauthUserDto getUserInfo(String accessToken) {
-        KakaoUserInfoResponse kakaoUserInfoResponse = kakaoUserInfoClient.getUserInfo(CONTENT_TYPE, "Bearer " + accessToken);
+        KakaoUserInfoResponse kakaoUserInfoResponse = kakaoUserInfoClient.getUserInfo("Bearer " + accessToken);
         return OauthUserDto.builder()
                 .id(kakaoUserInfoResponse.getId())
                 .email(kakaoUserInfoResponse.getKakaoAccount().getEmail())

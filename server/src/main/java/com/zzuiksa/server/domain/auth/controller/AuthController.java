@@ -1,11 +1,10 @@
 package com.zzuiksa.server.domain.auth.controller;
 
-import com.zzuiksa.server.domain.auth.data.request.LoginRequest;
+import com.zzuiksa.server.domain.auth.data.request.KakaoLoginRequest;
 import com.zzuiksa.server.domain.auth.data.response.LoginResponse;
 import com.zzuiksa.server.domain.auth.service.LoginService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,19 +15,17 @@ public class AuthController {
     private final LoginService loginService;
 
     @PostMapping("/login/kakao")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = loginService.oauthLogin(loginRequest.getAccessToken());
-        return ResponseEntity.ok(loginResponse);
+    public LoginResponse kakaoLogin(@Valid @RequestBody KakaoLoginRequest loginRequest) {
+        return loginService.kakaoLogin(loginRequest.getAccessToken());
     }
 
     @PostMapping("/login/guest")
-    public ResponseEntity<LoginResponse> guestLogin() {
-        LoginResponse loginResponse = loginService.guestLogin();
-        return ResponseEntity.ok(loginResponse);
+    public LoginResponse guestLogin() {
+        return loginService.guestLogin();
     }
 
     @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("test");
+    public String test() {
+        return "test";
     }
 }

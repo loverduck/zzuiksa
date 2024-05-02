@@ -20,7 +20,7 @@ public class LoginService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
 
-    public LoginResponse oauthLogin(String accessToken) {
+    public LoginResponse kakaoLogin(String accessToken) {
         OauthUserDto oauthUserDto = kakaoLoginApiService.getUserInfo(accessToken);
         String kakaoId = String.valueOf(oauthUserDto.getId());
         Optional<Member> member = memberRepository.findByKakaoId(kakaoId);

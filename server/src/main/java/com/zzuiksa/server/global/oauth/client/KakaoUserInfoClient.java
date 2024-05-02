@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(name = "KakaoUserInfoClient", url = "${oauth.kakao.url}")
 public interface KakaoUserInfoClient {
 
-    @GetMapping(value = "/v2/user/me", consumes = "application/json")
-    KakaoUserInfoResponse getUserInfo(
-            @RequestHeader("Content-type") String contentType,
-            @RequestHeader("Authorization") String accessToken);
+    @GetMapping(value = "/v2/user/me", consumes = "application/json", headers = {"Content-type=application/x-www-form-urlencoded"})
+    KakaoUserInfoResponse getUserInfo(@RequestHeader("Authorization") String accessToken);
 }
