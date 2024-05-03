@@ -86,6 +86,6 @@ public class GetScheduleResponse {
         if (schedule.getRoutine() == null) {
             return null;
         }
-        return RepeatDto.of(schedule.getRoutine().getRepeatCycle(), schedule.getRoutine().getRepeatEndDate(), schedule.getRoutine().getRepeatTerm(), schedule.getRoutine().getRepeatAt());
+        return RepeatDto.of(schedule.getRoutine().getRepeatCycle(), schedule.getRoutine().getRepeatEndDate(), schedule.getRoutine().getRepeatAt());
     }
 }
