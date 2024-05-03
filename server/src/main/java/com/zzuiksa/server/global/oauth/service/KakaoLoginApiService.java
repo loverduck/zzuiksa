@@ -1,5 +1,9 @@
 package com.zzuiksa.server.global.oauth.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
 import com.zzuiksa.server.global.exception.KakaoServerException;
 import com.zzuiksa.server.global.exception.custom.ErrorCodes;
 import com.zzuiksa.server.global.oauth.client.KakaoTokenClient;
@@ -8,11 +12,9 @@ import com.zzuiksa.server.global.oauth.data.OauthUserDto;
 import com.zzuiksa.server.global.oauth.data.request.KakaoTokenRequest;
 import com.zzuiksa.server.global.oauth.data.response.KakaoTokenResponse;
 import com.zzuiksa.server.global.oauth.data.response.KakaoUserInfoResponse;
+
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

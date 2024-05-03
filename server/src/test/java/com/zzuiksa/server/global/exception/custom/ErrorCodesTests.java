@@ -1,11 +1,11 @@
 package com.zzuiksa.server.global.exception.custom;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 public class ErrorCodesTests {
 

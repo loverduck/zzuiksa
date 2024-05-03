@@ -1,12 +1,14 @@
 package com.zzuiksa.server.domain.auth.controller;
 
-import com.zzuiksa.server.domain.auth.data.response.LoginResponse;
-import com.zzuiksa.server.domain.auth.service.LoginService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.zzuiksa.server.domain.auth.data.response.LoginResponse;
+import com.zzuiksa.server.domain.auth.service.LoginService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/auth/test")

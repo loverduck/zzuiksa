@@ -1,17 +1,16 @@
 package com.zzuiksa.server.domain.schedule.entity;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class ScheduleTests {
 
@@ -36,7 +35,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setTitle(title))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -47,7 +46,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setTitle(title))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -58,7 +57,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setTitle(title))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -82,7 +81,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setStartDate(startDate))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -106,7 +105,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setEndDate(EndDate))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -146,11 +145,11 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setTime(null, null))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> schedule.setTime(startTime, null))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> schedule.setTime(null, endTime))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -188,7 +187,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setAlertBefore(null))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -199,7 +198,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setAlertBefore(alertBefore))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -211,7 +210,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setAlertBefore(alertBefore))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -261,7 +260,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setMemo(null))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -304,9 +303,9 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setToPlace(toPlaceName))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> schedule.setToPlace(toPlaceName, 1.0f, 1.0f))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -317,7 +316,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setToPlace(toPlaceName))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -375,9 +374,9 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setFromPlace(fromPlaceName))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> schedule.setFromPlace(fromPlaceName, 1.0f, 1.0f))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -388,7 +387,7 @@ public class ScheduleTests {
 
         // when & then
         assertThatThrownBy(() -> schedule.setFromPlace(fromPlaceName))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

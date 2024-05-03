@@ -1,20 +1,27 @@
 package com.zzuiksa.server.domain.member.entity;
 
+import java.time.LocalDate;
+
+import org.springframework.util.StringUtils;
+
 import com.zzuiksa.server.global.entity.BaseEntity;
 import com.zzuiksa.server.global.exception.InvalidMemberNameException;
 import com.zzuiksa.server.global.oauth.data.OauthUserDto;
 import com.zzuiksa.server.global.util.Utils;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
-
-import java.sql.Date;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member extends BaseEntity {
@@ -29,7 +36,7 @@ public class Member extends BaseEntity {
     @Column(length = 100)
     private String kakaoId;
 
-    private Date birthday;
+    private LocalDate birthday;
 
     private String profileImage;
 
@@ -52,6 +59,13 @@ public class Member extends BaseEntity {
         this.name = name;
     }
 
+    public Member(String name, String kakaoId, LocalDate birthday, String profileImage) {
+        this.name = name;
+        this.kakaoId = kakaoId;
+        this.birthday = birthday;
+        this.profileImage = profileImage;
+    }
+
     public void setKakaoAccount(OauthUserDto oauthUserDto) {
         this.kakaoId = String.valueOf(oauthUserDto.getId());
 
@@ -60,13 +74,5 @@ public class Member extends BaseEntity {
         }
 
         // TODO: 생일 정보 받아올건지?
-    }
-
-    @Builder
-    public Member(String name, String kakaoId, Date birthday, String profileImage) {
-        this.name = name;
-        this.kakaoId = kakaoId;
-        this.birthday = birthday;
-        this.profileImage = profileImage;
     }
 }

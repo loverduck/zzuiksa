@@ -1,5 +1,11 @@
 package com.zzuiksa.server.domain.auth.service;
 
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import com.zzuiksa.server.domain.auth.data.response.LoginResponse;
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.member.repository.MemberRepository;
@@ -9,12 +15,8 @@ import com.zzuiksa.server.global.oauth.data.OauthUserDto;
 import com.zzuiksa.server.global.oauth.service.KakaoLoginApiService;
 import com.zzuiksa.server.global.token.TokenProvider;
 import com.zzuiksa.server.global.token.data.Jwt;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
