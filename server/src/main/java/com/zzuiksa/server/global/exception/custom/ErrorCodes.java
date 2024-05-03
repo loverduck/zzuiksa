@@ -1,10 +1,11 @@
 package com.zzuiksa.server.global.exception.custom;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

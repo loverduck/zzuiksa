@@ -1,11 +1,12 @@
 package com.zzuiksa.server.global.token;
 
-import com.zzuiksa.server.global.exception.AuthenticationException;
-import com.zzuiksa.server.global.token.data.Jwt;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.zzuiksa.server.global.exception.AuthenticationException;
+import com.zzuiksa.server.global.token.data.Jwt;
 
 @SpringBootTest
 public class TokenProviderTests {

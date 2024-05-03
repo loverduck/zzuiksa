@@ -1,19 +1,36 @@
 package com.zzuiksa.server.domain.schedule.entity;
 
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.schedule.constant.RoutineCycle;
 import com.zzuiksa.server.global.entity.BaseEntity;
 import com.zzuiksa.server.global.util.Utils;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-
-import java.time.*;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -97,7 +114,10 @@ public class Routine extends BaseEntity {
     private Integer repeatAt;
 
     @Builder
-    Routine(Long id, Member member, Category category, String title, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, Duration alertBefore, String memo, String toPlaceName, Float toPlaceLat, Float toPlaceLng, String fromPlaceName, Float fromPlaceLat, Float fromPlaceLng, RoutineCycle repeatCycle, LocalDate repeatStartDate, LocalDate repeatEndDate, Integer repeatAt) {
+    Routine(Long id, Member member, Category category, String title, LocalDate startDate, LocalDate endDate,
+            LocalTime startTime, LocalTime endTime, Duration alertBefore, String memo, String toPlaceName,
+            Float toPlaceLat, Float toPlaceLng, String fromPlaceName, Float fromPlaceLat, Float fromPlaceLng,
+            RoutineCycle repeatCycle, LocalDate repeatStartDate, LocalDate repeatEndDate, Integer repeatAt) {
         this.id = id;
         if (member == null) {
             throw new IllegalArgumentException("Member is null");
@@ -269,8 +289,8 @@ public class Routine extends BaseEntity {
 
         List<LocalDate> scheduleDates = getScheduleStartDates(from, to);
         return scheduleDates.stream()
-            .map(scheduleDate -> createScheduleWith(scheduleDate, startTime, scheduleDuration))
-            .toList();
+                .map(scheduleDate -> createScheduleWith(scheduleDate, startTime, scheduleDuration))
+                .toList();
     }
 
     private List<LocalDate> getScheduleStartDates(LocalDate from, LocalDate to) {
@@ -296,8 +316,8 @@ public class Routine extends BaseEntity {
 
     private List<LocalDate> getWeeklyRepeatDates(LocalDate from, LocalDate to) {
         return from.datesUntil(to.plusDays(1))
-            .filter(this::isWeeklyRepeatDate)
-            .toList();
+                .filter(this::isWeeklyRepeatDate)
+                .toList();
     }
 
     private boolean isWeeklyRepeatDate(LocalDate date) {
@@ -309,16 +329,16 @@ public class Routine extends BaseEntity {
     private List<LocalDate> getMonthlyRepeatDates(LocalDate from, LocalDate to) {
         int dayOfMonth = repeatAt;
         return from.datesUntil(to.plusDays(1))
-            .filter(date -> date.getDayOfMonth() == dayOfMonth)
-            .toList();
+                .filter(date -> date.getDayOfMonth() == dayOfMonth)
+                .toList();
     }
 
     private List<LocalDate> getYearlyRepeatDates(LocalDate from, LocalDate to) {
         int monthValue = repeatAt / 100;
         int dayOfMonth = repeatAt % 100;
         return from.datesUntil(to.plusDays(1))
-            .filter(date -> date.getMonthValue() == monthValue && date.getDayOfMonth() == dayOfMonth)
-            .toList();
+                .filter(date -> date.getMonthValue() == monthValue && date.getDayOfMonth() == dayOfMonth)
+                .toList();
     }
 
     private Schedule createScheduleWith(LocalDate startDate, LocalTime startTime, Duration duration) {
@@ -329,26 +349,27 @@ public class Routine extends BaseEntity {
         return createScheduleWith(startDate, endDate, startTime, endTime);
     }
 
-    private Schedule createScheduleWith(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+    private Schedule createScheduleWith(LocalDate startDate, LocalDate endDate, LocalTime startTime,
+            LocalTime endTime) {
         return Schedule.builder()
-            .member(member)
-            .category(category)
-            .routine(this)
-            .title(title)
-            .startDate(startDate)
-            .endDate(endDate)
-            .startTime(startTime)
-            .endTime(endTime)
-            .alertBefore(alertBefore)
-            .memo(memo)
-            .toPlaceName(toPlaceName)
-            .toPlaceLat(toPlaceLat)
-            .toPlaceLng(toPlaceLng)
-            .fromPlaceName(fromPlaceName)
-            .fromPlaceLat(fromPlaceLat)
-            .fromPlaceLng(fromPlaceLng)
-            .isDone(false)
-            .build();
+                .member(member)
+                .category(category)
+                .routine(this)
+                .title(title)
+                .startDate(startDate)
+                .endDate(endDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .alertBefore(alertBefore)
+                .memo(memo)
+                .toPlaceName(toPlaceName)
+                .toPlaceLat(toPlaceLat)
+                .toPlaceLng(toPlaceLng)
+                .fromPlaceName(fromPlaceName)
+                .fromPlaceLat(fromPlaceLat)
+                .fromPlaceLng(fromPlaceLng)
+                .isDone(false)
+                .build();
     }
 
     public static int weeklyRepeatAtOf(DayOfWeek... dayOfWeeks) {

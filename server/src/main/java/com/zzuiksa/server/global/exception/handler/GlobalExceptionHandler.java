@@ -1,13 +1,14 @@
 package com.zzuiksa.server.global.exception.handler;
 
-import com.zzuiksa.server.global.api.ErrorResponse;
-import com.zzuiksa.server.global.exception.custom.CustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.zzuiksa.server.global.api.ErrorResponse;
+import com.zzuiksa.server.global.exception.custom.CustomException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,6 +25,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return new ResponseEntity<>(new ErrorResponse("ZBE002", ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage()), ex.getStatusCode());
+        return new ResponseEntity<>(
+                new ErrorResponse("ZBE002", ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage()),
+                ex.getStatusCode());
     }
 }

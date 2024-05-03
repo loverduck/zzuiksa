@@ -1,17 +1,29 @@
 package com.zzuiksa.server.domain.schedule.entity;
 
-import com.zzuiksa.server.domain.member.entity.Member;
-import com.zzuiksa.server.global.entity.BaseEntity;
-import com.zzuiksa.server.global.util.Utils;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.*;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import com.zzuiksa.server.domain.member.entity.Member;
+import com.zzuiksa.server.global.entity.BaseEntity;
+import com.zzuiksa.server.global.util.Utils;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -87,7 +99,10 @@ public class Schedule extends BaseEntity {
     private boolean isDone;
 
     @Builder
-    Schedule(Long id, Member member, Category category, Routine routine, String title, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, Duration alertBefore, String memo, String toPlaceName, Float toPlaceLat, Float toPlaceLng, String fromPlaceName, Float fromPlaceLat, Float fromPlaceLng, boolean isDone) {
+    Schedule(Long id, Member member, Category category, Routine routine, String title, LocalDate startDate,
+            LocalDate endDate, LocalTime startTime, LocalTime endTime, Duration alertBefore, String memo,
+            String toPlaceName, Float toPlaceLat, Float toPlaceLng, String fromPlaceName, Float fromPlaceLat,
+            Float fromPlaceLng, boolean isDone) {
         this.id = id;
         if (member == null) {
             throw new IllegalArgumentException("Member is null");

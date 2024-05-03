@@ -1,9 +1,10 @@
 package com.zzuiksa.server.domain.member.repository;
 
-import com.zzuiksa.server.domain.member.entity.Member;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import com.zzuiksa.server.domain.member.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryQ {
     Optional<Member> findByKakaoId(String kakaoId);

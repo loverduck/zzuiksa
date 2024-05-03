@@ -1,14 +1,16 @@
 package com.zzuiksa.server.domain.member.service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.zzuiksa.server.domain.member.data.response.GetMemberResponse;
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.member.repository.MemberRepository;
 import com.zzuiksa.server.global.exception.custom.CustomException;
 import com.zzuiksa.server.global.exception.custom.ErrorCodes;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

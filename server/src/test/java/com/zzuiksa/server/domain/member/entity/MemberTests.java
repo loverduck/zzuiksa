@@ -1,12 +1,12 @@
 package com.zzuiksa.server.domain.member.entity;
 
-import com.zzuiksa.server.global.exception.InvalidMemberNameException;
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import com.zzuiksa.server.global.exception.InvalidMemberNameException;
 
 public class MemberTests {
 
@@ -18,7 +18,7 @@ public class MemberTests {
 
         // when & then
         assertThatThrownBy(() -> member.setName(name))
-            .isInstanceOf(InvalidMemberNameException.class);
+                .isInstanceOf(InvalidMemberNameException.class);
     }
 
     @Test
@@ -29,7 +29,7 @@ public class MemberTests {
 
         // when & then
         assertThatThrownBy(() -> member.setName(name))
-            .isInstanceOf(InvalidMemberNameException.class);
+                .isInstanceOf(InvalidMemberNameException.class);
     }
 
     @ParameterizedTest
@@ -40,7 +40,7 @@ public class MemberTests {
 
         // when & then
         assertThatThrownBy(() -> member.setName(name))
-            .isInstanceOf(InvalidMemberNameException.class);
+                .isInstanceOf(InvalidMemberNameException.class);
     }
 
     @ParameterizedTest
@@ -51,7 +51,7 @@ public class MemberTests {
 
         // when & then
         assertThatThrownBy(() -> member.setName(name))
-            .isInstanceOf(InvalidMemberNameException.class);
+                .isInstanceOf(InvalidMemberNameException.class);
     }
 
     @ParameterizedTest
@@ -62,7 +62,7 @@ public class MemberTests {
 
         // when & then
         assertThatThrownBy(() -> member.setName(name))
-            .isInstanceOf(InvalidMemberNameException.class);
+                .isInstanceOf(InvalidMemberNameException.class);
     }
 
     @ParameterizedTest
@@ -86,7 +86,7 @@ public class MemberTests {
 
         // when & then
         assertThatThrownBy(() -> member.setName(name))
-            .isInstanceOf(InvalidMemberNameException.class);
+                .isInstanceOf(InvalidMemberNameException.class);
     }
 
     @ParameterizedTest
@@ -97,7 +97,7 @@ public class MemberTests {
 
         // when & then
         assertThatThrownBy(() -> member.setName(name))
-            .isInstanceOf(InvalidMemberNameException.class);
+                .isInstanceOf(InvalidMemberNameException.class);
     }
 
     @ParameterizedTest

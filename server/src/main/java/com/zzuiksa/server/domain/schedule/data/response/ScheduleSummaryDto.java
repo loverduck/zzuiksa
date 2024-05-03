@@ -1,13 +1,20 @@
 package com.zzuiksa.server.domain.schedule.data.response;
 
-import com.querydsl.core.annotations.QueryProjection;
-import com.zzuiksa.server.domain.schedule.data.PlaceDto;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import com.querydsl.core.annotations.QueryProjection;
+import com.zzuiksa.server.domain.schedule.data.PlaceDto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
@@ -41,7 +48,9 @@ public class ScheduleSummaryDto {
     private Boolean isDone;
 
     @QueryProjection
-    public ScheduleSummaryDto(Long scheduleId, Long categoryId, String title, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, String toPlaceName, Float toPlaceLat, Float toPlaceLng, Boolean isDone) {
+    public ScheduleSummaryDto(Long scheduleId, Long categoryId, String title, LocalDate startDate, LocalDate endDate,
+            LocalTime startTime, LocalTime endTime, String toPlaceName, Float toPlaceLat, Float toPlaceLng,
+            Boolean isDone) {
         this.scheduleId = scheduleId;
         this.categoryId = categoryId;
         this.title = title;

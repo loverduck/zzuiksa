@@ -1,17 +1,23 @@
 package com.zzuiksa.server.domain.member.entity;
 
+import java.time.LocalDate;
+
+import org.springframework.util.StringUtils;
+
 import com.zzuiksa.server.global.entity.BaseEntity;
 import com.zzuiksa.server.global.exception.InvalidMemberNameException;
 import com.zzuiksa.server.global.oauth.data.OauthUserDto;
 import com.zzuiksa.server.global.util.Utils;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
-
-import java.time.LocalDate;
 
 @Entity
 @Getter

@@ -1,9 +1,9 @@
 package com.zzuiksa.server.domain.member;
 
+import java.time.LocalDate;
+
 import com.zzuiksa.server.domain.member.data.response.GetMemberResponse;
 import com.zzuiksa.server.domain.member.entity.Member;
-
-import java.time.LocalDate;
 
 public class MemberSource {
 

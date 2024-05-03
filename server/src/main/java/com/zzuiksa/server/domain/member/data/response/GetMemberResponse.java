@@ -1,10 +1,16 @@
 package com.zzuiksa.server.domain.member.data.response;
 
-import com.zzuiksa.server.domain.member.entity.Member;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
-
 import java.time.LocalDate;
+
+import com.zzuiksa.server.domain.member.entity.Member;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor

@@ -1,10 +1,12 @@
 package com.zzuiksa.server.domain.auth.data;
 
-import com.zzuiksa.server.domain.member.entity.Member;
-import lombok.Getter;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.util.StringUtils;
+
+import com.zzuiksa.server.domain.member.entity.Member;
+
+import lombok.Getter;
 
 @Getter
 public class MemberDetail extends User {
@@ -19,7 +21,8 @@ public class MemberDetail extends User {
 
     private static String getAuthority(Member member) {
         String authority = "GUEST";
-        if (StringUtils.hasText(member.getKakaoId())) authority = "USER";
+        if (StringUtils.hasText(member.getKakaoId()))
+            authority = "USER";
         return authority;
     }
 }

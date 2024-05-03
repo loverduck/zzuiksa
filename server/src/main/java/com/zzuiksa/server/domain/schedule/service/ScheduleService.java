@@ -1,5 +1,13 @@
 package com.zzuiksa.server.domain.schedule.service;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
@@ -13,15 +21,9 @@ import com.zzuiksa.server.domain.schedule.repository.RoutineRepository;
 import com.zzuiksa.server.domain.schedule.repository.ScheduleRepository;
 import com.zzuiksa.server.global.exception.custom.CustomException;
 import com.zzuiksa.server.global.exception.custom.ErrorCodes;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +53,7 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public GetScheduleResponse get(@NotNull Long id, @NotNull Member member) {
         Schedule schedule = scheduleRepository.findById(id)
-            .orElseThrow(() -> new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND));
         // 다른 사용자의 일정을 요청한 경우 404 리턴
         if (!member.getId().equals(schedule.getMember().getId())) {
             throw new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND);
@@ -60,13 +62,14 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleSummaryDto> getList(@NotNull LocalDate from, @NotNull LocalDate to, Long categoryId, @NotNull Member member) {
+    public List<ScheduleSummaryDto> getList(@NotNull LocalDate from, @NotNull LocalDate to, Long categoryId,
+            @NotNull Member member) {
         if (categoryId == null) {
             return scheduleRepository.findAllSummaryByMemberAndDateBetween(member, from, to);
         }
 
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
 
         return scheduleRepository.findAllSummaryByMemberAndDateBetweenAndCategory(member, from, to, category);
     }
@@ -95,27 +98,27 @@ public class ScheduleService {
 
     protected Schedule convertAddScheduleRequestToSchedule(AddScheduleRequest request, Member member) {
         Category category = categoryRepository.findById(request.getCategoryId())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
 
         return Schedule.builder()
-            .member(member)
-            .category(category)
-            .routine(null)
-            .title(request.getTitle())
-            .startDate(request.getStartDate())
-            .endDate(request.getEndDate())
-            .startTime(request.getStartTime())
-            .endTime(request.getEndTime())
-            .alertBefore(request.getAlertBefore())
-            .memo(request.getMemo())
-            .toPlaceName(request.getToPlace().getName())
-            .toPlaceLat(request.getToPlace().getLat())
-            .toPlaceLng(request.getToPlace().getLng())
-            .fromPlaceName(request.getFromPlace().getName())
-            .fromPlaceLat(request.getFromPlace().getLat())
-            .fromPlaceLng(request.getFromPlace().getLng())
-            .isDone(false)
-            .build();
+                .member(member)
+                .category(category)
+                .routine(null)
+                .title(request.getTitle())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .startTime(request.getStartTime())
+                .endTime(request.getEndTime())
+                .alertBefore(request.getAlertBefore())
+                .memo(request.getMemo())
+                .toPlaceName(request.getToPlace().getName())
+                .toPlaceLat(request.getToPlace().getLat())
+                .toPlaceLng(request.getToPlace().getLng())
+                .fromPlaceName(request.getFromPlace().getName())
+                .fromPlaceLat(request.getFromPlace().getLat())
+                .fromPlaceLng(request.getFromPlace().getLng())
+                .isDone(false)
+                .build();
     }
 
     protected Routine convertAddScheduleRequestToRoutine(AddScheduleRequest request, Member member) {
@@ -123,29 +126,29 @@ public class ScheduleService {
             throw new IllegalArgumentException("AddScheduleRequest without repeat cannot be converted to Routine");
         }
         Category category = categoryRepository.findById(request.getCategoryId())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
 
         return Routine.builder()
-            .member(member)
-            .category(category)
-            .title(request.getTitle())
-            .startDate(request.getStartDate())
-            .endDate(request.getEndDate())
-            .startTime(request.getStartTime())
-            .endTime(request.getEndTime())
-            .alertBefore(request.getAlertBefore())
-            .memo(request.getMemo())
-            .toPlaceName(request.getToPlace().getName())
-            .toPlaceLat(request.getToPlace().getLat())
-            .toPlaceLng(request.getToPlace().getLng())
-            .fromPlaceName(request.getFromPlace().getName())
-            .fromPlaceLat(request.getFromPlace().getLat())
-            .fromPlaceLng(request.getFromPlace().getLng())
-            .repeatCycle(request.getRepeat().getCycle())
-            .repeatStartDate(request.getStartDate())
-            .repeatEndDate(request.getRepeat().getEndDate())
-            .repeatAt(request.getRepeat().getRepeatAt())
-            .build();
+                .member(member)
+                .category(category)
+                .title(request.getTitle())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .startTime(request.getStartTime())
+                .endTime(request.getEndTime())
+                .alertBefore(request.getAlertBefore())
+                .memo(request.getMemo())
+                .toPlaceName(request.getToPlace().getName())
+                .toPlaceLat(request.getToPlace().getLat())
+                .toPlaceLng(request.getToPlace().getLng())
+                .fromPlaceName(request.getFromPlace().getName())
+                .fromPlaceLat(request.getFromPlace().getLat())
+                .fromPlaceLng(request.getFromPlace().getLng())
+                .repeatCycle(request.getRepeat().getCycle())
+                .repeatStartDate(request.getStartDate())
+                .repeatEndDate(request.getRepeat().getEndDate())
+                .repeatAt(request.getRepeat().getRepeatAt())
+                .build();
     }
 
     private LocalDate getToday() {

@@ -1,5 +1,25 @@
 package com.zzuiksa.server.domain.schedule.service;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.*;
+
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.schedule.ScheduleSource;
 import com.zzuiksa.server.domain.schedule.constant.RoutineCycle;
@@ -14,27 +34,6 @@ import com.zzuiksa.server.domain.schedule.repository.CategoryRepository;
 import com.zzuiksa.server.domain.schedule.repository.RoutineRepository;
 import com.zzuiksa.server.domain.schedule.repository.ScheduleRepository;
 import com.zzuiksa.server.global.exception.custom.CustomException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class ScheduleServiceTests {
@@ -74,16 +73,16 @@ public class ScheduleServiceTests {
     public void setUp() {
         categoryId = 4L;
         addScheduleRequestBuilder = ScheduleSource.getTestAddScheduleRequestBuilder()
-            .categoryId(categoryId);
+                .categoryId(categoryId);
         getScheduleResponseBuilder = ScheduleSource.getTestGetScheduleResponseBuilder()
-            .categoryId(categoryId);
+                .categoryId(categoryId);
         repeatDto = ScheduleSource.getTestRepeatDto();
         scheduleBuilder = ScheduleSource.getTestScheduleBuilder()
-            .category(categoryMock)
-            .member(memberMock);
+                .category(categoryMock)
+                .member(memberMock);
         routineBuilder = ScheduleSource.getTestRoutineBuilder()
-            .category(categoryMock)
-            .member(memberMock);
+                .category(categoryMock)
+                .member(memberMock);
         fixedClock = Clock.fixed(LOCAL_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
     }
 
@@ -116,7 +115,7 @@ public class ScheduleServiceTests {
 
         // when & then
         assertThatThrownBy(() -> scheduleService.add(request, memberMock))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -129,13 +128,13 @@ public class ScheduleServiceTests {
         LocalDate repeatEndDate = LocalDate.of(2024, 4, 20);
         int repeatAt = 1;
         Routine routine = routineBuilder.id(1L)
-            .startDate(startDate)
-            .endDate(endDate)
-            .repeatCycle(RoutineCycle.DAILY)
-            .repeatStartDate(startDate)
-            .repeatEndDate(repeatEndDate)
-            .repeatAt(repeatAt)
-            .build();
+                .startDate(startDate)
+                .endDate(endDate)
+                .repeatCycle(RoutineCycle.DAILY)
+                .repeatStartDate(startDate)
+                .repeatEndDate(repeatEndDate)
+                .repeatAt(repeatAt)
+                .build();
         ArgumentCaptor<List<Schedule>> scheduleCaptor = ArgumentCaptor.forClass(List.class);
         given(categoryRepositoryMock.findById(any())).willReturn(Optional.of(categoryMock));
         given(scheduleMock.getId()).willReturn(scheduleId);
@@ -144,11 +143,14 @@ public class ScheduleServiceTests {
         given(clockMock.instant()).willReturn(fixedClock.instant());
         given(clockMock.getZone()).willReturn(fixedClock.getZone());
         RepeatDto repeatDto = RepeatDto.builder()
-            .cycle(cycle)
-            .endDate(repeatEndDate)
-            .repeatAt(repeatAt)
-            .build();
-        AddScheduleRequest request = addScheduleRequestBuilder.startDate(startDate).endDate(endDate).repeat(repeatDto).build();
+                .cycle(cycle)
+                .endDate(repeatEndDate)
+                .repeatAt(repeatAt)
+                .build();
+        AddScheduleRequest request = addScheduleRequestBuilder.startDate(startDate)
+                .endDate(endDate)
+                .repeat(repeatDto)
+                .build();
 
         // when
         AddScheduleResponse response = scheduleService.add(request, memberMock);
@@ -170,7 +172,7 @@ public class ScheduleServiceTests {
 
         // when & then
         assertThatThrownBy(() -> scheduleService.add(request, memberMock))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -201,7 +203,7 @@ public class ScheduleServiceTests {
 
         // when & then
         assertThatThrownBy(() -> scheduleService.add(request, memberMock))
-            .isInstanceOf(CustomException.class);
+                .isInstanceOf(CustomException.class);
     }
 
     @Test
@@ -254,7 +256,7 @@ public class ScheduleServiceTests {
 
         // when & then
         assertThatThrownBy(() -> scheduleService.get(scheduleId, otherMemberMock))
-            .isInstanceOfSatisfying(CustomException.class, ex -> ex.getStatus().isSameCodeAs(HttpStatus.NOT_FOUND));
+                .isInstanceOfSatisfying(CustomException.class, ex -> ex.getStatus().isSameCodeAs(HttpStatus.NOT_FOUND));
     }
 
     @Test
@@ -306,6 +308,6 @@ public class ScheduleServiceTests {
 
         // when & then
         assertThatThrownBy(() -> scheduleService.convertAddScheduleRequestToRoutine(request, memberMock))
-            .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }
