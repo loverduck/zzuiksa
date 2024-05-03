@@ -15,7 +15,7 @@ class LoadButton extends StatelessWidget {
           print('load button clicked');
         },
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Constants.main300),
+            backgroundColor: MaterialStateProperty.all(Constants.main200),
             side: MaterialStateProperty.all(
                 BorderSide(width: 2.0, color: Constants.main600)),
             padding: MaterialStateProperty.all<EdgeInsets>(

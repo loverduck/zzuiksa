@@ -44,7 +44,9 @@ class _MyStatisticState extends State<MyStatistic> {
                 child: Text('주간 달성률', style: textTheme.displaySmall))),
         WeeklyContainer(percent: 90),
         SizedBox(height: 16),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
           BackupButton(),
           LoadButton(),
         ]),
