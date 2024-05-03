@@ -2,6 +2,7 @@ package com.zzuiksa.server.domain.member.entity;
 
 import com.zzuiksa.server.global.entity.BaseEntity;
 import com.zzuiksa.server.global.exception.InvalidMemberNameException;
+import com.zzuiksa.server.global.oauth.data.OauthUserDto;
 import com.zzuiksa.server.global.util.Utils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,6 +50,16 @@ public class Member extends BaseEntity {
             throw new InvalidMemberNameException("닉네임에는 영문 대소문자, 숫자, 한글, 공백만 포함할 수 있습니다.");
         }
         this.name = name;
+    }
+
+    public void setKakaoAccount(OauthUserDto oauthUserDto) {
+        this.kakaoId = String.valueOf(oauthUserDto.getId());
+
+        if (!StringUtils.hasText(this.profileImage)) {
+            this.profileImage = oauthUserDto.getProfileImageUrl();
+        }
+
+        // TODO: 생일 정보 받아올건지?
     }
 
     @Builder
