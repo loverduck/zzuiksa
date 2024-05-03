@@ -1,17 +1,24 @@
 package com.zzuiksa.server.domain.schedule.data.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.zzuiksa.server.domain.schedule.data.PlaceDto;
-import com.zzuiksa.server.domain.schedule.data.RepeatDto;
-import com.zzuiksa.server.domain.schedule.entity.Schedule;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import org.springframework.boot.convert.DurationUnit;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+
+import org.springframework.boot.convert.DurationUnit;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.zzuiksa.server.domain.schedule.data.PlaceDto;
+import com.zzuiksa.server.domain.schedule.data.RepeatDto;
+import com.zzuiksa.server.domain.schedule.entity.Schedule;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
@@ -53,19 +60,19 @@ public class GetScheduleResponse {
 
     public static GetScheduleResponse from(Schedule schedule) {
         return GetScheduleResponse.builder()
-            .categoryId(schedule.getCategory().getId())
-            .title(schedule.getTitle())
-            .startDate(schedule.getStartDate())
-            .endDate(schedule.getEndDate())
-            .startTime(schedule.getStartTime())
-            .endTime(schedule.getEndTime())
-            .alertBefore(schedule.getAlertBefore())
-            .memo(schedule.getMemo())
-            .toPlace(getToPlace(schedule))
-            .fromPlace(getFromPlace(schedule))
-            .repeat(getRepeat(schedule))
-            .isDone(schedule.isDone())
-            .build();
+                .categoryId(schedule.getCategory().getId())
+                .title(schedule.getTitle())
+                .startDate(schedule.getStartDate())
+                .endDate(schedule.getEndDate())
+                .startTime(schedule.getStartTime())
+                .endTime(schedule.getEndTime())
+                .alertBefore(schedule.getAlertBefore())
+                .memo(schedule.getMemo())
+                .toPlace(getToPlace(schedule))
+                .fromPlace(getFromPlace(schedule))
+                .repeat(getRepeat(schedule))
+                .isDone(schedule.isDone())
+                .build();
     }
 
     private static PlaceDto getToPlace(Schedule schedule) {
@@ -86,6 +93,7 @@ public class GetScheduleResponse {
         if (schedule.getRoutine() == null) {
             return null;
         }
-        return RepeatDto.of(schedule.getRoutine().getRepeatCycle(), schedule.getRoutine().getRepeatEndDate(), schedule.getRoutine().getRepeatTerm(), schedule.getRoutine().getRepeatAt());
+        return RepeatDto.of(schedule.getRoutine().getRepeatCycle(), schedule.getRoutine().getRepeatEndDate(),
+                schedule.getRoutine().getRepeatAt());
     }
 }

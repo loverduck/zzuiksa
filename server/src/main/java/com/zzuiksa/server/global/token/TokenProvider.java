@@ -1,25 +1,28 @@
 package com.zzuiksa.server.global.token;
 
+import java.time.Instant;
+import java.util.Base64;
+import java.util.Date;
+
+import javax.crypto.SecretKey;
+
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
 import com.zzuiksa.server.domain.auth.data.MemberDetail;
 import com.zzuiksa.server.domain.auth.service.MemberDetailService;
 import com.zzuiksa.server.global.config.TokenConfig;
 import com.zzuiksa.server.global.exception.AuthenticationException;
 import com.zzuiksa.server.global.exception.custom.ErrorCodes;
 import com.zzuiksa.server.global.token.data.Jwt;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-
-import javax.crypto.SecretKey;
-import java.time.Instant;
-import java.util.Base64;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +89,8 @@ public class TokenProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws
             org.springframework.security.core.AuthenticationException {
-        MemberDetail memberDetail = (MemberDetail) memberDetailService.loadUserByUsername((String) authentication.getPrincipal());
+        MemberDetail memberDetail = (MemberDetail)memberDetailService.loadUserByUsername(
+                (String)authentication.getPrincipal());
 
         return new UsernamePasswordAuthenticationToken(
                 memberDetail,

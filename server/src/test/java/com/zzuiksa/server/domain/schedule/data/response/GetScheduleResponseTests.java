@@ -1,11 +1,7 @@
 package com.zzuiksa.server.domain.schedule.data.response;
 
-import com.zzuiksa.server.domain.member.entity.Member;
-import com.zzuiksa.server.domain.schedule.ScheduleSource;
-import com.zzuiksa.server.domain.schedule.data.RepeatDto;
-import com.zzuiksa.server.domain.schedule.entity.Category;
-import com.zzuiksa.server.domain.schedule.entity.Routine;
-import com.zzuiksa.server.domain.schedule.entity.Schedule;
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +9,12 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.zzuiksa.server.domain.member.entity.Member;
+import com.zzuiksa.server.domain.schedule.ScheduleSource;
+import com.zzuiksa.server.domain.schedule.data.RepeatDto;
+import com.zzuiksa.server.domain.schedule.entity.Category;
+import com.zzuiksa.server.domain.schedule.entity.Routine;
+import com.zzuiksa.server.domain.schedule.entity.Schedule;
 
 @JsonTest
 public class GetScheduleResponseTests {
@@ -43,32 +44,31 @@ public class GetScheduleResponseTests {
         // given
         GetScheduleResponse getScheduleResponse = responseBuilder.repeat(repeatDto).isDone(true).build();
         String raw = """
-            {
-                "title": "Title",
-                "startDate": "2024-04-15",
-                "endDate": "2024-04-19",
-                "startTime": "08:50:30",
-                "endTime": "15:59:40",
-                "alertBefore": "PT10M",
-                "memo": "memo",
-                "toPlace": {
-                    "name": "To place",
-                    "lat": 123.4,
-                    "lng": 34.5
-                },
-                "fromPlace": {
-                    "name": "From place",
-                    "lat": 132.4,
-                    "lng": 43.5
-                },
-                "repeat": {
-                    "cycle": "WEEKLY",
-                    "endDate": "2024-04-25",
-                    "repeatTerm": 1,
-                    "repeatAt": 14
-                },
-                "isDone": true
-            }""";
+                {
+                    "title": "Title",
+                    "startDate": "2024-04-15",
+                    "endDate": "2024-04-19",
+                    "startTime": "08:50:30",
+                    "endTime": "15:59:40",
+                    "alertBefore": "PT10M",
+                    "memo": "memo",
+                    "toPlace": {
+                        "name": "To place",
+                        "lat": 123.4,
+                        "lng": 34.5
+                    },
+                    "fromPlace": {
+                        "name": "From place",
+                        "lat": 132.4,
+                        "lng": 43.5
+                    },
+                    "repeat": {
+                        "cycle": "WEEKLY",
+                        "endDate": "2024-04-25",
+                        "repeatAt": 14
+                    },
+                    "isDone": true
+                }""";
 
         // when
         JsonContent<GetScheduleResponse> content = json.write(getScheduleResponse);
@@ -82,18 +82,18 @@ public class GetScheduleResponseTests {
         // given
         GetScheduleResponse getScheduleResponse = responseBuilder.startTime(null).endTime(null).fromPlace(null).build();
         String raw = """
-            {
-                "title": "Title",
-                "startDate": "2024-04-15",
-                "endDate": "2024-04-19",
-                "alertBefore": "PT10M",
-                "memo": "memo",
-                "toPlace": {
-                    "name": "To place",
-                    "lat": 123.4,
-                    "lng": 34.5
-                }
-            }""";
+                {
+                    "title": "Title",
+                    "startDate": "2024-04-15",
+                    "endDate": "2024-04-19",
+                    "alertBefore": "PT10M",
+                    "memo": "memo",
+                    "toPlace": {
+                        "name": "To place",
+                        "lat": 123.4,
+                        "lng": 34.5
+                    }
+                }""";
 
         // when
         JsonContent<GetScheduleResponse> content = json.write(getScheduleResponse);
@@ -122,7 +122,10 @@ public class GetScheduleResponseTests {
         Long categoryId = 4L;
         GetScheduleResponse getScheduleResponse = responseBuilder.categoryId(categoryId).repeat(repeatDto).build();
         Routine routine = routineBuilder.category(categoryBuilder.id(categoryId).build()).member(member).build();
-        Schedule schedule = scheduleBuilder.category(categoryBuilder.id(categoryId).build()).member(member).routine(routine).build();
+        Schedule schedule = scheduleBuilder.category(categoryBuilder.id(categoryId).build())
+                .member(member)
+                .routine(routine)
+                .build();
 
         // when
         GetScheduleResponse of = GetScheduleResponse.from(schedule);

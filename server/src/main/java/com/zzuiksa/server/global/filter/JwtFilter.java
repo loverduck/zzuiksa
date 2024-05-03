@@ -1,21 +1,23 @@
 package com.zzuiksa.server.global.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zzuiksa.server.global.api.ErrorResponse;
-import com.zzuiksa.server.global.exception.AuthenticationException;
-import com.zzuiksa.server.global.exception.custom.ErrorCodes;
-import com.zzuiksa.server.global.token.TokenProvider;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zzuiksa.server.global.api.ErrorResponse;
+import com.zzuiksa.server.global.exception.AuthenticationException;
+import com.zzuiksa.server.global.exception.custom.ErrorCodes;
+import com.zzuiksa.server.global.token.TokenProvider;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -27,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
         try {
             if ("OPTIONS".equals(request.getMethod())) {
                 filterChain.doFilter(request, response);
@@ -48,7 +50,8 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = authorizationHeader.split(" ")[1];
             tokenProvider.validateToken(token);
 
-            Authentication authentication = tokenProvider.authenticate(new UsernamePasswordAuthenticationToken(tokenProvider.getMemberId(token), ""));
+            Authentication authentication = tokenProvider.authenticate(
+                    new UsernamePasswordAuthenticationToken(tokenProvider.getMemberId(token), ""));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);

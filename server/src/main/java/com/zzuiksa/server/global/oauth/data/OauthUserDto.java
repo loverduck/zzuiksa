@@ -1,6 +1,7 @@
 package com.zzuiksa.server.global.oauth.data;
 
 import com.zzuiksa.server.domain.member.entity.Member;
+
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

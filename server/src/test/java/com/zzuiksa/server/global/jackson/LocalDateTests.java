@@ -1,5 +1,9 @@
 package com.zzuiksa.server.global.jackson;
 
+import static org.assertj.core.api.Assertions.*;
+
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -7,11 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-
-import java.time.LocalDate;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JsonTest
 public class LocalDateTests {
@@ -50,6 +49,6 @@ public class LocalDateTests {
     public void deserialize_zonedDateString_throwRuntimeException(String dateString) throws Exception {
         // when & then
         assertThatThrownBy(() -> json.parseObject(dateString))
-            .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(RuntimeException.class);
     }
 }

@@ -1,5 +1,9 @@
 package com.zzuiksa.server.domain.schedule;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.schedule.constant.RoutineCycle;
 import com.zzuiksa.server.domain.schedule.data.PlaceDto;
@@ -9,10 +13,6 @@ import com.zzuiksa.server.domain.schedule.data.response.GetScheduleResponse;
 import com.zzuiksa.server.domain.schedule.entity.Category;
 import com.zzuiksa.server.domain.schedule.entity.Routine;
 import com.zzuiksa.server.domain.schedule.entity.Schedule;
-
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class ScheduleSource {
 
@@ -37,83 +37,81 @@ public class ScheduleSource {
     public static final RoutineCycle repeatCycle = RoutineCycle.WEEKLY;
     public static final LocalDate repeatStartDate = startDate;
     public static final LocalDate repeatEndDate = LocalDate.of(2024, 4, 25);
-    public static final Integer repeatTerm = 1;
     public static final Integer repeatAt = 0b1110;
 
     public static Schedule.ScheduleBuilder getTestScheduleBuilder() {
         return Schedule.builder()
-            .id(id)
-            .member(member)
-            .category(category)
-            .routine(routine)
-            .title(title)
-            .startDate(startDate)
-            .endDate(endDate)
-            .startTime(startTime)
-            .endTime(endTime)
-            .alertBefore(alertBefore)
-            .memo(memo)
-            .toPlaceName(toPlaceName)
-            .toPlaceLat(toPlaceLat)
-            .toPlaceLng(toPlaceLng)
-            .fromPlaceName(fromPlaceName)
-            .fromPlaceLat(fromPlaceLat)
-            .fromPlaceLng(fromPlaceLng)
-            .isDone(isDone);
+                .id(id)
+                .member(member)
+                .category(category)
+                .routine(routine)
+                .title(title)
+                .startDate(startDate)
+                .endDate(endDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .alertBefore(alertBefore)
+                .memo(memo)
+                .toPlaceName(toPlaceName)
+                .toPlaceLat(toPlaceLat)
+                .toPlaceLng(toPlaceLng)
+                .fromPlaceName(fromPlaceName)
+                .fromPlaceLat(fromPlaceLat)
+                .fromPlaceLng(fromPlaceLng)
+                .isDone(isDone);
     }
 
     public static Routine.RoutineBuilder getTestRoutineBuilder() {
         return Routine.builder()
-            .id(id)
-            .member(member)
-            .category(category)
-            .title(title)
-            .startDate(startDate)
-            .endDate(endDate)
-            .startTime(startTime)
-            .endTime(endTime)
-            .alertBefore(alertBefore)
-            .memo(memo)
-            .toPlaceName(toPlaceName)
-            .toPlaceLat(toPlaceLat)
-            .toPlaceLng(toPlaceLng)
-            .fromPlaceName(fromPlaceName)
-            .fromPlaceLat(fromPlaceLat)
-            .fromPlaceLng(fromPlaceLng)
-            .repeatCycle(repeatCycle)
-            .repeatStartDate(repeatStartDate)
-            .repeatEndDate(repeatEndDate)
-            .repeatTerm(repeatTerm)
-            .repeatAt(repeatAt);
+                .id(id)
+                .member(member)
+                .category(category)
+                .title(title)
+                .startDate(startDate)
+                .endDate(endDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .alertBefore(alertBefore)
+                .memo(memo)
+                .toPlaceName(toPlaceName)
+                .toPlaceLat(toPlaceLat)
+                .toPlaceLng(toPlaceLng)
+                .fromPlaceName(fromPlaceName)
+                .fromPlaceLat(fromPlaceLat)
+                .fromPlaceLng(fromPlaceLng)
+                .repeatCycle(repeatCycle)
+                .repeatStartDate(repeatStartDate)
+                .repeatEndDate(repeatEndDate)
+                .repeatAt(repeatAt);
     }
 
     public static AddScheduleRequest.AddScheduleRequestBuilder getTestAddScheduleRequestBuilder() {
         return AddScheduleRequest.builder()
-            .categoryId(null)
-            .title(title)
-            .startDate(startDate)
-            .endDate(endDate)
-            .startTime(startTime)
-            .endTime(endTime)
-            .alertBefore(alertBefore)
-            .memo(memo)
-            .toPlace(getTestToPlaceDto())
-            .fromPlace(getTestFromPlaceDto());
+                .categoryId(null)
+                .title(title)
+                .startDate(startDate)
+                .endDate(endDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .alertBefore(alertBefore)
+                .memo(memo)
+                .toPlace(getTestToPlaceDto())
+                .fromPlace(getTestFromPlaceDto());
     }
 
     public static GetScheduleResponse.GetScheduleResponseBuilder getTestGetScheduleResponseBuilder() {
         return GetScheduleResponse.builder()
-            .categoryId(null)
-            .title(title)
-            .startDate(startDate)
-            .endDate(endDate)
-            .startTime(startTime)
-            .endTime(endTime)
-            .alertBefore(alertBefore)
-            .memo(memo)
-            .toPlace(getTestToPlaceDto())
-            .fromPlace(getTestFromPlaceDto())
-            .isDone(isDone);
+                .categoryId(null)
+                .title(title)
+                .startDate(startDate)
+                .endDate(endDate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .alertBefore(alertBefore)
+                .memo(memo)
+                .toPlace(getTestToPlaceDto())
+                .fromPlace(getTestFromPlaceDto())
+                .isDone(isDone);
     }
 
     public static PlaceDto getTestToPlaceDto() {
@@ -125,6 +123,6 @@ public class ScheduleSource {
     }
 
     public static RepeatDto getTestRepeatDto() {
-        return RepeatDto.of(repeatCycle, repeatEndDate, repeatTerm, repeatAt);
+        return RepeatDto.of(repeatCycle, repeatEndDate, repeatAt);
     }
 }

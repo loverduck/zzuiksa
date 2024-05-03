@@ -1,8 +1,7 @@
 package com.zzuiksa.server.global.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import java.lang.reflect.ParameterizedType;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +12,12 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import java.lang.reflect.ParameterizedType;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RestControllerAdvice
+import lombok.RequiredArgsConstructor;
+
+@RestControllerAdvice(basePackages = "com.zzuiksa.server.domain")
 @RequiredArgsConstructor
 public class SuccessResponseAdvice implements ResponseBodyAdvice<Object> {
 
@@ -27,8 +29,8 @@ public class SuccessResponseAdvice implements ResponseBodyAdvice<Object> {
         // Method의 반환 형식이 ResponseEntity일 경우 제네릭의 타입 사용
         if (ResponseEntity.class.isAssignableFrom(type)) {
             try {
-                ParameterizedType parameterizedType = (ParameterizedType) returnType.getGenericParameterType();
-                type = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                ParameterizedType parameterizedType = (ParameterizedType)returnType.getGenericParameterType();
+                type = (Class<?>)parameterizedType.getActualTypeArguments()[0];
             } catch (ClassCastException | ArrayIndexOutOfBoundsException ex) {
                 return false;
             }
@@ -40,7 +42,9 @@ public class SuccessResponseAdvice implements ResponseBodyAdvice<Object> {
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
+            Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
+            ServerHttpResponse response) {
         SuccessResponse<?> successResponse = new SuccessResponse<>(body);
         if (MappingJackson2HttpMessageConverter.class.isAssignableFrom(selectedConverterType)) {
             return successResponse;

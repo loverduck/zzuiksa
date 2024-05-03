@@ -1,16 +1,23 @@
 package com.zzuiksa.server.domain.schedule.data.request;
 
-import com.zzuiksa.server.domain.schedule.data.PlaceDto;
-import com.zzuiksa.server.domain.schedule.data.RepeatDto;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import org.springframework.boot.convert.DurationUnit;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+
+import org.springframework.boot.convert.DurationUnit;
+
+import com.zzuiksa.server.domain.schedule.data.PlaceDto;
+import com.zzuiksa.server.domain.schedule.data.RepeatDto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
