@@ -5,15 +5,15 @@ import com.zzuiksa.server.domain.schedule.constant.RoutineCycle;
 import com.zzuiksa.server.global.entity.BaseEntity;
 import com.zzuiksa.server.global.util.Utils;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -92,6 +92,7 @@ public class Routine extends BaseEntity {
     private LocalDate repeatEndDate;
 
     @NotNull
+    @Min(value = 1)
     @Column(nullable = false)
     private Integer repeatAt;
 
@@ -130,6 +131,9 @@ public class Routine extends BaseEntity {
         this.repeatEndDate = repeatEndDate;
         if (repeatAt == null) {
             throw new IllegalArgumentException("Repeat at is null");
+        }
+        if (repeatAt <= 0) {
+            throw new IllegalArgumentException("Repeat at must be greater than 0");
         }
         this.repeatAt = repeatAt;
     }
@@ -248,15 +252,112 @@ public class Routine extends BaseEntity {
         this.fromPlaceLng = null;
     }
 
-    public void setRepeat(RoutineCycle cycle, LocalDate startDate, LocalDate endDate, int repeatTerm, int repeatAt) {
-        // TODO: Routine 관련 필드 setter 추가
-        throw new UnsupportedOperationException();
+    public List<Schedule> createSchedules(@NotNull LocalDate from, @NotNull LocalDate to) {
+        if (repeatStartDate.isAfter(from)) {
+            from = repeatStartDate;
+        }
+        if (repeatEndDate != null && repeatEndDate.isBefore(to)) {
+            to = repeatEndDate;
+        }
+        if (from.isAfter(to)) {
+            return List.of();
+        }
+
+        LocalDateTime scheduleStart = LocalDateTime.of(startDate, startTime);
+        LocalDateTime scheduleEnd = LocalDateTime.of(endDate, endTime);
+        Duration scheduleDuration = Duration.between(scheduleStart, scheduleEnd);
+
+        List<LocalDate> scheduleDates = getScheduleStartDates(from, to);
+        return scheduleDates.stream()
+            .map(scheduleDate -> createScheduleWith(scheduleDate, startTime, scheduleDuration))
+            .toList();
     }
 
-    public static int getWeeklyRepeatAtOf(DayOfWeek ...days) {
+    private List<LocalDate> getScheduleStartDates(LocalDate from, LocalDate to) {
+        return switch (repeatCycle) {
+            case DAILY -> getDailyRepeatDates(from, to);
+            case WEEKLY -> getWeeklyRepeatDates(from, to);
+            case MONTHLY -> getMonthlyRepeatDates(from, to);
+            case YEARLY -> getYearlyRepeatDates(from, to);
+        };
+    }
+
+    private List<LocalDate> getDailyRepeatDates(LocalDate from, LocalDate to) {
+        List<LocalDate> dates = new ArrayList<>();
+        LocalDate curDate = repeatStartDate;
+        while (curDate.isBefore(to) || curDate.isEqual(to)) {
+            if (curDate.isAfter(from) || curDate.isEqual(from)) {
+                dates.add(curDate);
+            }
+            curDate = curDate.plusDays(repeatAt);
+        }
+        return dates;
+    }
+
+    private List<LocalDate> getWeeklyRepeatDates(LocalDate from, LocalDate to) {
+        return from.datesUntil(to.plusDays(1))
+            .filter(this::isWeeklyRepeatDate)
+            .toList();
+    }
+
+    private boolean isWeeklyRepeatDate(LocalDate date) {
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        int value = dayOfWeek.getValue();
+        return (repeatAt & (1 << value)) != 0;
+    }
+
+    private List<LocalDate> getMonthlyRepeatDates(LocalDate from, LocalDate to) {
+        int dayOfMonth = repeatAt;
+        return from.datesUntil(to.plusDays(1))
+            .filter(date -> date.getDayOfMonth() == dayOfMonth)
+            .toList();
+    }
+
+    private List<LocalDate> getYearlyRepeatDates(LocalDate from, LocalDate to) {
+        int monthValue = repeatAt / 100;
+        int dayOfMonth = repeatAt % 100;
+        return from.datesUntil(to.plusDays(1))
+            .filter(date -> date.getMonthValue() == monthValue && date.getDayOfMonth() == dayOfMonth)
+            .toList();
+    }
+
+    private Schedule createScheduleWith(LocalDate startDate, LocalTime startTime, Duration duration) {
+        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+        LocalDateTime endDateTime = startDateTime.plus(duration);
+        LocalDate endDate = endDateTime.toLocalDate();
+        LocalTime endTime = endDateTime.toLocalTime();
+        return createScheduleWith(startDate, endDate, startTime, endTime);
+    }
+
+    private Schedule createScheduleWith(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        return Schedule.builder()
+            .member(member)
+            .category(category)
+            .routine(this)
+            .title(title)
+            .startDate(startDate)
+            .endDate(endDate)
+            .startTime(startTime)
+            .endTime(endTime)
+            .alertBefore(alertBefore)
+            .memo(memo)
+            .toPlaceName(toPlaceName)
+            .toPlaceLat(toPlaceLat)
+            .toPlaceLng(toPlaceLng)
+            .fromPlaceName(fromPlaceName)
+            .fromPlaceLat(fromPlaceLat)
+            .fromPlaceLng(fromPlaceLng)
+            .isDone(false)
+            .build();
+    }
+
+    public static int weeklyRepeatAtOf(DayOfWeek... dayOfWeeks) {
+        if (dayOfWeeks.length == 0) {
+            throw new IllegalArgumentException("dayOfWeek is empty");
+        }
         int repeatAt = 0;
-        for (DayOfWeek day : days) {
-            repeatAt |= 1 << day.getValue();
+        for (DayOfWeek dayOfWeek : dayOfWeeks) {
+            repeatAt |= 1 << dayOfWeek.getValue();
         }
         return repeatAt;
     }
