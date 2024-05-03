@@ -51,7 +51,7 @@ public class KakaoLoginApiService {
                     .profileImageUrl(kakaoUserInfoResponse.getKakaoAccount().getProfile().getProfileImageUrl())
                     .build();
         } catch (FeignException ex) {
-            if(HttpStatus.valueOf(ex.status()).is4xxClientError()) {
+            if (HttpStatus.valueOf(ex.status()).is4xxClientError()) {
                 throw new KakaoServerException(ErrorCodes.KAKAO_CLIENT_EXCEPTION, ex.contentUTF8());
             }
             throw new KakaoServerException(ErrorCodes.KAKAO_SERVER_ERROR, ex.contentUTF8());
