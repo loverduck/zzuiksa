@@ -1,7 +1,6 @@
 import 'package:client/constants.dart';
-import 'package:client/screens/profile/widgets/statistic/backup_button.dart';
+import 'package:client/widgets/custom_button.dart';
 import 'package:client/screens/profile/widgets/statistic/graph_container.dart';
-import 'package:client/screens/profile/widgets/statistic/load_button.dart';
 import 'package:client/screens/profile/widgets/statistic/weekly_container.dart';
 import 'package:flutter/material.dart';
 
@@ -44,11 +43,22 @@ class _MyStatisticState extends State<MyStatistic> {
                 child: Text('주간 달성률', style: textTheme.displaySmall))),
         WeeklyContainer(percent: 90),
         SizedBox(height: 16),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-          BackupButton(),
-          LoadButton(),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          CustomButton(
+            text: '기록 백업하기',
+            size: 'small',
+            func: () {
+              print('backup button clicked');
+            },
+          ),
+          CustomButton(
+            text: '백업 불러오기',
+            size: 'small',
+            color: 200,
+            func: () {
+              print('backup button clicked');
+            },
+          ),
         ]),
       ],
     );

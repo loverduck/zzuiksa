@@ -17,3 +17,5 @@ class Constants {
   static const violet300 = Color(0xFFD89ADF);
   static const textColor = Color(0xFF451E1E);
 }
+
+String baseUrl = "http://localhost:8080";

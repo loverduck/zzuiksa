@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'modify_button.dart';
-import 'withdrawal_button.dart';
+import 'modify_info.dart';
 import 'package:client/constants.dart';
+import 'package:client/widgets/custom_button.dart';
 
 class MyInfo extends StatelessWidget {
   static const title = 'Profile';
@@ -18,14 +17,12 @@ class MyInfo extends StatelessWidget {
       child: Column(
         children: [
           Table(
-
             columnWidths: {
               0: FixedColumnWidth(80.0),
               1: FixedColumnWidth(160.0),
             },
             children: [
-              TableRow(
-                  children: [
+              TableRow(children: [
                 Text('닉네임',
                     style: TextStyle(color: Constants.main400, fontSize: 22),
                     textAlign: TextAlign.center),
@@ -49,9 +46,39 @@ class MyInfo extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20),
-          const ModifyButton(),
+          CustomButton(
+            text: '수정하기',
+            func: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ModifyInfo()));
+            },
+          ),
           SizedBox(height: 8),
-          const WithdrawalButton(),
+          CustomButton(
+            text: '탈퇴하기',
+            color: 200,
+            func: () {
+              showDialog<void>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('회원 탈퇴'),
+                    content: Text('정말 탈퇴하시겠어요?'),
+                    actions: [
+                      TextButton(
+                        child: const Text('예'),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      TextButton(
+                        child: const Text('아니오'),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
         ],
       ),
     );
