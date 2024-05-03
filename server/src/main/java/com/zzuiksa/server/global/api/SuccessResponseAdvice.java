@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.lang.reflect.ParameterizedType;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.zzuiksa.server.domain")
 @RequiredArgsConstructor
 public class SuccessResponseAdvice implements ResponseBodyAdvice<Object> {
 
