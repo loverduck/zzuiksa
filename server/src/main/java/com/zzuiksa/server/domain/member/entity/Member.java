@@ -11,9 +11,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member extends BaseEntity {
@@ -28,7 +30,7 @@ public class Member extends BaseEntity {
     @Column(length = 100)
     private String kakaoId;
 
-    private Date birthday;
+    private LocalDate birthday;
 
     private String profileImage;
 
@@ -51,8 +53,7 @@ public class Member extends BaseEntity {
         this.name = name;
     }
 
-    @Builder
-    public Member(String name, String kakaoId, Date birthday, String profileImage) {
+    public Member(String name, String kakaoId, LocalDate birthday, String profileImage) {
         this.name = name;
         this.kakaoId = kakaoId;
         this.birthday = birthday;
