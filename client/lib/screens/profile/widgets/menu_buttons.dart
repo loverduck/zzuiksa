@@ -29,8 +29,8 @@ class _MenuButtonsState extends State<MenuButtons> {
     int selectedIndex = 0;
 
     Widget _statisticText = selectedIndex == 0 ? htStatistic : myStatistic;
-    Widget _infoText = selectedIndex == 1 ? htInfo : myInfo;
-    Widget _placeText = selectedIndex == 2 ? htPlace : myPlace;
+    Widget _placeText = selectedIndex == 1 ? htPlace : myPlace;
+    Widget _infoText = selectedIndex == 2 ? htInfo : myInfo;
 
     return Container(
         height: 60,
@@ -60,7 +60,7 @@ class _MenuButtonsState extends State<MenuButtons> {
                     widget.setIndex(selectedIndex);
                   });
                 },
-                child: _infoText),
+                child: _placeText),
             TextButton(
                 onPressed: () {
                   setState(() {
@@ -68,7 +68,7 @@ class _MenuButtonsState extends State<MenuButtons> {
                     widget.setIndex(selectedIndex);
                   });
                 },
-                child: _placeText),
+                child: _infoText),
           ],
         ));
   }

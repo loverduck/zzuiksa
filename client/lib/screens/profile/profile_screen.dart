@@ -78,8 +78,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget renderBody(int index) {
     switch (index) {
       case 1:
-        return MyInfo();
-      case 2:
         return Column(
           children: [
             Container(height: 124 * 2, child: MyPlace()),
@@ -102,6 +100,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         );
+      case 2:
+        return MyInfo();
       default:
         return MyStatistic();
     }

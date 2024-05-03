@@ -18,12 +18,14 @@ class MyInfo extends StatelessWidget {
       child: Column(
         children: [
           Table(
+
             columnWidths: {
               0: FixedColumnWidth(80.0),
               1: FixedColumnWidth(160.0),
             },
             children: [
-              TableRow(children: [
+              TableRow(
+                  children: [
                 Text('닉네임',
                     style: TextStyle(color: Constants.main400, fontSize: 22),
                     textAlign: TextAlign.center),
