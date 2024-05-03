@@ -17,6 +17,6 @@ public class AuthTestController {
 
     @PostMapping("/login/{userId}")
     public LoginResponse getToken(@PathVariable long userId) {
-        return loginService.getAccessToken(userId);
+        return loginService.generateAccessToken(userId);
     }
 }

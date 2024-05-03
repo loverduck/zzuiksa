@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 public class KakaoLoginRequest {
 
-    @NotNull
+    @NotNull(message = "accessToken이 필요합니다.")
     private String accessToken;
 }

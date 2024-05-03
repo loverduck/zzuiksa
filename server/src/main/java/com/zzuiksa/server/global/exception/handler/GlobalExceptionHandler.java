@@ -2,9 +2,10 @@ package com.zzuiksa.server.global.exception.handler;
 
 import com.zzuiksa.server.global.api.ErrorResponse;
 import com.zzuiksa.server.global.exception.custom.CustomException;
-import feign.FeignException;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -16,8 +17,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse(ex.getErrorCode(), ex.getMessage()), ex.getStatus());
     }
 
-    @ExceptionHandler(FeignException.class)
-    public ResponseEntity<ErrorResponse> handlemethodValidException(FeignException ex) {
-        return new ResponseEntity<>(new ErrorResponse("ZKE001", ex.getMessage()), HttpStatusCode.valueOf(ex.status()));
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return new ResponseEntity<>(new ErrorResponse("ZBE001", ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return new ResponseEntity<>(new ErrorResponse("ZBE002", ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage()), ex.getStatusCode());
     }
 }

@@ -12,6 +12,7 @@ import com.zzuiksa.server.global.token.data.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -26,8 +27,8 @@ public class LoginService {
     @Transactional
     public LoginResponse kakaoLogin(String accessToken) {
         OauthUserDto oauthUserDto = kakaoLoginApiService.getUserInfo(accessToken);
-        Member member = getKakaoMember(oauthUserDto).orElseGet(() -> memberRepository.save(oauthUserDto.toEntity()));
-        return getAccessToken(member.getId());
+        Member member = findKakaoMember(oauthUserDto).orElseGet(() -> memberRepository.save(oauthUserDto.toEntity()));
+        return generateAccessToken(member.getId());
     }
 
     @Transactional
@@ -38,21 +39,24 @@ public class LoginService {
                 .name(randomName)
                 .build();
         Member newMember = memberRepository.save(guestMember);
-        return getAccessToken(newMember.getId());
+        return generateAccessToken(newMember.getId());
     }
 
     @Transactional
     public LoginResponse connectKakaoAccount(String accessToken, Member member) {
         OauthUserDto oauthUserDto = kakaoLoginApiService.getUserInfo(accessToken);
-        if (getKakaoMember(oauthUserDto).isPresent()) {
+        if (StringUtils.hasText(member.getKakaoId())) {
+            throw new CustomException(ErrorCodes.KAKAO_MEMBER_ALREADY_CONNECTED);
+        }
+        if (findKakaoMember(oauthUserDto).isPresent()) {
             throw new CustomException(ErrorCodes.KAKAO_MEMBER_ALREADY_EXIST);
         }
         member.setKakaoAccount(oauthUserDto);
         Member newMember = memberRepository.save(member);
-        return getAccessToken(newMember.getId());
+        return generateAccessToken(newMember.getId());
     }
 
-    public LoginResponse getAccessToken(long id) {
+    public LoginResponse generateAccessToken(long id) {
         Jwt token = tokenProvider.generateToken(id);
         return LoginResponse.builder()
                 .accessToken(token.getToken())
@@ -60,7 +64,7 @@ public class LoginService {
                 .build();
     }
 
-    private Optional<Member> getKakaoMember(OauthUserDto oauthUserDto) {
+    private Optional<Member> findKakaoMember(OauthUserDto oauthUserDto) {
         String kakaoId = String.valueOf(oauthUserDto.getId());
         return memberRepository.findByKakaoId(kakaoId);
     }

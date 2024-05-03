@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -31,8 +32,8 @@ public class AuthController {
     }
 
     @PostMapping("/connect")
-    public LoginResponse connectKakao(@RequestBody @Valid KakaoLoginRequest loginRequest, @AuthenticationPrincipal MemberDetail memberDetail) {
+    public void connectKakao(@RequestBody @Valid KakaoLoginRequest loginRequest, @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
-        return loginService.connectKakaoAccount(loginRequest.getAccessToken(), member);
+        loginService.connectKakaoAccount(loginRequest.getAccessToken(), member);
     }
 }
