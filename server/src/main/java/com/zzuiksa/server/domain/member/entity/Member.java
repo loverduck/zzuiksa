@@ -2,6 +2,7 @@ package com.zzuiksa.server.domain.member.entity;
 
 import com.zzuiksa.server.global.entity.BaseEntity;
 import com.zzuiksa.server.global.exception.InvalidMemberNameException;
+import com.zzuiksa.server.global.oauth.data.OauthUserDto;
 import com.zzuiksa.server.global.util.Utils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
@@ -58,5 +58,15 @@ public class Member extends BaseEntity {
         this.kakaoId = kakaoId;
         this.birthday = birthday;
         this.profileImage = profileImage;
+    }
+
+    public void setKakaoAccount(OauthUserDto oauthUserDto) {
+        this.kakaoId = String.valueOf(oauthUserDto.getId());
+
+        if (!StringUtils.hasText(this.profileImage)) {
+            this.profileImage = oauthUserDto.getProfileImageUrl();
+        }
+
+        // TODO: 생일 정보 받아올건지?
     }
 }
