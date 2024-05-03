@@ -64,7 +64,6 @@ public class GetScheduleResponseTests {
                 "repeat": {
                     "cycle": "WEEKLY",
                     "endDate": "2024-04-25",
-                    "repeatTerm": 1,
                     "repeatAt": 14
                 },
                 "isDone": true

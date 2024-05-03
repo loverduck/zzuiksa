@@ -37,7 +37,6 @@ public class ScheduleSource {
     public static final RoutineCycle repeatCycle = RoutineCycle.WEEKLY;
     public static final LocalDate repeatStartDate = startDate;
     public static final LocalDate repeatEndDate = LocalDate.of(2024, 4, 25);
-    public static final Integer repeatTerm = 1;
     public static final Integer repeatAt = 0b1110;
 
     public static Schedule.ScheduleBuilder getTestScheduleBuilder() {
@@ -83,7 +82,6 @@ public class ScheduleSource {
             .repeatCycle(repeatCycle)
             .repeatStartDate(repeatStartDate)
             .repeatEndDate(repeatEndDate)
-            .repeatTerm(repeatTerm)
             .repeatAt(repeatAt);
     }
 
@@ -125,6 +123,6 @@ public class ScheduleSource {
     }
 
     public static RepeatDto getTestRepeatDto() {
-        return RepeatDto.of(repeatCycle, repeatEndDate, repeatTerm, repeatAt);
+        return RepeatDto.of(repeatCycle, repeatEndDate, repeatAt);
     }
 }
