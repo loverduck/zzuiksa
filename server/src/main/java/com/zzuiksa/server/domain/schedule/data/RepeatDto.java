@@ -1,6 +1,7 @@
 package com.zzuiksa.server.domain.schedule.data;
 
 import com.zzuiksa.server.domain.schedule.constant.RoutineCycle;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -19,6 +20,8 @@ public class RepeatDto {
 
     private LocalDate endDate;
 
+    @NotNull
+    @Min(1)
     private Integer repeatAt;
 
     public static RepeatDto of(RoutineCycle cycle, LocalDate endDate, Integer repeatAt) {
