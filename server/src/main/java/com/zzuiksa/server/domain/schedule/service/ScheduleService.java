@@ -18,7 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 @Service
@@ -28,11 +30,22 @@ public class ScheduleService {
     private final CategoryRepository categoryRepository;
     private final ScheduleRepository scheduleRepository;
     private final RoutineRepository routineRepository;
+    private final Clock clock;
 
     @Transactional
     public AddScheduleResponse add(@NotNull AddScheduleRequest request, @NotNull Member member) {
-        Schedule schedule = request.isRepeat() ? addScheduleAndRoutine(request, member) : addSchedule(request, member);
-        return AddScheduleResponse.from(schedule.getId());
+        // 최대 2년 이내의 일정만 생성 가능
+        if (request.getStartDate().isAfter(getLastScheduleCreateDate())) {
+            throw new CustomException(ErrorCodes.SCHEDULE_TOO_FAR);
+        }
+        if (request.isRepeat()) {
+            List<Schedule> schedules = addRoutineAndFutureSchedules(request, member);
+            Schedule schedule = schedules.get(0);
+            return AddScheduleResponse.from(schedule.getId());
+        } else {
+            Schedule schedule = addSchedule(request, member);
+            return AddScheduleResponse.from(schedule.getId());
+        }
     }
 
     @Transactional(readOnly = true)
@@ -59,27 +72,35 @@ public class ScheduleService {
     }
 
     private Schedule addSchedule(AddScheduleRequest request, Member member) {
-        Schedule schedule = convertAddScheduleRequestToSchedule(request, member, null);
+        Schedule schedule = convertAddScheduleRequestToSchedule(request, member);
         schedule = scheduleRepository.save(schedule);
         return schedule;
     }
 
-    private Schedule addScheduleAndRoutine(AddScheduleRequest request, Member member) {
+    private List<Schedule> addRoutineAndFutureSchedules(AddScheduleRequest request, Member member) {
         Routine routine = convertAddScheduleRequestToRoutine(request, member);
         routine = routineRepository.save(routine);
-        Schedule schedule = convertAddScheduleRequestToSchedule(request, member, routine);
-        schedule = scheduleRepository.save(schedule);
-        return schedule;
+        List<Schedule> schedules = getFutureSchedules(routine);
+        if (schedules.isEmpty()) {
+            throw new CustomException(ErrorCodes.BAD_SCHEDULE_REPEAT);
+        }
+        schedules = scheduleRepository.saveAll(schedules);
+        return schedules;
     }
 
-    protected Schedule convertAddScheduleRequestToSchedule(AddScheduleRequest request, Member member, Routine routine) {
+    protected List<Schedule> getFutureSchedules(Routine routine) {
+        // 현재 년도 + SCHEDULE_YEAR년 뒤까지 일정 생성
+        return routine.createSchedules(getToday(), getLastScheduleCreateDate());
+    }
+
+    protected Schedule convertAddScheduleRequestToSchedule(AddScheduleRequest request, Member member) {
         Category category = categoryRepository.findById(request.getCategoryId())
             .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
 
         return Schedule.builder()
             .member(member)
             .category(category)
-            .routine(routine)
+            .routine(null)
             .title(request.getTitle())
             .startDate(request.getStartDate())
             .endDate(request.getEndDate())
@@ -125,5 +146,14 @@ public class ScheduleService {
             .repeatEndDate(request.getRepeat().getEndDate())
             .repeatAt(request.getRepeat().getRepeatAt())
             .build();
+    }
+
+    private LocalDate getToday() {
+        return LocalDate.now(clock);
+    }
+
+    private LocalDate getLastScheduleCreateDate() {
+        final int SCHEDULE_YEARS = 2;
+        return getToday().plusYears(SCHEDULE_YEARS).with(TemporalAdjusters.lastDayOfYear());
     }
 }
