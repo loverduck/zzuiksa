@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysql
+    restart: unless-stopped
+    volumes:
+      - ~/zzuiksa/mysql/data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: zzuiksa
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    networks:
+      - backend
+  server:
+    build: ./server
+    container_name: server
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+    depends_on:
+      - mysql
+
+networks:
+  backend:
+    name: backend
+    driver: bridge
