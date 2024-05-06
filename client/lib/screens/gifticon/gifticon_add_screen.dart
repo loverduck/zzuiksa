@@ -53,11 +53,11 @@ class _GifticonAddScreenState extends State<GifticonAddScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Gifticon newGifticon = Gifticon(name: "새 기프티콘");
+              // Gifticon newGifticon = Gifticon(name: "새 기프티콘");
               // postGifticon(newGifticon).then((createdGifticon) {
               //   _navigateToDetailScreen(createdGifticon);
               // });
-
+              Navigator.pushNamed(context, '/gifticon_detail_screen', arguments: 1);
             },
             child: Text(
               '등록하기',

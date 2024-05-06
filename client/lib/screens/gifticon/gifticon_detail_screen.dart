@@ -1,5 +1,6 @@
 import 'package:client/screens/gifticon/service/gifticon_api.dart';
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
+import 'package:client/screens/gifticon/widgets/gifticon_detail_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
@@ -82,17 +83,26 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
           ),
         ],
       ),
-      body: gifticon == null ? Center(child: CircularProgressIndicator()) : ListView(
-        padding: EdgeInsets.all(16.0),
+      body: gifticon == null
+          ? Center(child: CircularProgressIndicator())
+          : Column(
         children: <Widget>[
-          Text('Name: ${gifticon!.name ?? 'N/A'}'),
-          Text('Brand: ${gifticon!.store ?? 'N/A'}'),
-          Text('Barcode: ${gifticon!.couponNum ?? 'N/A'}'),
-          Text('Expiry Date: ${gifticon!.endDate ?? 'N/A'}'),
-          if (gifticon!.remainMoney != null)
-            Text('Amount: ${gifticon!.remainMoney}'),
-          if (gifticon!.memo != null)
-            Text('Memo: ${gifticon!.memo}'),
+          Image(
+            image: AssetImage(gifticon!.url!),
+            height: 150,
+            width: 150,
+            fit: BoxFit.cover,
+          ),
+          SizedBox(height: 24),
+          Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Constants.main100,
+              border: Border.all(color: Constants.main600, width: 2.5),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: GifticonDetailInfo(gifticon: gifticon!),
+          ),
         ],
       ),
     );
