@@ -50,14 +50,13 @@ class MyApp extends StatelessWidget {
         '/gifticon': (context) => const GifticonListScreen(),
         '/gifticon_select_screen': (context) => const GifticonSelectScreen(),
         '/gifticon_add_screen': (context) => const GifticonAddScreen(),
-        '/gifticon_detail_screen': (context) => const GifticonDetailScreen(
+        '/gifticon_detail_screen': (context) => GifticonDetailScreen(
           gifticonId: ModalRoute.of(context)!.settings.arguments as int,
         ),
-        '/gifticon_update_screen': (context) => const GifticonUpdateScreen(
+        '/gifticon_update_screen': (context) => GifticonUpdateScreen(
           gifticon: ModalRoute.of(context)!.settings.arguments as Gifticon,
         ),
         '/profile': (context) => const ProfileScreen(),
->>>>>>> client/lib/main.dart
       },
       home: const HomeScreen(),
     );
