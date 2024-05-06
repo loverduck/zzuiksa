@@ -20,20 +20,19 @@ class _GifticonListScreenState extends State<GifticonListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          GifticonListHeader(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 10),
-                  GifticonOverview(expiringGifticonsCount: 5),
-                  SizedBox(height: 10),
-                  GifticonList(),
-                ],
-              ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                GifticonListHeader(),
+                GifticonOverview(expiringGifticonsCount: 5),
+                SizedBox(height: 10),
+              ],
             ),
+          ),
+          SliverFillRemaining(
+            child: GifticonList(),
           ),
         ],
       ),

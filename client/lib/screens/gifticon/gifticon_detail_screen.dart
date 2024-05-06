@@ -1,30 +1,98 @@
+import 'package:client/screens/gifticon/service/gifticon_api.dart';
+import 'package:client/screens/gifticon/model/gifticon_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:client/constants.dart';
+import 'package:flutter/widgets.dart';
 
 class GifticonDetailScreen extends StatefulWidget {
-  final Map<String, dynamic> data;
-  const GifticonDetailScreen({Key? key, required this.data}) : super(key: key);
+  const GifticonDetailScreen({
+    super.key,
+    required this.gifticonId,
+  });
+
+  final int gifticonId;
 
   @override
-  _GifticonDetailScreenState createState() => _GifticonDetailScreenState();
+  State<GifticonDetailScreen> createState() => _GifticonDetailScreenState();
 }
 
 class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
+  Gifticon ? gifticon;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getGifticonDetail(widget.gifticonId);
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    // Mock data for testing
+    gifticon = Gifticon(
+        id: 1,
+        name: '아이스아메리카노T',
+        url: 'assets/images/tempGifticon.jpeg',
+        store: '스타벅스',
+        couponNum: '1234567890',
+        endDate: '2024-05-31',
+        isUsed: '미사용',
+        remainMoney: 5000,
+        memo: '커피 좋아!'
+    );
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Gifticon Detail')),
-      body: ListView(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        backgroundColor: Constants.main200,
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              switch (value) {
+                case 'edit':
+                //수정페이지로
+                  break;
+                case 'delete':
+                //삭제하시겠습니까 뜨게
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem<String>(
+                  value: 'edit',
+                  child: Text('정보 수정하기'),
+                ),
+                PopupMenuItem<String>(
+                  value: 'delete',
+                  child: Text('삭제하기'),
+                ),
+              ];
+            },
+          ),
+        ],
+      ),
+      body: gifticon == null ? Center(child: CircularProgressIndicator()) : ListView(
         padding: EdgeInsets.all(16.0),
         children: <Widget>[
-          Text('Name: ${widget.data['name'] ?? 'N/A'}'),
-          Text('Brand: ${widget.data['brand'] ?? 'N/A'}'),
-          Text('Barcode: ${widget.data['barcode'] ?? 'N/A'}'),
-          Text('Expiry Date: ${widget.data['expiryDate'] ?? 'N/A'}'),
-          if (widget.data['amount'] != null)
-            Text('Amount: ${widget.data['amount']}'),
-          if (widget.data['memo'] != null)
-            Text('Memo: ${widget.data['memo']}'),
+          Text('Name: ${gifticon!.name ?? 'N/A'}'),
+          Text('Brand: ${gifticon!.store ?? 'N/A'}'),
+          Text('Barcode: ${gifticon!.couponNum ?? 'N/A'}'),
+          Text('Expiry Date: ${gifticon!.endDate ?? 'N/A'}'),
+          if (gifticon!.remainMoney != null)
+            Text('Amount: ${gifticon!.remainMoney}'),
+          if (gifticon!.memo != null)
+            Text('Memo: ${gifticon!.memo}'),
         ],
       ),
     );

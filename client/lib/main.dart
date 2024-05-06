@@ -1,6 +1,8 @@
 import 'package:client/screens/gifticon/gifticon_add_screen.dart';
 import 'package:client/screens/gifticon/gifticon_detail_screen.dart';
 import 'package:client/screens/gifticon/gifticon_select_screen.dart';
+import 'package:client/screens/gifticon/gifticon_update_screen.dart';
+import 'package:client/screens/gifticon/model/gifticon_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -27,7 +29,12 @@ class MyApp extends StatelessWidget {
         '/gifticon': (context) => GifticonListScreen(),
         '/gifticon_select_screen': (context) => GifticonSelectScreen(),
         '/gifticon_add_screen': (context) => GifticonAddScreen(),
-        '/gifticon_detail_screen': (context) => GifticonDetailScreen(data: ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>),
+        '/gifticon_detail_screen': (context) => GifticonDetailScreen(
+          gifticonId: ModalRoute.of(context)!.settings.arguments as int,
+        ),
+        '/gifticon_update_screen': (context) => GifticonUpdateScreen(
+          gifticon: ModalRoute.of(context)!.settings.arguments as Gifticon,
+        ),
         '/profile': (context) => ProfileScreen(),
       },
       home: HomeScreen(),

@@ -1,69 +1,36 @@
 import 'package:flutter/material.dart';
-
 import '../../../constants.dart';
+import 'package:client/screens/gifticon/model/gifticon_model.dart';
 
 class GifticonAddForm extends StatefulWidget {
-  final Function(Map<String, dynamic>) onSubmit;
-  GifticonAddForm({Key? key, required this.onSubmit}) : super(key: key);
+  final Gifticon? initialGifticon;
+  final Function(Gifticon) onSubmit;
+
+  const GifticonAddForm({
+    Key? key, required this.onSubmit, this.initialGifticon
+  }) : super(key: key);
 
   @override
-  _GifticonAddFormState createState() => _GifticonAddFormState();
+  State<GifticonAddForm> createState() => _GifticonAddFormState();
 }
 
 class _GifticonAddFormState extends State<GifticonAddForm> {
   bool _isAmountVoucher = false;
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _brandController = TextEditingController();
-  final TextEditingController _barcodeController = TextEditingController();
-  final TextEditingController _expiryDateController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _memoController = TextEditingController();
+  late Gifticon _gifticon;
+
+  @override
+  void initState() {
+    super.initState();
+    _gifticon = widget.initialGifticon ?? Gifticon();
+    _isAmountVoucher = _gifticon.remainMoney != null;
+  }
 
   void _handleSubmit() {
     if (!_formKey.currentState!.validate()) {
-      return;  // 폼 검증 실패 시 리턴
+      return;
     }
-    Map<String, dynamic> formData = {
-      'url': 'assets/images/tempGifticon.jpeg',
-      'name': _nameController.text,
-      'brand': _brandController.text,
-      'barcode': _barcodeController.text,
-      'expiryDate': _expiryDateController.text,
-      'amount': _isAmountVoucher ? _amountController.text : null,
-      'memo': _memoController.text.isNotEmpty ? _memoController.text : null,
-    };
-    widget.onSubmit(formData);  // 콜백 함수 실행
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _brandController.dispose();
-    _barcodeController.dispose();
-    _expiryDateController.dispose();
-    _amountController.dispose();
-    _memoController.dispose();
-    super.dispose();
-  }
-
-  Widget _buildTextFormField({
-    required TextEditingController controller,
-    String? Function(String?)? validator,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
-        filled: true,
-        fillColor: Constants.main100,
-        contentPadding: EdgeInsets.symmetric(horizontal: 30),
-      ),
-      style: Theme.of(context).textTheme.bodyLarge,
-      validator: validator,
-      keyboardType: keyboardType,
-    );
+    widget.onSubmit(_gifticon);
   }
 
   @override
@@ -82,78 +49,80 @@ class _GifticonAddFormState extends State<GifticonAddForm> {
           ),
           SizedBox(height: 30),
           ListTile(
-            title: Text(
-              '금액권인가요?',
-              style: Theme.of(context).textTheme.displayMedium,
-            ),
+            title: Text('금액권인가요?', style: Theme.of(context).textTheme.displayMedium),
             trailing: Switch(
               value: _isAmountVoucher,
               onChanged: (bool value) {
                 setState(() {
                   _isAmountVoucher = value;
+                  _gifticon.remainMoney = value ? 0 : null;  // 금액권 여부에 따라 금액 설정 초기화
                 });
               },
-              activeColor: Constants.main400, // 활성화 색상 지정
+              activeColor: Constants.main400,
             ),
           ),
           SizedBox(height: 30),
-          Text('기프티콘명', style: Theme.of(context).textTheme.displayMedium),
           _buildTextFormField(
-            controller: _nameController,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return '기프티콘명을 입력해주세요.';
-              }
-              return null;
-            },
+            label: '기프티콘명',
+            value: _gifticon.name,
+            onChanged: (value) => _gifticon.name = value,
           ),
-          Text('브랜드명', style: Theme.of(context).textTheme.displayMedium),
           _buildTextFormField(
-            controller: _brandController,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return '브랜드명을 입력해주세요.';
-              }
-              return null;
-            },
+            label: '브랜드명',
+            value: _gifticon.store,
+            onChanged: (value) => _gifticon.store = value,
           ),
-          Text('바코드', style: Theme.of(context).textTheme.displayMedium),
           _buildTextFormField(
-            controller: _barcodeController,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return '바코드 번호를 입력해주세요.';
-              }
-              return null;
-            },
+            label: '바코드',
+            value: _gifticon.couponNum,
+            onChanged: (value) => _gifticon.couponNum = value,
           ),
-          Text('유효기간', style: Theme.of(context).textTheme.displayMedium),
           _buildTextFormField(
-            controller: _expiryDateController,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return '유효기간을 입력해주세요.';
-              }
-              return null;
-            },
+            label: '유효기간',
+            value: _gifticon.endDate,
+            onChanged: (value) => _gifticon.endDate = value,
           ),
           if (_isAmountVoucher)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('금액', style: Theme.of(context).textTheme.displayMedium),
-                _buildTextFormField(
-                  controller: _amountController,
-                  keyboardType: TextInputType.number,
-                ),
-              ],
+            _buildTextFormField(
+              label: '금액',
+              value: _gifticon.remainMoney?.toString(),
+              onChanged: (value) => _gifticon.remainMoney = int.tryParse(value),
+              keyboardType: TextInputType.number,
             ),
-          Text('메모', style: Theme.of(context).textTheme.displayMedium),
           _buildTextFormField(
-            controller: _memoController,
+            label: '메모',
+            value: _gifticon.memo,
+            onChanged: (value) => _gifticon.memo = value,
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required String label,
+    String? value,
+    required Function(String) onChanged,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextFormField(
+      initialValue: value,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
+        filled: true,
+        fillColor: Constants.main100,
+        contentPadding: EdgeInsets.symmetric(horizontal: 30),
+      ),
+      style: Theme.of(context).textTheme.bodyLarge,
+      onChanged: onChanged,
+      keyboardType: keyboardType,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return '$label을(를) 입력해주세요.';
+        }
+        return null;
+      },
     );
   }
 }

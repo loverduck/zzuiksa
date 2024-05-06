@@ -1,8 +1,10 @@
+import 'package:client/screens/gifticon/service/gifticon_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 
 import 'gifticon_detail_screen.dart';
+import 'model/gifticon_model.dart';
 import 'widgets/gifticon_add_form.dart';
 
 class GifticonAddScreen extends StatefulWidget {
@@ -17,11 +19,22 @@ class GifticonAddScreen extends StatefulWidget {
 }
 
 class _GifticonAddScreenState extends State<GifticonAddScreen> {
-  void _navigateToDetailScreen(Map<String, dynamic> formData) {
+  void _navigateToDetailScreen(Gifticon createdGifticon) {
+    if (createdGifticon.id == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("기프티콘 등록에 실패했습니다. 다시 시도해 주세요."),
+            backgroundColor: Colors.red,
+          )
+      );
+      return;
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => GifticonDetailScreen(data: formData),
+        // builder: (context) => GifticonDetailScreen(gifticonId: createdGifticon.id!),
+        builder: (context) => GifticonDetailScreen(gifticonId: 1),
       ),
     );
   }
@@ -40,7 +53,11 @@ class _GifticonAddScreenState extends State<GifticonAddScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/gifticon_detail_screen');
+              Gifticon newGifticon = Gifticon(name: "새 기프티콘");
+              // postGifticon(newGifticon).then((createdGifticon) {
+              //   _navigateToDetailScreen(createdGifticon);
+              // });
+
             },
             child: Text(
               '등록하기',
