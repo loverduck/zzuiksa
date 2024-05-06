@@ -1,5 +1,5 @@
 import 'package:client/screens/dashboard/dashboard_screen.dart';
-import 'package:client/screens/gifticon/gifticon_screen.dart';
+import 'package:client/screens/gifticon/gifticon_list_screen.dart';
 import 'package:client/screens/profile/profile_screen.dart';
 import 'package:client/screens/schedule/schedule_calendar_screen.dart';
 
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const CalendarScreen();
       case 2:
-        return const GifticonScreen();
+        return GifticonListScreen();
       case 3:
         return const ProfileScreen();
       default:

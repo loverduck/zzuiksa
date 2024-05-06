@@ -1,15 +1,20 @@
-import 'package:client/screens/schedule/schedule_detail_screen.dart';
-import 'package:client/screens/schedule/schedule_place_search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
-import 'screens/schedule/schedule_calendar_screen.dart';
-import 'screens/gifticon/gifticon_screen.dart';
-import 'screens/profile/profile_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
+import 'screens/schedule/schedule_calendar_screen.dart';
+import 'screens/schedule/schedule_detail_screen.dart';
+import 'screens/schedule/schedule_place_search_screen.dart';
+import 'screens/profile/profile_screen.dart';
+import 'screens/gifticon/gifticon_list_screen.dart';
+import 'screens/gifticon/gifticon_add_screen.dart';
+import 'screens/gifticon/gifticon_detail_screen.dart';
+import 'screens/gifticon/gifticon_select_screen.dart';
+import 'screens/gifticon/gifticon_update_screen.dart';
+import 'screens/gifticon/model/gifticon_model.dart';
 import 'screens/home/home_screen.dart';
 import 'styles.dart' as style;
 
@@ -42,8 +47,17 @@ class MyApp extends StatelessWidget {
         '/calendar': (context) => const CalendarScreen(),
         '/schedule/search': (context) => const SchedulePlaceSearchScreen(),
         '/schedule/detail': (context) => const ScheduleDetailScreen(),
-        '/gifticon': (context) => const GifticonScreen(),
+        '/gifticon': (context) => const GifticonListScreen(),
+        '/gifticon_select_screen': (context) => const GifticonSelectScreen(),
+        '/gifticon_add_screen': (context) => const GifticonAddScreen(),
+        '/gifticon_detail_screen': (context) => const GifticonDetailScreen(
+          gifticonId: ModalRoute.of(context)!.settings.arguments as int,
+        ),
+        '/gifticon_update_screen': (context) => const GifticonUpdateScreen(
+          gifticon: ModalRoute.of(context)!.settings.arguments as Gifticon,
+        ),
         '/profile': (context) => const ProfileScreen(),
+>>>>>>> client/lib/main.dart
       },
       home: const HomeScreen(),
     );
