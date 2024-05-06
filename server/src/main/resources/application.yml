@@ -9,16 +9,18 @@ spring:
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 springdoc:
   api-docs:
-    path: /api-docs
     groups:
       enabled: true
-    swagger-ui:
-      path: /swagger-ui.html
-    paths-to-match:
-      - /api/**
+  swagger-ui:
+    disable-swagger-default-url: true
+  paths-to-match:
+    - /api/**
 
 management:
   endpoints:
@@ -28,7 +30,23 @@ management:
     health:
       show-details: always
 
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+
 token:
   issuer: zzuiksa
   secret: ${TOKEN_SECRET}
   time-to-live: 1209600 # 2 weeks
+
+oauth:
+  kakao:
+    auth-url: https://kauth.kakao.com
+    url: https://kapi.kakao.com
+    client:
+      id: ${KAKAO_CLIENT_KEY}
+      secret: ${KAKAO_CLIENT_SECRET}

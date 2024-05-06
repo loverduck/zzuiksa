@@ -5,7 +5,7 @@ import 'widgets/today.dart';
 import 'widgets/completeRate.dart';
 import 'widgets/sentences.dart';
 import 'widgets/zzuiksa.dart';
-import 'widgets/timeline.dart';
+import 'widgets/timeline/timeline.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const title = 'DashBoard';
@@ -27,25 +27,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
       children: [
         Container(
             margin: EdgeInsets.only(top: 80.0),
-            padding: EdgeInsets.all(20.0),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            padding: EdgeInsets.only(left: 40, right: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Today(),
-                CompleteRate(),
+                ChartPage(),
               ],
             )),
         Container(
             margin: EdgeInsets.all(10.0),
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.only(right: 20.0),
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Sentences(),
                 Zzuiksa(),
               ],
             )),
         const Timeline(),
+        const SizedBox(height: 32)
       ],
     )));
   }

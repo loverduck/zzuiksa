@@ -16,10 +16,10 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "token")
 public class TokenConfig {
 
-	private String issuer;
+    private String issuer;
 
-	private String secret;
+    private String secret;
 
-	@DurationUnit(ChronoUnit.SECONDS)
-	private Duration timeToLive;
+    @DurationUnit(ChronoUnit.SECONDS)
+    private Duration timeToLive;
 }

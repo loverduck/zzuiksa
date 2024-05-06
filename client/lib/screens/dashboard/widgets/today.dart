@@ -12,9 +12,12 @@ class _TodayState extends State<Today> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Center(
-        child: Text('${now.month}월 ${now.day}일',
-            style: textTheme.displayLarge)
-    );
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children:[
+          Text('${now.month}월 ${now.day}일',
+              style: textTheme.displayLarge),
+          Text('금요일', style: textTheme.displayMedium),
+        ]);
   }
 }

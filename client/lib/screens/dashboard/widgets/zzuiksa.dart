@@ -12,8 +12,8 @@ class _TodayState extends State<Zzuiksa> {
     final textTheme = Theme.of(context).textTheme;
     return Center(
         child: Image(image: AssetImage('assets/images/temp.png'),
-          width: 100,
-          height: 120,
+          width: 110,
+          height: 130,
         )
     );
   }
