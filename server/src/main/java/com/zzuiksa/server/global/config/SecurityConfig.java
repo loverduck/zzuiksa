@@ -22,9 +22,6 @@ public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
     private static final String[] AUTH_WHITE_LIST = {
-            "/api/health",
-            "/auth/login/**",
-            "/auth/test/**",
             "/h2-console/**",
             "/favicon.ico",
             "/error",
@@ -41,6 +38,12 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
+                                .requestMatchers(
+                                        "/api/auth/login/**",
+                                        "/api/auth/test/login/**",
+                                        "/api/health"
+                                )
+                                .permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
