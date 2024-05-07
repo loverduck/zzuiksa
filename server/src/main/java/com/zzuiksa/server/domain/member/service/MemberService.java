@@ -31,8 +31,9 @@ public class MemberService {
     public UpdateMemberResponse update(UpdateMemberRequest updateMemberRequest, @NotNull Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCodes.MEMBER_NOT_FOUND));
-        Member updateMember = updateMemberRequest.update(member);
-        return UpdateMemberResponse.from(updateMember);
+        member = updateMemberRequest.update(member);
+        member = memberRepository.save(member);
+        return UpdateMemberResponse.from(member);
     }
 
 }
