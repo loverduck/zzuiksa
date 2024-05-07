@@ -59,6 +59,13 @@ public class Member extends BaseEntity {
         this.name = name;
     }
 
+    public void setBirthday(LocalDate birthday) {
+        if (birthday.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("유효하지 않은 날짜입니다.");
+        }
+        this.birthday = birthday;
+    }
+
     public Member(String name, String kakaoId, LocalDate birthday, String profileImage) {
         this.name = name;
         this.kakaoId = kakaoId;
