@@ -45,24 +45,11 @@ public class MemberServiceTests {
         Long id = 1L;
         GetMemberResponse getMemberResponse = getMemberResponseBuilder.id(id).build();
         Member member = memberBuilder.id(id).build();
-        given(memberRepositoryMock.findById(anyLong())).willReturn(Optional.of(member));
 
         // when
-        GetMemberResponse got = memberService.get(id);
+        GetMemberResponse got = memberService.get(member);
 
         // then
         assertThat(got).isEqualTo(getMemberResponse);
     }
-
-    @Test
-    public void get_notExistMember_throwCustomExceptionWithStatus404() {
-        // given
-        Long id = 1L;
-        given(memberRepositoryMock.findById(id)).willReturn(Optional.empty());
-
-        // when & then
-        assertThatThrownBy(() -> memberService.get(id))
-                .isInstanceOfSatisfying(CustomException.class, ex -> ex.getStatus().isSameCodeAs(HttpStatus.NOT_FOUND));
-    }
-
 }
