@@ -1,4 +1,4 @@
-import 'package:client/screens/schedule/schedule_add_screen.dart';
+import 'package:client/screens/schedule/schedule_form_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -67,45 +67,49 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           content: SizedBox(
             height: 300,
-            child: Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  GestureDetector(
-                    onTap: moveToDetail,
-                    child: const Text("할일 1"),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Text("할 일을 입력해주세요"),
-                      Transform.translate(
-                        offset: const Offset(8, 0),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return ScheduleAddScreen(
-                                    selectedDay: selectedDay,
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.add_circle,
-                            color: Constants.main600,
-                            size: 36.0,
-                          ),
-                          padding: const EdgeInsets.all(0),
-                        ),
+                      GestureDetector(
+                        onTap: moveToDetail,
+                        child: const Text("할일 1"),
                       ),
                     ],
-                  )
-                ],
-              ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("할 일을 입력해주세요"),
+                    Transform.translate(
+                      offset: const Offset(8, 0),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ScheduleFormScreen(
+                                  selectedDay: selectedDay,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.add_circle,
+                          color: Constants.main600,
+                          size: 36.0,
+                        ),
+                        padding: const EdgeInsets.all(0),
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
         );

@@ -1,4 +1,6 @@
 import 'package:client/constants.dart';
+import 'package:client/screens/schedule/model/schedule_model.dart';
+import 'package:client/screens/schedule/schedule_form_screen.dart';
 import 'package:client/screens/schedule/widgets/detail/detail_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,14 @@ class ScheduleDetailScreen extends StatefulWidget {
 }
 
 class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
+  Schedule schedule = Schedule(
+    title: "저녁 약속",
+    startDate: "2024-04-27",
+    startTime: "19:00",
+    endDate: "2024-04-17",
+    endTime: "20:00",
+  );
+
   SizedBox textMargin = const SizedBox(
     width: 10.0,
   );
@@ -28,15 +38,40 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
     fontSize: fontSizeMedium,
   );
 
+  Widget menuButton() {
+    return PopupMenuButton(
+      onSelected: (val) {
+        print(val);
+        if (val == "수정") {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return ScheduleFormScreen(
+              selectedDay: DateTime.parse(schedule.startDate!),
+              schedule: schedule,
+            );
+          }));
+        }
+      },
+      itemBuilder: (context) => <PopupMenuItem>[
+        const PopupMenuItem(
+          value: "수정",
+          child: Text("수정"),
+        ),
+        const PopupMenuItem(
+          child: Text("삭제"),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.main200,
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Icon(Icons.more_vert),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: menuButton(),
           ),
         ],
       ),
