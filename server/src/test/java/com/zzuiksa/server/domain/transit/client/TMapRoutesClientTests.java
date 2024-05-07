@@ -11,24 +11,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zzuiksa.server.domain.transit.data.request.TMapRoutesRequest;
 import com.zzuiksa.server.domain.transit.data.request.TMapTransitRoutesSubRequest;
+import com.zzuiksa.server.domain.transit.data.response.TMapRoutesResponse;
 import com.zzuiksa.server.domain.transit.data.response.TMapTransitRoutesSubResponse;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-public class TMapTransitRoutesSubClientTests {
+public class TMapRoutesClientTests {
 
     @Value("${api.tmap.app-key}")
     private String tmapAppKey;
 
     @Autowired
-    private TMapTransitRoutesSubClient client;
+    private TMapRoutesClient client;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
-    public void getTransitRoutes__success() throws Exception {
+    public void getTransitRoutesSub__success() throws Exception {
         // given
         float startLat = 126.936928f;
         float startLng = 37.555162f;
@@ -40,10 +42,27 @@ public class TMapTransitRoutesSubClientTests {
                 count);
 
         // when
-        TMapTransitRoutesSubResponse routes = client.getTransitRoutes(request, tmapAppKey);
-        objectMapper.writeValue(System.out, routes);
+        TMapTransitRoutesSubResponse response = client.getTransitRoutesSub(request, tmapAppKey);
+        objectMapper.writeValue(System.out, response);
 
         // then
-        Assertions.assertThat(routes.findMinTotalTime()).isNotNull().isGreaterThanOrEqualTo(0);
+        Assertions.assertThat(response.findMinTotalTime()).isNotNull().isGreaterThan(0);
+    }
+
+    @Test
+    public void getRoutes__success() throws Exception {
+        // given
+        float startLat = 126.936928f;
+        float startLng = 37.555162f;
+        float endLat = 127.029281f;
+        float endLng = 37.564436f;
+        TMapRoutesRequest request = TMapRoutesRequest.of(startLat, startLng, endLat, endLng);
+
+        // when
+        TMapRoutesResponse response = client.getRoutes(request, tmapAppKey);
+        objectMapper.writeValue(System.out, response);
+
+        // then
+        Assertions.assertThat(response.findMinTotalTime()).isNotNull().isGreaterThan(0);
     }
 }

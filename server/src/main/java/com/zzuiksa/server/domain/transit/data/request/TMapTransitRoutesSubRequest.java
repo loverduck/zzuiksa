@@ -31,7 +31,7 @@ public class TMapTransitRoutesSubRequest {
     @NotNull
     private String endY;
 
-    private String format = "json";
+    private String format;
 
     private Integer count;
 
@@ -45,6 +45,7 @@ public class TMapTransitRoutesSubRequest {
                 .startY(String.valueOf(startLng))
                 .endX(String.valueOf(endLat))
                 .endY(String.valueOf(endLng))
+                .format("json")
                 .searchDttm(startDateTime.format(searchDttmFormatter))
                 .count(count)
                 .build();
