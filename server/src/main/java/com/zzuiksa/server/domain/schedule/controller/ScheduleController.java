@@ -2,6 +2,7 @@ package com.zzuiksa.server.domain.schedule.controller;
 
 import com.zzuiksa.server.domain.auth.data.MemberDetail;
 import com.zzuiksa.server.domain.member.entity.Member;
+import com.zzuiksa.server.domain.schedule.data.CategoryDto;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
 import com.zzuiksa.server.domain.schedule.data.request.GetScheduleListRequest;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
@@ -47,5 +48,10 @@ public class ScheduleController {
     public DeleteScheduleResponse delete(@PathVariable Long scheduleId, @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
         return scheduleService.delete(scheduleId, member);
+    }
+
+    @GetMapping("/categories")
+    public List<CategoryDto> getCategoryList() {
+        return scheduleService.getCategoryList();
     }
 }

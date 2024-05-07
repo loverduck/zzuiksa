@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zzuiksa.server.domain.member.entity.Member;
+import com.zzuiksa.server.domain.schedule.data.CategoryDto;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.DeleteScheduleResponse;
@@ -88,6 +89,11 @@ public class ScheduleService {
         } else {
             scheduleRepository.deleteById(id);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryDto> getCategoryList() {
+        return categoryRepository.findAll().stream().map(CategoryDto::from).toList();
     }
 
     private Schedule addSchedule(AddScheduleRequest request, Member member) {
