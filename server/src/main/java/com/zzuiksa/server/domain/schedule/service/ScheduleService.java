@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zzuiksa.server.domain.member.entity.Member;
+import com.zzuiksa.server.domain.schedule.data.CategoryDto;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
+import com.zzuiksa.server.domain.schedule.data.response.DeleteScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.GetScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.ScheduleSummaryDto;
 import com.zzuiksa.server.domain.schedule.entity.Category;
@@ -72,6 +74,27 @@ public class ScheduleService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
 
         return scheduleRepository.findAllSummaryByMemberAndDateBetweenAndCategory(member, from, to, category);
+    }
+
+    @Transactional
+    public DeleteScheduleResponse delete(@NotNull Long id, @NotNull Member member) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND));
+        if (!member.getId().equals(schedule.getMember().getId())) {
+            throw new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND);
+        }
+        Routine routine = schedule.getRoutine();
+        if (routine != null) {
+            scheduleRepository.deleteAllByRoutine(routine);
+        } else {
+            scheduleRepository.deleteById(id);
+        }
+        return new DeleteScheduleResponse();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryDto> getCategoryList() {
+        return categoryRepository.findAll().stream().map(CategoryDto::from).toList();
     }
 
     private Schedule addSchedule(AddScheduleRequest request, Member member) {
