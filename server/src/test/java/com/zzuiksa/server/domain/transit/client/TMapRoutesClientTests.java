@@ -11,8 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zzuiksa.server.domain.transit.data.request.TMapRoutesPedestrianRequest;
 import com.zzuiksa.server.domain.transit.data.request.TMapRoutesRequest;
 import com.zzuiksa.server.domain.transit.data.request.TMapTransitRoutesSubRequest;
+import com.zzuiksa.server.domain.transit.data.response.TMapRoutesPedestrianResponse;
 import com.zzuiksa.server.domain.transit.data.response.TMapRoutesResponse;
 import com.zzuiksa.server.domain.transit.data.response.TMapTransitRoutesSubResponse;
 
@@ -60,6 +62,23 @@ public class TMapRoutesClientTests {
 
         // when
         TMapRoutesResponse response = client.getRoutes(request, tmapAppKey);
+        objectMapper.writeValue(System.out, response);
+
+        // then
+        Assertions.assertThat(response.findMinTotalTime()).isNotNull().isGreaterThan(0);
+    }
+
+    @Test
+    public void getRoutesPedestrian__success() throws Exception {
+        // given
+        float startLat = 126.936928f;
+        float startLng = 37.555162f;
+        float endLat = 127.029281f;
+        float endLng = 37.564436f;
+        TMapRoutesPedestrianRequest request = TMapRoutesPedestrianRequest.of(startLat, startLng, endLat, endLng);
+
+        // when
+        TMapRoutesPedestrianResponse response = client.getRoutesPedestrian(request, tmapAppKey);
         objectMapper.writeValue(System.out, response);
 
         // then
