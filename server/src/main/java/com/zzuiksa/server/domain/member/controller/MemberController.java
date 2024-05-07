@@ -11,6 +11,7 @@ import com.zzuiksa.server.domain.auth.data.MemberDetail;
 import com.zzuiksa.server.domain.member.data.request.UpdateMemberRequest;
 import com.zzuiksa.server.domain.member.data.response.GetMemberResponse;
 import com.zzuiksa.server.domain.member.data.response.UpdateMemberResponse;
+import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,12 +25,14 @@ public class MemberController {
 
     @GetMapping
     public GetMemberResponse getMember(@AuthenticationPrincipal MemberDetail memberDetail) {
-        return memberService.get(memberDetail.getMember().getId());
+        Member member = memberDetail.getMember();
+        return memberService.get(member);
     }
 
     @PatchMapping
     public UpdateMemberResponse updateMember(@RequestBody UpdateMemberRequest updateMemberRequest,
             @AuthenticationPrincipal MemberDetail memberDetail) {
-        return memberService.update(updateMemberRequest, memberDetail.getMember().getId());
+        Member member = memberDetail.getMember();
+        return memberService.update(updateMemberRequest, member);
     }
 }
