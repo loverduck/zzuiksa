@@ -79,7 +79,7 @@ public class ScheduleService {
     @Transactional
     public DeleteScheduleResponse delete(@NotNull Long id, @NotNull Member member) {
         Schedule schedule = scheduleRepository.findById(id)
-            .orElseThrow(() -> new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND));
         if (!member.getId().equals(schedule.getMember().getId())) {
             throw new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND);
         }
