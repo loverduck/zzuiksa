@@ -39,7 +39,7 @@ public class PlaceService {
         Place place = placeRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCodes.PLACE_NOT_FOUND));
         if (!place.getMember().getId().equals(member.getId())) {
-            throw new CustomException(ErrorCodes.MEMBER_NOT_FOUND);
+            throw new CustomException(ErrorCodes.PLACE_FORBIDDEN);
         }
         return GetPlaceResponse.from(place);
     }
@@ -54,7 +54,7 @@ public class PlaceService {
         Place place = placeRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCodes.PLACE_NOT_FOUND));
         if (!place.getMember().getId().equals(member.getId())) {
-            throw new CustomException(ErrorCodes.MEMBER_NOT_FOUND);
+            throw new CustomException(ErrorCodes.PLACE_FORBIDDEN);
         }
         place = request.update(place);
         place = placeRepository.save(place);
@@ -66,7 +66,7 @@ public class PlaceService {
         Place place = placeRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCodes.PLACE_NOT_FOUND));
         if (!place.getMember().getId().equals(member.getId())) {
-            throw new CustomException(ErrorCodes.MEMBER_NOT_FOUND);
+            throw new CustomException(ErrorCodes.PLACE_FORBIDDEN);
         }
         placeRepository.delete(place);
         return new DeletePlaceResponse();
