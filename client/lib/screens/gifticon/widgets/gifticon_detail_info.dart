@@ -1,6 +1,12 @@
+import 'package:client/screens/gifticon/widgets/use_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
+import 'package:client/screens/gifticon/widgets/gifticon_barcode_modal.dart';
 import 'package:client/styles.dart';
+
+import 'gifticon_store_map_button.dart';
+
 
 class GifticonDetailInfo extends StatelessWidget {
   final Gifticon gifticon;
@@ -9,6 +15,13 @@ class GifticonDetailInfo extends StatelessWidget {
     Key? key,
     required this.gifticon,
   }) : super(key: key);
+
+  void _showBarcodeModal(BuildContext context, String couponNum) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => BarcodeModal(couponNum: couponNum),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,57 +32,54 @@ class GifticonDetailInfo extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    gifticon.store ?? 'N/A',
-                    style: myTheme.textTheme.displayMedium,
-                  ),
-                ],
+              Text(
+                gifticon.store ?? 'N/A',
+                style: myTheme.textTheme.displayMedium,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  // 바코드 및 쿠폰 번호 뜨는 화면으로 이동
-                },
-                child: Text('사용하기', style: myTheme.textTheme.displayMedium),
+              UseButton(
+                onPressed: () => _showBarcodeModal(context, gifticon.couponNum ?? 'N/A'),
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             gifticon.name ?? 'N/A',
+            style: myTheme.textTheme.displayLarge,
+          ),
+          Text(
+            '${gifticon.endDate ?? 'N/A'} 까지',
             style: myTheme.textTheme.displayMedium,
           ),
-          SizedBox(height: 8),
-          Text('${gifticon.endDate ?? 'N/A'} 까지',
-              style: myTheme.textTheme.displayMedium),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: '메모',
               border: OutlineInputBorder(),
             ),
             controller: TextEditingController(text: gifticon.memo ?? ''),
             readOnly: true,
           ),
-          SizedBox(height: 10),
-          Text(
-            '사용 가능한 주변 지점',
-            style: myTheme.textTheme.displayMedium,
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '사용 가능한 주변 지점',
+                style: myTheme.textTheme.displayMedium,
+              ),
+              GifticonStoreMapButton(
+                onPressed: () => Navigator.pushNamed(context, '/gifticon_select_screen', arguments: gifticon.id),
+              )
+            ],
           ),
-          ElevatedButton.icon(
-            onPressed: () {
-              //지도 화면으로 이동하는 내용 추가
-            },
-            icon: Icon(Icons.map),
-            label: Text('지도로 보기', style: myTheme.textTheme.displayMedium),
-          ),
+          const SizedBox(height: 8),
           ...List.generate(3, (index) => _buildNearbyStoreInfo(gifticon)),
         ],
       ),
     );
   }
+
+
 
   Widget _buildNearbyStoreInfo(Gifticon gifticon) {
     return Padding(
@@ -79,8 +89,8 @@ class GifticonDetailInfo extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.place, color: Colors.grey),
-              SizedBox(width: 8),
+              const Icon(Icons.place, color: Colors.grey),
+              const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

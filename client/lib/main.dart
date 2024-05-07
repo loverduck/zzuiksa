@@ -1,3 +1,4 @@
+import 'package:client/screens/gifticon/gifticon_map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -51,6 +52,9 @@ class MyApp extends StatelessWidget {
         '/gifticon_select_screen': (context) => const GifticonSelectScreen(),
         '/gifticon_add_screen': (context) => const GifticonAddScreen(),
         '/gifticon_detail_screen': (context) => GifticonDetailScreen(
+          gifticonId: ModalRoute.of(context)!.settings.arguments as int,
+        ),
+        '/gifticon_map_screen': (context) => GifticonMapScreen(
           gifticonId: ModalRoute.of(context)!.settings.arguments as int,
         ),
         '/gifticon_update_screen': (context) => GifticonUpdateScreen(

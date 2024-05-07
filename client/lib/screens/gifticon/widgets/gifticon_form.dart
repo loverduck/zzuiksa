@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
 
-class GifticonAddForm extends StatefulWidget {
+class GifticonForm extends StatefulWidget {
   final Gifticon? initialGifticon;
   final Function(Gifticon) onSubmit;
+  final bool isEdit;
 
-  const GifticonAddForm({
-    Key? key, required this.onSubmit, this.initialGifticon
+  const GifticonForm({
+    Key? key,
+    required this.onSubmit,
+    this.initialGifticon,
+    this.isEdit = false,
   }) : super(key: key);
 
   @override
-  State<GifticonAddForm> createState() => _GifticonAddFormState();
+  State<GifticonForm> createState() => _GifticonFormState();
 }
 
-class _GifticonAddFormState extends State<GifticonAddForm> {
+class _GifticonFormState extends State<GifticonForm> {
   bool _isAmountVoucher = false;
   final _formKey = GlobalKey<FormState>();
   late Gifticon _gifticon;
@@ -38,16 +42,16 @@ class _GifticonAddFormState extends State<GifticonAddForm> {
     return Form(
       key: _formKey,
       child: ListView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         children: <Widget>[
-          Container(
+          SizedBox(
             width: 300,
             height: 300,
-            child: Image(
+            child: const Image(
               image: AssetImage('assets/images/tempGifticon.jpeg'),
             ),
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           ListTile(
             title: Text('금액권인가요?', style: Theme.of(context).textTheme.displayMedium),
             trailing: Switch(
@@ -55,13 +59,13 @@ class _GifticonAddFormState extends State<GifticonAddForm> {
               onChanged: (bool value) {
                 setState(() {
                   _isAmountVoucher = value;
-                  _gifticon.remainMoney = value ? 0 : null;  // 금액권 여부에 따라 금액 설정 초기화
+                  _gifticon.remainMoney = value ? 0 : null;
                 });
               },
               activeColor: Constants.main400,
             ),
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           _buildTextFormField(
             label: '기프티콘명',
             value: _gifticon.name,
@@ -94,6 +98,11 @@ class _GifticonAddFormState extends State<GifticonAddForm> {
             value: _gifticon.memo,
             onChanged: (value) => _gifticon.memo = value,
           ),
+          const SizedBox(height: 30),
+          ElevatedButton(
+            onPressed: _handleSubmit,
+            child: Text(widget.isEdit ? '수정하기' : '저장하기'),
+          ),
         ],
       ),
     );
@@ -112,7 +121,7 @@ class _GifticonAddFormState extends State<GifticonAddForm> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
         filled: true,
         fillColor: Constants.main100,
-        contentPadding: EdgeInsets.symmetric(horizontal: 30),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 30),
       ),
       style: Theme.of(context).textTheme.bodyLarge,
       onChanged: onChanged,

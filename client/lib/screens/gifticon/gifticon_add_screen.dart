@@ -5,7 +5,7 @@ import '../../constants.dart';
 
 import 'gifticon_detail_screen.dart';
 import 'model/gifticon_model.dart';
-import 'widgets/gifticon_add_form.dart';
+import 'widgets/gifticon_form.dart';
 
 class GifticonAddScreen extends StatefulWidget {
   static const title = 'Gifticon';
@@ -69,7 +69,7 @@ class _GifticonAddScreenState extends State<GifticonAddScreen> {
           ),
         ],
       ),
-      body: GifticonAddForm(onSubmit: _navigateToDetailScreen),
+      body: GifticonForm(onSubmit: _navigateToDetailScreen),
     );
   }
 }
