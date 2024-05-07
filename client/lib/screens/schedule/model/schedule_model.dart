@@ -1,16 +1,16 @@
 class Schedule {
-  int? categoryId;
+  int? categoryId = 1;
   String? title;
   String? startDate;
   String? endDate;
   String? startTime;
   String? endTime;
   int? alertBefore;
-  String? memo;
+  String? memo = "";
   Place? toPlace;
   Place? fromPlace;
-  bool? repeat;
-  bool? isDone;
+  bool? repeat = false;
+  bool? isDone = false;
 
   Schedule(
       {this.categoryId,
