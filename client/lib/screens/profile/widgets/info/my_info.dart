@@ -30,17 +30,17 @@ class MyInfo extends StatelessWidget {
                     style: textTheme.displaySmall, textAlign: TextAlign.center)
               ]),
               TableRow(children: [
-                Text('카카오 ID',
-                    style: TextStyle(color: Constants.main400, fontSize: 22),
-                    textAlign: TextAlign.center),
-                Text('kim@ssafy.com',
-                    style: textTheme.displaySmall, textAlign: TextAlign.center)
-              ]),
-              TableRow(children: [
                 Text('생일',
                     style: TextStyle(color: Constants.main400, fontSize: 22),
                     textAlign: TextAlign.center),
                 Text('2000년 1월 1일',
+                    style: textTheme.displaySmall, textAlign: TextAlign.center)
+              ]),
+              TableRow(children: [
+                Text('카카오 ID',
+                    style: TextStyle(color: Constants.main400, fontSize: 22),
+                    textAlign: TextAlign.center),
+                Text('kim@ssafy.com',
                     style: textTheme.displaySmall, textAlign: TextAlign.center)
               ]),
             ],

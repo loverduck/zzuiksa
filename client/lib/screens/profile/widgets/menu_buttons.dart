@@ -61,14 +61,14 @@ class _MenuButtonsState extends State<MenuButtons> {
                   });
                 },
                 child: _placeText),
-            TextButton(
-                onPressed: () {
-                  setState(() {
-                    selectedIndex = 2;
-                    widget.setIndex(selectedIndex);
-                  });
-                },
-                child: _infoText),
+            // TextButton(
+            //     onPressed: () {
+            //       setState(() {
+            //         selectedIndex = 2;
+            //         widget.setIndex(selectedIndex);
+            //       });
+            //     },
+            //     child: _infoText),
           ],
         ));
   }

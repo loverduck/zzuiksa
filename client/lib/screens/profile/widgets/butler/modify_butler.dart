@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../input_box.dart';
+import 'package:client/constants.dart';
+import 'package:client/widgets/header.dart';
+import 'package:client/widgets/input_box.dart';
+import 'package:client/widgets/dropdown_box.dart';
 
 class ModifyButler extends StatefulWidget {
   const ModifyButler({super.key});
@@ -17,31 +20,41 @@ class _ModifyButlerState extends State<ModifyButler> {
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(80.0),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            title: Text('집사 정보 수정', style: textTheme.displayLarge),
-            centerTitle: true,
-            toolbarHeight: 80.0,
+          child: Header(
+            title: '집사 정보 수정',
+            buttonList: [IconButton(
+              icon: Icon(Icons.check),
+              padding: EdgeInsets.all(32),
+              iconSize: 32,
+              onPressed: () {
+                print('complete button clicked');
+              },
+            )],
           ),
         ),
         extendBodyBehindAppBar: true,
         body: SafeArea(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Center(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              InputBox(name: 'address2', placeholder: '나머지 주소를 입력하세요'),
-                              InputBox(name: 'name', placeholder: '장소명을 입력하세요'),
-                              InputBox(name: 'category', placeholder: '분류를 선택하세요'),
-                            ])),
-                  ),
-                ],
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Center(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                      InputBox(
+                        name: 'nickname',
+                        placeholder: '집사 닉네임',
+                      ),
+                      DropdownBox(
+                        name: 'speachStyle',
+                        dropdownList: ['귀여운 말투', '근엄한 말투', '딱딱한 말투'],
+                      ),
+                    ])),
               ),
-            )));
+            ],
+          ),
+        )));
   }
 }

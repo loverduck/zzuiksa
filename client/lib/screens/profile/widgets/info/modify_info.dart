@@ -1,7 +1,10 @@
+import 'package:client/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:client/constants.dart';
-import '../input_box.dart';
+import 'package:client/widgets/header.dart';
+import 'package:client/widgets/input_box.dart';
+import 'package:client/widgets/custom_button.dart';
 
 class ModifyInfo extends StatefulWidget {
   const ModifyInfo({super.key});
@@ -18,41 +21,82 @@ class _ModifyInfoState extends State<ModifyInfo> {
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(80.0),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            title: Text('내 정보 수정', style: textTheme.displayLarge),
-            centerTitle: true,
-            toolbarHeight: 80.0,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.check),
-                iconSize: 32.0,
-                padding: EdgeInsets.all(24),
-                onPressed: () {
-                  print('setting button clicked');
-                },
-              ),
-            ],
+          child: Header(title:'내 정보 수정',
+            buttonList: [IconButton(
+              icon: Icon(Icons.check),
+              padding: EdgeInsets.all(32),
+              iconSize: 32,
+              onPressed: () {
+                print('complete button clicked');
+              },
+            )],
           ),
         ),
         extendBodyBehindAppBar: true,
         body: SafeArea(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Center(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              InputBox(name: 'address2', placeholder: '나머지 주소를 입력하세요'),
-                              InputBox(name: 'name', placeholder: '장소명을 입력하세요'),
-                              InputBox(name: 'category', placeholder: '분류를 선택하세요'),
-                            ])),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Center(
+                    child: Column(children: <Widget>[
+                  IconButton(
+                    onPressed: () {},
+                    icon: Image.asset(
+                      'assets/images/avatar.png',
+                      width: 120,
+                      height: 120,
+                    ),
                   ),
-                ],
+                  Container(
+                    margin: EdgeInsets.all(18),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CustomButton(
+                            text: '사진 바꾸기',
+                            size: 'small',
+                            func: () {
+                              print('image modify button clicked');
+                            },
+                          ),
+                          CustomButton(
+                            text: '사진 초기화',
+                            size: 'small',
+                            color: 200,
+                            func: () {
+                              print('image initialize button clicked');
+                            },
+                          ),
+                        ]),
+                  ),
+                  InputBox(
+                    name: 'nickname',
+                    placeholder: '닉네임',
+                    prefixIcon: IconButton(
+                      icon: Icon(Icons.person),
+                      iconSize: 32,
+                      color: Constants.main500,
+                      padding: EdgeInsets.only(left: 16, right: 16),
+                      onPressed: () {},
+                    ),
+                  ),
+                  InputBox(
+                    name: 'birthday',
+                    placeholder: '생일 (YYYY-M-D 형식)',
+                    prefixIcon: IconButton(
+                      icon: Icon(Icons.cake),
+                      iconSize: 32,
+                      color: Constants.main500,
+                      padding: EdgeInsets.only(left: 16, right: 16),
+                      onPressed: () {},
+                    ),
+                  ),
+                ])),
               ),
-            )));
+            ],
+          ),
+        )));
   }
 }
