@@ -1,9 +1,11 @@
+import 'package:client/screens/schedule/model/schedule_model.dart';
+import 'package:client/screens/schedule/utils/data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:client/constants.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class Calendar extends StatelessWidget {
+class Calendar extends StatefulWidget {
   final DateTime foucsedDay;
   final OnDaySelected onDaySelected;
   final bool Function(DateTime day) selectedDayPredicate;
@@ -14,6 +16,41 @@ class Calendar extends StatelessWidget {
     required this.onDaySelected,
     required this.selectedDayPredicate,
   });
+
+  @override
+  State<Calendar> createState() => _CalendarState();
+}
+
+Map<int, Color> categoryColor = {
+  0: Constants.green300,
+  1: Constants.blue300,
+  2: Constants.pink300,
+  3: Constants.violet300,
+};
+
+class _CalendarState extends State<Calendar> {
+  Map<DateTime, List<Schedule>> groupSchedules = {};
+
+  @override
+  void initState() {
+    getGroupSchedules();
+    super.initState();
+  }
+
+  void getGroupSchedules() {
+    groupSchedules = {};
+
+    for (Schedule schedule in schedulesData) {
+      DateTime date = DateTime.parse(schedule.startDate!);
+      DateTime key = DateTime(date.year, date.month, date.day).toUtc();
+
+      if (groupSchedules[key] == null) {
+        groupSchedules[key] = [];
+      }
+
+      groupSchedules[key]!.add(schedule);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,22 +77,35 @@ class Calendar extends StatelessWidget {
       locale: "ko_KR",
       shouldFillViewport: true,
       firstDay: DateTime(1800),
-      focusedDay: foucsedDay,
+      focusedDay: widget.foucsedDay,
       lastDay: DateTime(2400),
       daysOfWeekHeight: 30,
+      eventLoader: (day) {
+        return groupSchedules[day] ?? [];
+      },
       headerStyle: const HeaderStyle(
         leftChevronVisible: false,
         rightChevronVisible: false,
         formatButtonVisible: false,
-        headerPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        headerPadding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0),
         titleTextStyle: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w600,
         ),
       ),
-      onDaySelected: onDaySelected,
+      onDaySelected: widget.onDaySelected,
       // selectedDayPredicate: selectedDayPredicate,
       calendarBuilders: CalendarBuilders(
+        // 이벤트 표시
+        markerBuilder: (context, date, groupSchedules) {
+          if (groupSchedules.isNotEmpty) {
+            return Container(
+              padding: const EdgeInsets.fromLTRB(2.0, 0, 2.0, 0),
+              child: buildEventMarker(date, groupSchedules),
+            );
+          }
+          return null;
+        },
         // 일반 날짜
         defaultBuilder: (context, day, foucsedDay) {
           // 1일이고 일요일(화면의 첫 번째 날짜일 때 왼쪽 위 보더 둥글게)
@@ -188,4 +238,59 @@ class Calendar extends StatelessWidget {
       ),
     );
   }
+}
+
+// 이벤트 마커 커스텀
+Widget buildEventMarker(DateTime date, List events) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 8.0),
+    child: Column(
+      children: [
+        ...events.take(3).map(
+              (e) => Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.fromLTRB(4.0, 0, 4.0, 0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.0),
+                      color: categoryColor[e.categoryId]!.withOpacity(0.7),
+                    ),
+                    child: Text(
+                      "${e.title}",
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        decoration: e.isDone
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 3.0,
+                  ),
+                ],
+              ),
+            ),
+        if (events.length > 3)
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 4.0),
+                child: Text(
+                  "+${events.length - 3}",
+                  style: const TextStyle(
+                    color: Colors.black45,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ),
+            ],
+          )
+      ],
+    ),
+  );
 }
