@@ -1,12 +1,11 @@
+import 'package:client/screens/profile/widgets/butler/my_butler.dart';
 import 'package:client/widgets/header.dart';
-import 'widgets/info/butler_button.dart';
 import 'package:client/screens/profile/widgets/statistic/my_staticstic.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/menu_buttons.dart';
 import 'widgets/info/my_info.dart';
 import 'widgets/place/my_place.dart';
-import 'package:client/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const title = 'Profile';
@@ -33,16 +32,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0),
-          child: Header(title:'마이페이지'),
-        ),
+            preferredSize: Size.fromHeight(80.0),
+            child: Header(
+              title: '마이페이지',
+              // buttonList: [
+              //   IconButton(
+              //     icon: Icon(Icons.room_service),
+              //     padding: EdgeInsets.all(32),
+              //     iconSize: 32,
+              //     onPressed: () {
+              //       Navigator.push(context,
+              //           MaterialPageRoute(builder: (context) => MyButler()));
+              //     },
+              //   )
+              // ],
+            )),
         extendBodyBehindAppBar: true,
         body: SafeArea(
             child: SingleChildScrollView(
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Center(
                     child: Column(children: [
                   Image(

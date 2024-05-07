@@ -48,7 +48,15 @@ class _MyStatisticState extends State<MyStatistic> {
             text: '기록 백업하기',
             size: 'small',
             func: () {
-              print('backup button clicked');
+              showDialog<void>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('준비 중', style: textTheme.displayMedium),
+                    content: Text('준비 중인 기능이에요!', style: textTheme.displaySmall),
+                  );
+                },
+              );
             },
           ),
           CustomButton(
@@ -56,7 +64,15 @@ class _MyStatisticState extends State<MyStatistic> {
             size: 'small',
             color: 200,
             func: () {
-              print('backup button clicked');
+              showDialog<void>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('준비 중', style: textTheme.displayMedium),
+                    content: Text('준비 중인 기능이에요!', style: textTheme.displaySmall),
+                  );
+                },
+              );
             },
           ),
         ]),
