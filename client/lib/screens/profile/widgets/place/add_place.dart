@@ -1,8 +1,9 @@
 import 'package:client/constants.dart';
 import 'package:flutter/material.dart';
 
+import 'package:client/widgets/header.dart';
+import 'package:client/widgets/input_box.dart';
 import 'package:client/widgets/custom_button.dart';
-import '../input_box.dart';
 
 class AddPlace extends StatefulWidget {
   const AddPlace({super.key});
@@ -19,21 +20,16 @@ class _AddPlaceState extends State<AddPlace> {
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(80.0),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            title: Text('새 주소 등록', style: textTheme.displayLarge),
-            centerTitle: true,
-            toolbarHeight: 80.0,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.check),
-                iconSize: 32.0,
-                padding: EdgeInsets.all(24),
-                onPressed: () {
-                  print('setting button clicked');
-                },
-              ),
-            ],
+          child: Header(
+            title: '새 주소 추가',
+            buttonList: [IconButton(
+              icon: Icon(Icons.check),
+              padding: EdgeInsets.all(32),
+              iconSize: 32,
+              onPressed: () {
+                print('complete button clicked');
+              },
+            )],
           ),
         ),
         extendBodyBehindAppBar: true,
@@ -55,26 +51,28 @@ class _AddPlaceState extends State<AddPlace> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        CustomButton(
-                          text: '장소선택',
-                          size: 'small',
-                          func: () {
-                            print('select button clicked');
-                          },
-                        ),
-                        CustomButton(
-                          text: '현위치로',
-                          size: 'small',
-                          color: 200,
-                          func: () {
-                            print('here button clicked');
-                          },
-                        ),
-                      ]),
-                  SizedBox(height: 8),
+                  Container(
+                    margin: EdgeInsets.all(12),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CustomButton(
+                            text: '장소선택',
+                            size: 'small',
+                            func: () {
+                              print('select button clicked');
+                            },
+                          ),
+                          CustomButton(
+                            text: '현위치로',
+                            size: 'small',
+                            color: 200,
+                            func: () {
+                              print('here button clicked');
+                            },
+                          ),
+                        ]),
+                  ),
                   InputBox(
                     name: 'address1',
                     placeholder: '지도에서 장소를 선택하세요',
@@ -84,9 +82,15 @@ class _AddPlaceState extends State<AddPlace> {
                         color: Constants.main600,
                         onPressed: () {}),
                   ),
-                  InputBox(name: 'address2', placeholder: '나머지 주소를 입력하세요'),
-                  InputBox(name: 'name', placeholder: '장소명을 입력하세요'),
-                  InputBox(name: 'category', placeholder: '분류를 선택하세요'),
+                  InputBox(
+                    name: 'name',
+                    placeholder: '장소명을 입력하세요',
+                    suffixIcon: IconButton(
+                        icon: Icon(Icons.close),
+                        iconSize: 32,
+                        color: Constants.main600,
+                        onPressed: () {}),
+                  ),
                 ])),
               ),
             ],
