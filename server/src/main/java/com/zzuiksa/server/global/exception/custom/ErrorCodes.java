@@ -27,6 +27,9 @@ public enum ErrorCodes implements ErrorCode {
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "ZSE001", "해당하는 일정이 없습니다."),
     SCHEDULE_TOO_FAR(HttpStatus.BAD_REQUEST, "ZSE004", "2년 뒤까지의 일정만 추가할 수 있습니다."),
     BAD_SCHEDULE_REPEAT(HttpStatus.BAD_REQUEST, "ZSE005", "잘못된 반복 일정입니다. (기간 내에 생성된 일정이 없음)"),
+
+    PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "ZPE001", "장소를 찾을 수 없습니다."),
+    PLACE_FORBIDDEN(HttpStatus.FORBIDDEN, "ZPE002", "장소 접근 권한이 없습니다."),
     ;
 
     private final HttpStatusCode status;
