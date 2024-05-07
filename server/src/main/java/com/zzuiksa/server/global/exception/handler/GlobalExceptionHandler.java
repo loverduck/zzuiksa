@@ -29,4 +29,9 @@ public class GlobalExceptionHandler {
                 new ErrorResponse("ZBE002", ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage()),
                 ex.getStatusCode());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return new ResponseEntity<>(new ErrorResponse("ZGE001", ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 }
