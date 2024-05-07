@@ -89,6 +89,7 @@ public class ScheduleService {
         } else {
             scheduleRepository.deleteById(id);
         }
+        return new DeleteScheduleResponse();
     }
 
     @Transactional(readOnly = true)
