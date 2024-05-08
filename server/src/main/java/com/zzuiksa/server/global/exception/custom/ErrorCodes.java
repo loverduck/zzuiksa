@@ -30,6 +30,9 @@ public enum ErrorCodes implements ErrorCode {
 
     PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "ZPE001", "장소를 찾을 수 없습니다."),
     PLACE_FORBIDDEN(HttpStatus.FORBIDDEN, "ZPE002", "장소 접근 권한이 없습니다."),
+
+    GIFTICON_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "ZGE001", "이미 등록된 기프티콘입니다."),
+    GIFTICON_NOT_FOUND(HttpStatus.NOT_FOUND, "ZGE002", "기프티콘 정보를 찾을 수 없습니다."),
     ;
 
     private final HttpStatusCode status;
