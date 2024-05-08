@@ -61,7 +61,7 @@ public class Gifticon extends BaseEntity {
     private IsUsed isUsed;
 
     @Column
-    private int remainMoney;
+    private Integer remainMoney;
 
     @Size(max = 1000)
     @Column(length = 1000)
