@@ -1,6 +1,7 @@
 package com.zzuiksa.server.domain.member.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.util.StringUtils;
 
@@ -81,5 +82,9 @@ public class Member extends BaseEntity {
         }
 
         // TODO: 생일 정보 받아올건지?
+    }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
     }
 }
