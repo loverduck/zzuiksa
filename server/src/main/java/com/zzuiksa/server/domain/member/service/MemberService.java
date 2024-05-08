@@ -30,4 +30,10 @@ public class MemberService {
         return UpdateMemberResponse.from(member);
     }
 
+    @Transactional
+    public long delete(@NotNull Member member) {
+        member.delete();
+        member = memberRepository.save(member);
+        return member.getId();
+    }
 }
