@@ -19,7 +19,20 @@ class _TimelineState extends State<Timeline> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('오늘의 일정', style: textTheme.displayMedium),
-                  Icon(Icons.add_circle_outline, size: 32),
+                  IconButton(
+                      icon: Icon(Icons.add_circle_outline),
+                      iconSize: 32,
+                      onPressed: () {
+                        showDialog<void>(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('준비 중', style: textTheme.displayMedium),
+                              content: Text('준비 중인 기능이에요!', style: textTheme.displaySmall),
+                            );
+                          },
+                        );
+                      }),
                 ])),
         const TimelineCard(
           title: '내 생일',

@@ -31,11 +31,11 @@ class CustomButton extends StatelessWidget {
     EdgeInsets edgeInsets() {
       switch (size) {
         case 'small':
-          return EdgeInsets.symmetric(horizontal: 40, vertical: 10);
+          return const EdgeInsets.symmetric(horizontal: 40, vertical: 10);
         case 'medium':
-          return EdgeInsets.symmetric(horizontal: 80, vertical: 10);
+          return const EdgeInsets.symmetric(horizontal: 80, vertical: 10);
         default:
-          return EdgeInsets.symmetric(horizontal: 120, vertical: 10);
+          return const EdgeInsets.symmetric(horizontal: 120, vertical: 10);
       }
     }
 
@@ -46,7 +46,7 @@ class CustomButton extends StatelessWidget {
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(bgColor()),
             side: MaterialStateProperty.all(
-                BorderSide(width: 2.0, color: Constants.main600)),
+                const BorderSide(width: 2.0, color: Constants.main600)),
             padding: MaterialStateProperty.all<EdgeInsets>(
                 edgeInsets()
             )),
