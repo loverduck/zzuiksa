@@ -18,4 +18,4 @@ class Constants {
   static const textColor = Color(0xFF451E1E);
 }
 
-String baseUrl = "http://localhost:8080";
+String baseUrl = "https://k10a202.p.ssafy.io";

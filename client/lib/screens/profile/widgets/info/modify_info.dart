@@ -84,7 +84,7 @@ class _ModifyInfoState extends State<ModifyInfo> {
                   ),
                   InputBox(
                     name: 'birthday',
-                    placeholder: '생일 (YYYY-M-D 형식)',
+                    placeholder: '생일 (MM-DD 형식)',
                     prefixIcon: IconButton(
                       icon: Icon(Icons.cake),
                       iconSize: 32,

@@ -1,10 +1,9 @@
-import 'package:client/screens/gifticon/gifticon_map_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
+import 'screens/login/login_check_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/schedule/schedule_calendar_screen.dart';
 import 'screens/schedule/schedule_detail_screen.dart';
@@ -15,6 +14,7 @@ import 'screens/gifticon/gifticon_add_screen.dart';
 import 'screens/gifticon/gifticon_detail_screen.dart';
 import 'screens/gifticon/gifticon_select_screen.dart';
 import 'screens/gifticon/gifticon_update_screen.dart';
+import 'screens/gifticon/gifticon_map_screen.dart';
 import 'screens/gifticon/model/gifticon_model.dart';
 import 'screens/home/home_screen.dart';
 import 'styles.dart' as style;
@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
       title: 'ZZUIKSA',
       theme: style.myTheme,
       routes: {
+        '/home': (context) => const HomeScreen(),
         '/dashboard': (context) => const DashboardScreen(),
         '/calendar': (context) => const CalendarScreen(),
         '/schedule/search': (context) => const SchedulePlaceSearchScreen(),
@@ -60,9 +61,8 @@ class MyApp extends StatelessWidget {
         '/gifticon_update_screen': (context) => GifticonUpdateScreen(
           gifticon: ModalRoute.of(context)!.settings.arguments as Gifticon,
         ),
-        '/profile': (context) => const ProfileScreen(),
       },
-      home: const HomeScreen(),
+      home: LoginScreen(),
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/today.dart';
@@ -6,11 +5,11 @@ import 'widgets/completeRate.dart';
 import 'widgets/sentences.dart';
 import 'widgets/zzuiksa.dart';
 import 'widgets/timeline/timeline.dart';
+import '../login/logout_button.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const title = 'DashBoard';
   static const androidIcon = Icon(Icons.home);
-  static const iosIcon = Icon(CupertinoIcons.music_note);
 
   const DashboardScreen({super.key});
 
@@ -47,6 +46,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             )),
         const Timeline(),
+        const LogoutButton(),
         const SizedBox(height: 32)
       ],
     )));

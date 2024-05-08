@@ -18,7 +18,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int currentIndex = 0;
+  int currentIndex = 2;
 
   setIndex(int index) {
     setState(() {
@@ -35,17 +35,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             preferredSize: Size.fromHeight(80.0),
             child: Header(
               title: '마이페이지',
-              // buttonList: [
-              //   IconButton(
-              //     icon: Icon(Icons.room_service),
-              //     padding: EdgeInsets.all(32),
-              //     iconSize: 32,
-              //     onPressed: () {
-              //       Navigator.push(context,
-              //           MaterialPageRoute(builder: (context) => MyButler()));
-              //     },
-              //   )
-              // ],
+              buttonList: [
+                IconButton(
+                  icon: Icon(Icons.room_service),
+                  padding: EdgeInsets.all(32),
+                  iconSize: 32,
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MyButler()));
+                  },
+                )
+              ],
             )),
         extendBodyBehindAppBar: true,
         body: SafeArea(
