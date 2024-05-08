@@ -1,6 +1,7 @@
 package com.zzuiksa.server.domain.member.controller;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,5 +49,16 @@ public class MemberController {
             @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
         return memberService.update(updateMemberRequest, member);
+    }
+
+    @Operation(
+            summary = "회원 탈퇴",
+            description = "회원 탈퇴를 진행합니다.",
+            security = {@SecurityRequirement(name = "bearer-key")}
+    )
+    @DeleteMapping
+    public void deleteMember(@AuthenticationPrincipal MemberDetail memberDetail) {
+        Member member = memberDetail.getMember();
+        memberService.delete(member);
     }
 }

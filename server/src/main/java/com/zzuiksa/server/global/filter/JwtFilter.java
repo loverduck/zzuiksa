@@ -10,7 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zzuiksa.server.global.api.ErrorResponse;
-import com.zzuiksa.server.global.exception.AuthenticationException;
+import com.zzuiksa.server.global.exception.AuthException;
 import com.zzuiksa.server.global.exception.custom.ErrorCodes;
 import com.zzuiksa.server.global.token.TokenProvider;
 
@@ -44,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             String[] authorizations = authorizationHeader.split(" ");
             if (authorizations.length < 2 || (!"Bearer".equals(authorizations[0]))) {
-                throw new AuthenticationException(ErrorCodes.NOT_VALID_BEARER_TYPE);
+                throw new AuthException(ErrorCodes.NOT_VALID_BEARER_TYPE);
             }
 
             String token = authorizationHeader.split(" ")[1];
@@ -55,12 +55,12 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);
-        } catch (AuthenticationException e) {
+        } catch (AuthException e) {
             handleException(response, e);
         }
     }
 
-    public void handleException(HttpServletResponse response, AuthenticationException ex) throws
+    public void handleException(HttpServletResponse response, AuthException ex) throws
             IOException {
         response.setStatus(ex.getStatus().value());
         response.setContentType("application/json");
