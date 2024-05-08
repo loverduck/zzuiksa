@@ -1,11 +1,12 @@
 class Schedule {
+  int? scheduleId;
   int? categoryId = 1;
   String? title;
   String? startDate;
   String? endDate;
   String? startTime;
   String? endTime;
-  int? alertBefore;
+  int? alertBefore = 10000;
   String? memo = "";
   Place? toPlace;
   Place? fromPlace;
@@ -13,18 +14,19 @@ class Schedule {
   bool? isDone = false;
 
   Schedule(
-      {this.categoryId,
-      this.title,
-      this.startDate,
-      this.endDate,
-      this.startTime,
-      this.endTime,
-      this.alertBefore,
-      this.memo,
-      this.toPlace,
-      this.fromPlace,
-      this.repeat,
-      this.isDone});
+      {this.scheduleId,
+        this.categoryId,
+        this.title,
+        this.startDate,
+        this.endDate,
+        this.startTime,
+        this.endTime,
+        this.alertBefore,
+        this.memo,
+        this.toPlace,
+        this.fromPlace,
+        this.repeat,
+        this.isDone});
 
   Schedule.fromJson(Map<String, dynamic> json) {
     categoryId = json['categoryId'];
@@ -39,7 +41,7 @@ class Schedule {
     // fromPlace = json['fromPlace'];
     toPlace = json['toPlace'] != null ? Place.fromJson(json['toPlace']) : null;
     fromPlace =
-        json['fromPlace'] != null ? Place.fromJson(json['fromPlace']) : null;
+    json['fromPlace'] != null ? Place.fromJson(json['fromPlace']) : null;
     // repeat = json['repeat'] != null ? repeat.fromJson(json['repeat']) : null;
     repeat = json['repeat'];
     isDone = json['isDone'];
@@ -79,8 +81,8 @@ class Schedule {
 
 class Place {
   String? name;
-  String? lat;
-  String? lng;
+  double? lat;
+  double? lng;
 
   Place({this.name, this.lat, this.lng});
 
