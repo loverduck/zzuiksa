@@ -50,3 +50,8 @@ oauth:
     client:
       id: ${KAKAO_CLIENT_KEY}
       secret: ${KAKAO_CLIENT_SECRET}
+
+api:
+  tmap:
+    url: https://apis.openapi.sk.com
+    app-key: ${TMAP_APP_KEY}
