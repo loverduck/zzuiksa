@@ -20,4 +20,8 @@ public class RouteTimeResponse {
     @Schema(description = "소요 시간 (초)")
     @NotNull
     private Integer time;
+
+    public static RouteTimeResponse of(int time) {
+        return new RouteTimeResponse(time);
+    }
 }
