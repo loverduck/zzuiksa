@@ -85,6 +85,9 @@ public class Member extends BaseEntity {
     }
 
     public void delete() {
+        if (deletedAt != null) {
+            throw new IllegalArgumentException("이미 삭제된 회원입니다.");
+        }
         this.deletedAt = LocalDateTime.now();
     }
 }

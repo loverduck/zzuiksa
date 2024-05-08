@@ -1,5 +1,7 @@
 package com.zzuiksa.server.domain.member.repository;
 
+import java.util.Optional;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.member.entity.QMember;
@@ -13,10 +15,10 @@ public class MemberRepositoryQImpl implements MemberRepositoryQ {
     QMember qMember = QMember.member;
 
     @Override
-    public Member findActiveMemberById(Long id) {
-        return queryFactory.selectFrom(qMember)
+    public Optional<Member> findActiveMemberById(Long id) {
+        return Optional.ofNullable(queryFactory.selectFrom(qMember)
                 .where(qMember.id.eq(id))
                 .where(qMember.deletedAt.isNull())
-                .fetchOne();
+                .fetchOne());
     }
 }

@@ -2,6 +2,8 @@ package com.zzuiksa.server.domain.member.repository;
 
 import com.zzuiksa.server.domain.member.entity.Member;
 
+import java.util.Optional;
+
 public interface MemberRepositoryQ {
-    Member findActiveMemberById(Long id);
+    Optional<Member> findActiveMemberById(Long id);
 }
