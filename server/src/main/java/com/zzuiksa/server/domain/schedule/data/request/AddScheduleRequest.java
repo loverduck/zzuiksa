@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import org.springframework.boot.convert.DurationUnit;
 
 import com.zzuiksa.server.domain.schedule.data.PlaceDto;
@@ -27,32 +29,43 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class AddScheduleRequest {
 
+    @Schema(description = "카테고리 ID")
     @NotNull
     private Long categoryId;
 
+    @Schema(description = "일정 제목")
     @NotBlank
     private String title;
 
+    @Schema(description = "일정 시작일")
     @NotNull
     private LocalDate startDate;
 
+    @Schema(description = "일정 종료일")
     @NotNull
     private LocalDate endDate;
 
+    @Schema(description = "일정 시작시간")
     private LocalTime startTime;
 
+    @Schema(description = "일정 종료시간")
     private LocalTime endTime;
 
+    @Schema(description = "알림 시간")
     @DurationUnit(ChronoUnit.MINUTES)
     private Duration alertBefore;
 
+    @Schema(description = "메모")
     @NotNull
     private String memo;
 
+    @Schema(description = "목적지")
     private PlaceDto toPlace;
 
+    @Schema(description = "출발지")
     private PlaceDto fromPlace;
 
+    @Schema(description = "반복")
     private RepeatDto repeat;
 
     public boolean isRepeat() {

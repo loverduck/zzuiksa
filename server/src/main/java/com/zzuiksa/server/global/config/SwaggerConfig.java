@@ -2,6 +2,10 @@ package com.zzuiksa.server.global.config;
 
 import java.util.Arrays;
 
+import io.swagger.v3.oas.models.Components;
+
+import io.swagger.v3.oas.models.security.SecurityScheme;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,9 +28,9 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .servers(Arrays.asList(localServer, prodServer))
-                // .components(new Components()
-                // 	.addSecuritySchemes("bearer-key",
-                // 		new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
+                .components(new Components()
+                	.addSecuritySchemes("bearer-key",
+                		new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
                 .info(apiInfo());
     }
 

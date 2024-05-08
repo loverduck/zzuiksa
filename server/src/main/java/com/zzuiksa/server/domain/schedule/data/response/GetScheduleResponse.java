@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import org.springframework.boot.convert.DurationUnit;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -29,33 +31,45 @@ import lombok.ToString;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetScheduleResponse {
 
+    @Schema(description = "카테고리 ID")
     private Long categoryId;
 
+    @Schema(description = "일정 제목")
     @NotNull
     private String title;
 
+    @Schema(description = "시작일")
     @NotNull
     private LocalDate startDate;
 
+    @Schema(description = "종료일")
     @NotNull
     private LocalDate endDate;
 
+    @Schema(description = "시작시간")
     private LocalTime startTime;
 
+    @Schema(description = "종료시간")
     private LocalTime endTime;
 
+    @Schema(description = "알림 시간")
     @DurationUnit(ChronoUnit.MINUTES)
     private Duration alertBefore;
 
+    @Schema(description = "메모")
     @NotNull
     private String memo;
 
+    @Schema(description = "도착지")
     private PlaceDto toPlace;
 
+    @Schema(description = "출발지")
     private PlaceDto fromPlace;
 
+    @Schema(description = "반복")
     private RepeatDto repeat;
 
+    @Schema(description = "완료 여부")
     private Boolean isDone;
 
     public static GetScheduleResponse from(Schedule schedule) {

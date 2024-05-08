@@ -2,6 +2,7 @@ package com.zzuiksa.server.domain.place.data.request;
 
 import com.zzuiksa.server.domain.place.entity.Place;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -21,14 +22,17 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class UpdatePlaceRequest {
 
+    @Schema(description = "이름")
     @NotBlank
     @Min(1)
     @Max(100)
     private String name;
 
+    @Schema(description = "위도")
     @NotNull
     private Float lat;
 
+    @Schema(description = "경도")
     @NotNull
     private Float lng;
 
