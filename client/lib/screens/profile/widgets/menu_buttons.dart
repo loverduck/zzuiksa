@@ -26,7 +26,7 @@ class _MenuButtonsState extends State<MenuButtons> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    int selectedIndex = 0;
+    int selectedIndex = 2;
 
     Widget _statisticText = selectedIndex == 0 ? htStatistic : myStatistic;
     Widget _placeText = selectedIndex == 1 ? htPlace : myPlace;
@@ -61,14 +61,14 @@ class _MenuButtonsState extends State<MenuButtons> {
                   });
                 },
                 child: _placeText),
-            // TextButton(
-            //     onPressed: () {
-            //       setState(() {
-            //         selectedIndex = 2;
-            //         widget.setIndex(selectedIndex);
-            //       });
-            //     },
-            //     child: _infoText),
+            TextButton(
+                onPressed: () {
+                  setState(() {
+                    selectedIndex = 2;
+                    widget.setIndex(selectedIndex);
+                  });
+                },
+                child: _infoText),
           ],
         ));
   }
