@@ -28,7 +28,7 @@ public class RouteTimeRequest {
     @NotNull
     private LatLngDto to;
 
-    @Schema(description = "도착 시간 (\"yyyy-MM-ddThh:mm:ss\")")
+    @Schema(description = "도착 시간", example = "yyyy-MM-ddThh:mm:ss")
     @NotNull
     private LocalDateTime arrivalTime;
 }

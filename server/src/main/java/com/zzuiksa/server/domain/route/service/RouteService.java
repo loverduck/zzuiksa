@@ -14,7 +14,10 @@ import com.zzuiksa.server.domain.route.data.request.TMapTransitRoutesSubRequest;
 import com.zzuiksa.server.domain.route.data.response.TMapRoutesPedestrianResponse;
 import com.zzuiksa.server.domain.route.data.response.TMapRoutesResponse;
 import com.zzuiksa.server.domain.route.data.response.TMapTransitRoutesSubResponse;
+import com.zzuiksa.server.global.exception.custom.CustomException;
+import com.zzuiksa.server.global.exception.custom.ErrorCodes;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -30,11 +33,17 @@ public class RouteService {
      * @return 소요 시간 (초)
      */
     public Integer calcRouteTime(RouteTimeRequest request) {
-        return switch (request.getType()) {
-            case TRANSIT -> calcTransitRouteTime(request);
-            case CAR -> calcCarRouteTime(request);
-            case WALK -> calcWalkRouteTime(request);
-        };
+        try {
+            return switch (request.getType()) {
+                case TRANSIT -> calcTransitRouteTime(request);
+                case CAR -> calcCarRouteTime(request);
+                case WALK -> calcWalkRouteTime(request);
+            };
+        } catch (FeignException.FeignClientException ex) {
+            throw new CustomException(ErrorCodes.ROUTE_CLIENT_EXCEPTION, ex.getMessage());
+        } catch (FeignException.FeignServerException ex) {
+            throw new CustomException(ErrorCodes.ROUTE_SERVER_ERROR);
+        }
     }
 
     protected Integer calcTransitRouteTime(RouteTimeRequest request) {
