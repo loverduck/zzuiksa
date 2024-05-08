@@ -2,6 +2,8 @@ package com.zzuiksa.server.domain.member.data.request;
 
 import java.time.LocalDate;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import org.springframework.util.StringUtils;
 
 import com.zzuiksa.server.domain.member.entity.Member;
@@ -21,8 +23,10 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class UpdateMemberRequest {
 
+    @Schema(description = "이름", nullable = true)
     private String name;
 
+    @Schema(description = "생년월일", nullable = true, example = "yyyy-mm-dd")
     private LocalDate birthday;
 
     public Member update(Member member) {
