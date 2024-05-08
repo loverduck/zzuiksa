@@ -1,16 +1,16 @@
-package com.zzuiksa.server.domain.transit.client;
+package com.zzuiksa.server.domain.route.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-import com.zzuiksa.server.domain.transit.data.request.TMapRoutesPedestrianRequest;
-import com.zzuiksa.server.domain.transit.data.request.TMapRoutesRequest;
-import com.zzuiksa.server.domain.transit.data.request.TMapTransitRoutesSubRequest;
-import com.zzuiksa.server.domain.transit.data.response.TMapRoutesPedestrianResponse;
-import com.zzuiksa.server.domain.transit.data.response.TMapRoutesResponse;
-import com.zzuiksa.server.domain.transit.data.response.TMapTransitRoutesSubResponse;
+import com.zzuiksa.server.domain.route.data.request.TMapRoutesPedestrianRequest;
+import com.zzuiksa.server.domain.route.data.request.TMapRoutesRequest;
+import com.zzuiksa.server.domain.route.data.request.TMapTransitRoutesSubRequest;
+import com.zzuiksa.server.domain.route.data.response.TMapRoutesPedestrianResponse;
+import com.zzuiksa.server.domain.route.data.response.TMapRoutesResponse;
+import com.zzuiksa.server.domain.route.data.response.TMapTransitRoutesSubResponse;
 
 @FeignClient(name = "TMapRoutesClient", url = "${api.tmap.url}")
 public interface TMapRoutesClient {

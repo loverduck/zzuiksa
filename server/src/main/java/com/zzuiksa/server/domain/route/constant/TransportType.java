@@ -1,4 +1,4 @@
-package com.zzuiksa.server.domain.transit.constant;
+package com.zzuiksa.server.domain.route.constant;
 
 public enum TransportType {
     /**

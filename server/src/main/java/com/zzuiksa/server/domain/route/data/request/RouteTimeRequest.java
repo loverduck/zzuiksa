@@ -1,9 +1,9 @@
-package com.zzuiksa.server.domain.transit.data.request;
+package com.zzuiksa.server.domain.route.data.request;
 
 import java.time.LocalDateTime;
 
-import com.zzuiksa.server.domain.transit.constant.TransportType;
-import com.zzuiksa.server.domain.transit.data.LatLngDto;
+import com.zzuiksa.server.domain.route.constant.TransportType;
+import com.zzuiksa.server.domain.route.data.LatLngDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

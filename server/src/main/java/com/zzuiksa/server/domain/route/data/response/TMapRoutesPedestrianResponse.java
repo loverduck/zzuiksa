@@ -1,12 +1,13 @@
-package com.zzuiksa.server.domain.transit.data.response;
+package com.zzuiksa.server.domain.route.data.response;
 
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class TMapRoutesResponse {
+public class TMapRoutesPedestrianResponse {
 
     @NotNull
     private List<Features> features;
@@ -15,19 +16,19 @@ public class TMapRoutesResponse {
     static class Features {
 
         @NotNull
-        private Properties properties;
+        private Features.Properties properties;
 
         @Getter
         static class Properties {
 
-            @NotNull
             private Integer totalTime;
         }
     }
 
     public Integer findMinTotalTime() {
         return features.stream()
-                .mapToInt(feature -> feature.properties.totalTime)
-                .min().orElseThrow();
+                .map(feature -> feature.properties.totalTime)
+                .filter(Objects::nonNull)
+                .min(Integer::compare).orElseThrow();
     }
 }

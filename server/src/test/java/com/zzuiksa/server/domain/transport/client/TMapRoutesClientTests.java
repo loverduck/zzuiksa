@@ -1,4 +1,4 @@
-package com.zzuiksa.server.domain.transit.client;
+package com.zzuiksa.server.domain.transport.client;
 
 import java.time.LocalDateTime;
 
@@ -11,12 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zzuiksa.server.domain.transit.data.request.TMapRoutesPedestrianRequest;
-import com.zzuiksa.server.domain.transit.data.request.TMapRoutesRequest;
-import com.zzuiksa.server.domain.transit.data.request.TMapTransitRoutesSubRequest;
-import com.zzuiksa.server.domain.transit.data.response.TMapRoutesPedestrianResponse;
-import com.zzuiksa.server.domain.transit.data.response.TMapRoutesResponse;
-import com.zzuiksa.server.domain.transit.data.response.TMapTransitRoutesSubResponse;
+import com.zzuiksa.server.domain.transport.data.request.TMapRoutesPedestrianRequest;
+import com.zzuiksa.server.domain.transport.data.request.TMapRoutesRequest;
+import com.zzuiksa.server.domain.transport.data.request.TMapTransitRoutesSubRequest;
+import com.zzuiksa.server.domain.transport.data.response.TMapRoutesPedestrianResponse;
+import com.zzuiksa.server.domain.transport.data.response.TMapRoutesResponse;
+import com.zzuiksa.server.domain.transport.data.response.TMapTransitRoutesSubResponse;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)

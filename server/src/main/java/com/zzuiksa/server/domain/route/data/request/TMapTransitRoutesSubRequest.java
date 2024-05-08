@@ -1,4 +1,4 @@
-package com.zzuiksa.server.domain.transit.data.request;
+package com.zzuiksa.server.domain.route.data.request;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

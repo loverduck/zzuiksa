@@ -1,4 +1,4 @@
-package com.zzuiksa.server.domain.transit.data.request;
+package com.zzuiksa.server.domain.route.data.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TMapRoutesPedestrianRequest {
+public class TMapRoutesRequest {
 
     @NotNull
     private Float startX;
@@ -24,20 +24,15 @@ public class TMapRoutesPedestrianRequest {
     @NotNull
     private Float endY;
 
-    @NotNull
-    private String startName;
+    private Integer totalValue;
 
-    @NotNull
-    private String endName;
-
-    public static TMapRoutesPedestrianRequest of(float startLat, float startLng, float endLat, float endLng) {
-        return TMapRoutesPedestrianRequest.builder()
+    public static TMapRoutesRequest of(float startLat, float startLng, float endLat, float endLng) {
+        return TMapRoutesRequest.builder()
                 .startX(startLat)
                 .startY(startLng)
                 .endX(endLat)
                 .endY(endLng)
-                .startName("start")
-                .endName("end")
+                .totalValue(2)
                 .build();
     }
 }

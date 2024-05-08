@@ -1,4 +1,4 @@
-package com.zzuiksa.server.domain.transit.data;
+package com.zzuiksa.server.domain.route.data;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

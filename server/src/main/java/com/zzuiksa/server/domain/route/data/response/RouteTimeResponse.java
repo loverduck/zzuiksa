@@ -1,4 +1,4 @@
-package com.zzuiksa.server.domain.transit.data.response;
+package com.zzuiksa.server.domain.route.data.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
