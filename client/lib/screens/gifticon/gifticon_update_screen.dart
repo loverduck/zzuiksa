@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 import 'model/gifticon_model.dart';
 import 'gifticon_detail_screen.dart';
-import 'widgets/gifticon_add_form.dart';
+import 'widgets/gifticon_form.dart';
 
 class GifticonUpdateScreen extends StatefulWidget {
   final Gifticon gifticon;
@@ -55,7 +55,7 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
           ),
         ],
       ),
-      body: GifticonAddForm(
+      body: GifticonForm(
         initialGifticon: gifticon,
         onSubmit: (updatedGifticon) {
           gifticon = updatedGifticon;
