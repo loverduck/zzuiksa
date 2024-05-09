@@ -181,13 +181,16 @@ public class ScheduleTests {
     }
 
     @Test
-    public void setAlertBefore_null_throwIllegalArgumentException() {
+    public void setAlertBefore_null_success() {
         // given
+        Duration alertBefore = null;
         Schedule schedule = new Schedule();
 
-        // when & then
-        assertThatThrownBy(() -> schedule.setAlertBefore(null))
-                .isInstanceOf(IllegalArgumentException.class);
+        // when
+        schedule.setAlertBefore(alertBefore);
+
+        // then
+        assertThat(schedule.getAlertBefore()).isEqualTo(alertBefore);
     }
 
     @Test
