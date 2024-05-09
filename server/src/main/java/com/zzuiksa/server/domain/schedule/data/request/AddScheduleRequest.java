@@ -68,6 +68,14 @@ public class AddScheduleRequest {
     @Schema(description = "반복")
     private RepeatDto repeat;
 
+    public PlaceDto getToPlace() {
+        return toPlace == null ? PlaceDto.EMPTY : toPlace;
+    }
+
+    public PlaceDto getFromPlace() {
+        return toPlace == null ? PlaceDto.EMPTY : toPlace;
+    }
+
     public boolean isRepeat() {
         return repeat != null;
     }

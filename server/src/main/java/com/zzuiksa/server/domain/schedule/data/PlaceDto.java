@@ -15,6 +15,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class PlaceDto {
 
+    public static final PlaceDto EMPTY = new PlaceDto();
+
     @Schema(description = "장소명")
     @NotNull
     private String name;
