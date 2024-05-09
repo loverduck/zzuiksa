@@ -20,6 +20,7 @@ public class GifticonRepositoryQImpl implements GifticonRepositoryQ{
     public List<GifticonPreviewDto> findAllGifticonByMember(Member member) {
         return queryFactory.select(getQGifticonPreviewDto())
                 .from(gifticon)
+                .where(gifticon.member.eq(member))
                 .fetch();
     }
 

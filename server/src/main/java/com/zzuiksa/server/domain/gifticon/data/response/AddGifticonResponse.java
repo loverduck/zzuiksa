@@ -3,6 +3,7 @@ package com.zzuiksa.server.domain.gifticon.data.response;
 import com.zzuiksa.server.domain.gifticon.constant.IsUsed;
 import com.zzuiksa.server.domain.gifticon.entity.Gifticon;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AddGifticonResponse {
 
+    @Schema(description = "기프티콘 ID")
     @NotNull
     private Long gifticonId;
 

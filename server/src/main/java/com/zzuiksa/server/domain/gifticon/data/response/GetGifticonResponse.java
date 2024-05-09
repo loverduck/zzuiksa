@@ -5,6 +5,7 @@ import com.zzuiksa.server.domain.gifticon.constant.IsUsed;
 import com.zzuiksa.server.domain.gifticon.entity.Gifticon;
 import com.zzuiksa.server.domain.place.data.response.GetPlaceResponse;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -20,50 +21,48 @@ import java.util.OptionalInt;
 @EqualsAndHashCode
 public class GetGifticonResponse {
 
+    @Schema(description = "기프티콘 ID")
     @NotNull
     private Long gifticonId;
 
+    @Schema(description = "이미지주소")
     @NotBlank
     private String url;
 
-    @NotBlank
+    @Schema(description = "상품명")
     private String name;
 
+    @Schema(description = "브랜드명")
     private String store;
 
+    @Schema(description = "바코드")
     @NotBlank
     private String couponNum;
 
-    @NotNull
+    @Schema(description = "유효기한")
     private LocalDate endDate;
 
+    @Schema(description = "사용 상태")
     @NotNull
     private IsUsed isUsed;
 
-    private OptionalInt remainMoney;
+    @Schema(description = "금액")
+    private Integer remainMoney;
 
+    @Schema(description = "메모")
     private String memo;
 
     public static GetGifticonResponse from(Gifticon gifticon) {
-        GetGifticonResponseBuilder builder = GetGifticonResponse.builder()
+        return GetGifticonResponse.builder()
                 .gifticonId(gifticon.getId())
-                .name(gifticon.getName())
                 .url(gifticon.getUrl())
+                .name(gifticon.getName())
+                .store(gifticon.getStore())
                 .couponNum(gifticon.getCouponNum())
                 .endDate(gifticon.getEndDate())
-                .isUsed(gifticon.getIsUsed());
-        if (gifticon.getStore() != null) {
-            builder.store(gifticon.getStore());
-        }
-        // builder.remainMoney(OptionalInt.of(gifticon.getRemainMoney()));
-        // if (gifticon.getRemainMoney() != null) { // remainMoney가 null이 아닐 때만 값 설정
-        //     builder.remainMoney(OptionalInt.of(gifticon.getRemainMoney()));
-        // }
-        builder.remainMoney(OptionalInt.of(gifticon.getRemainMoney()));
-        if (gifticon.getMemo() != null) {
-            builder.memo(gifticon.getMemo());
-        }
-
-        return builder.build();
+                .isUsed(gifticon.getIsUsed())
+                .remainMoney(gifticon.getRemainMoney())
+                .memo(gifticon.getMemo())
+                .build();
     }
 }

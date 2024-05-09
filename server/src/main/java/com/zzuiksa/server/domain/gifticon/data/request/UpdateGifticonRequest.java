@@ -4,6 +4,7 @@ import com.zzuiksa.server.domain.gifticon.constant.IsUsed;
 
 import com.zzuiksa.server.domain.gifticon.entity.Gifticon;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -25,31 +26,44 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 public class UpdateGifticonRequest {
 
+    @Schema(description = "상품명")
     @NotBlank
     @Min(1)
     @Max(100)
     private String name;
 
+    @Schema(description = "이미지주소")
     @NotBlank
     private String url;
 
+    @Schema(description = "브랜드명")
     private String store;
 
+    @Schema(description = "바코드")
     @NotBlank
     private String couponNum;
 
-    @NotNull
+    @Schema(description = "유효기한")
     private LocalDate endDate;
 
+    @Schema(description = "사용 상태")
     @NotNull
     private IsUsed isUsed;
 
-    private int remainMoney;
+    @Schema(description = "금액")
+    private Integer remainMoney;
 
+    @Schema(description = "메모")
     private String memo;
 
     public Gifticon update(Gifticon gifticon) {
         gifticon.setName(name);
+        gifticon.setStore(store);
+        gifticon.setCouponNum(couponNum);
+        gifticon.setEndDate(endDate);
+        gifticon.setIsUsed(isUsed);
+        gifticon.setRemainMoney(remainMoney);
+        gifticon.setMemo(memo);
         return gifticon;
     }
 }
