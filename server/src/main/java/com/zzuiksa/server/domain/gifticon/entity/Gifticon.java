@@ -95,7 +95,7 @@ public class Gifticon extends BaseEntity {
     }
 
     public void setRemainMoney(Integer remainMoney) {
-        if (remainMoney != null && remainMoney <= 0) {
+        if (remainMoney != null && remainMoney < 0) {
             throw new IllegalArgumentException("금액권의 남은 모든 금액을 사용하였습니다.");
         }
         this.remainMoney = remainMoney;
