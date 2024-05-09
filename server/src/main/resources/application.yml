@@ -55,3 +55,7 @@ api:
   tmap:
     url: https://apis.openapi.sk.com
     app-key: ${TMAP_APP_KEY}
+
+fcm:
+  secret-key-path: ${FCM_SECRET_KEY_PATH}
+  project-id: ${FCM_PROJECT_ID}
