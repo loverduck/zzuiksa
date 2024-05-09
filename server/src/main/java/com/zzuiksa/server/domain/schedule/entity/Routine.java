@@ -39,7 +39,6 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class Routine extends BaseEntity {
 
-    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
