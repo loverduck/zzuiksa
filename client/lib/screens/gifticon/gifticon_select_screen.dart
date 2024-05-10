@@ -108,18 +108,29 @@ class _GifticonSelectScreenState extends State<GifticonSelectScreen> {
               onPressed: _pickImage,
               child: const Text('사진 선택하기'),
             ),
-            const SizedBox(height: 20),
-            if (_selectedImagePath != null)
-              Column(
+            // const SizedBox(height: 20),
+            // if (_selectedImagePath != null)
+            //   Column(
+            //     children: [
+            //       Text('현재 선택한 사진:', style: textTheme.bodyMedium),
+            //       Image.file(
+            //         File(_selectedImagePath!),
+            //         height: 200,
+            //       ),
+            //     ],
+            //   ),
+              // const SizedBox(height: 20),
+            ..._ocrResults.map((field) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
                 children: [
-                  Text('현재 선택한 사진:', style: textTheme.bodyMedium),
-                  Image.file(
-                    File(_selectedImagePath!),
-                    height: 200,
+                  Text(
+                    'Text: ${field.text}',
+                    style: textTheme.bodyMedium,
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+            )),
           ],
         ),
       ),
