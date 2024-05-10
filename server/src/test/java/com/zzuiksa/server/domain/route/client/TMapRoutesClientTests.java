@@ -34,10 +34,10 @@ public class TMapRoutesClientTests {
     @Test
     public void getTransitRoutesSub__success() throws Exception {
         // given
-        float startLat = 126.936928f;
-        float startLng = 37.555162f;
-        float endLat = 127.029281f;
-        float endLng = 37.564436f;
+        float startLat = 37.555162f;
+        float startLng = 126.936928f;
+        float endLat = 37.564436f;
+        float endLng = 127.029281f;
         int count = 10;
         LocalDateTime at = LocalDateTime.now();
         TMapTransitRoutesSubRequest request = TMapTransitRoutesSubRequest.of(startLat, startLng, endLat, endLng, at,
@@ -54,10 +54,10 @@ public class TMapRoutesClientTests {
     @Test
     public void getRoutes__success() throws Exception {
         // given
-        float startLat = 126.936928f;
-        float startLng = 37.555162f;
-        float endLat = 127.029281f;
-        float endLng = 37.564436f;
+        float startLat = 37.555162f;
+        float startLng = 126.936928f;
+        float endLat = 37.564436f;
+        float endLng = 127.029281f;
         TMapRoutesRequest request = TMapRoutesRequest.of(startLat, startLng, endLat, endLng);
 
         // when
@@ -71,10 +71,10 @@ public class TMapRoutesClientTests {
     @Test
     public void getRoutesPedestrian__success() throws Exception {
         // given
-        float startLat = 126.936928f;
-        float startLng = 37.555162f;
-        float endLat = 127.029281f;
-        float endLng = 37.564436f;
+        float startLat = 37.555162f;
+        float startLng = 126.936928f;
+        float endLat = 37.564436f;
+        float endLng = 127.029281f;
         TMapRoutesPedestrianRequest request = TMapRoutesPedestrianRequest.of(startLat, startLng, endLat, endLng);
 
         // when

@@ -28,10 +28,10 @@ public class TMapRoutesRequest {
 
     public static TMapRoutesRequest of(float startLat, float startLng, float endLat, float endLng) {
         return TMapRoutesRequest.builder()
-                .startX(startLat)
-                .startY(startLng)
-                .endX(endLat)
-                .endY(endLng)
+                .startX(startLng)
+                .startY(startLat)
+                .endX(endLng)
+                .endY(endLat)
                 .totalValue(2)
                 .build();
     }
