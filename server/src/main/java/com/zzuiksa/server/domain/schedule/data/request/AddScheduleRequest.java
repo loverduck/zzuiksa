@@ -1,5 +1,6 @@
 package com.zzuiksa.server.domain.schedule.data.request;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -61,6 +62,10 @@ public class AddScheduleRequest {
 
     @Schema(description = "반복")
     private RepeatDto repeat;
+
+    public Duration getAlertBefore() {
+        return alertBefore == null ? null : Duration.ofMinutes(alertBefore);
+    }
 
     public PlaceDto getToPlace() {
         return toPlace == null ? PlaceDto.EMPTY : toPlace;
