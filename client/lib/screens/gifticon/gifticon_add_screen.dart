@@ -1,6 +1,6 @@
 import 'package:client/screens/gifticon/service/gifticon_api.dart';
 import 'package:client/screens/gifticon/service/merged_field.dart';
-import 'package:client/screens/gifticon/util/ocr_parser.dart';
+import 'package:client/screens/gifticon/util/ocr_sample_parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
