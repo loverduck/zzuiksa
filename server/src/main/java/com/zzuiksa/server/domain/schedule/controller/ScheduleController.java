@@ -1,5 +1,6 @@
 package com.zzuiksa.server.domain.schedule.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zzuiksa.server.domain.auth.data.MemberDetail;
@@ -18,7 +20,6 @@ import com.zzuiksa.server.domain.route.data.response.RouteTimeResponse;
 import com.zzuiksa.server.domain.route.service.RouteService;
 import com.zzuiksa.server.domain.schedule.data.CategoryDto;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
-import com.zzuiksa.server.domain.schedule.data.request.GetScheduleListRequest;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.DeleteScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.GetScheduleResponse;
@@ -69,10 +70,10 @@ public class ScheduleController {
             security = {@SecurityRequirement(name = "bearer-key")}
     )
     @GetMapping
-    public List<ScheduleSummaryDto> getList(@Valid @RequestBody GetScheduleListRequest request,
-            @AuthenticationPrincipal MemberDetail memberDetail) {
+    public List<ScheduleSummaryDto> getList(@RequestParam LocalDate from, @RequestParam LocalDate to,
+            @RequestParam(required = false) Long categoryId, @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
-        return scheduleService.getList(request.getFrom(), request.getTo(), request.getCategoryId(), member);
+        return scheduleService.getList(from, to, categoryId, member);
     }
 
     @Operation(
