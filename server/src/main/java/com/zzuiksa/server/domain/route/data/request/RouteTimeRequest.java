@@ -29,6 +29,5 @@ public class RouteTimeRequest {
     private LatLngDto to;
 
     @Schema(description = "도착 시간", example = "yyyy-MM-ddThh:mm:ss")
-    @NotNull
-    private LocalDateTime arrivalTime;
+    private LocalDateTime arrivalTime = LocalDateTime.now();
 }
