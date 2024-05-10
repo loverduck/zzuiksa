@@ -8,11 +8,13 @@ class DateTimeInput extends StatefulWidget {
     required this.dateController,
     required this.requiredTime,
     this.timeEditController,
+    this.onChange,
   });
 
   final TextEditingController dateController;
   final bool requiredTime;
   final TextEditingController? timeEditController;
+  final Function? onChange;
 
   @override
   State<DateTimeInput> createState() => _DateTimeInputState();
@@ -30,6 +32,9 @@ class _DateTimeInputState extends State<DateTimeInput> {
     if (pickedDate != null) {
       setState(() {
         widget.dateController.text = pickedDate.toString().split(" ")[0];
+        if (widget.onChange != null) {
+          widget.onChange!(pickedDate.toString().split(" ")[0]);
+        }
       });
     }
   }

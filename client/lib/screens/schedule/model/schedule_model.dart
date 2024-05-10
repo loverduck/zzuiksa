@@ -10,7 +10,7 @@ class Schedule {
   String? memo = "";
   Place? toPlace;
   Place? fromPlace;
-  bool? repeat = false;
+  Repeat? repeat;
   bool? isDone = false;
 
   Schedule(
@@ -59,12 +59,8 @@ class Schedule {
     data['memo'] = memo;
     // data['toPlace'] = toPlace;
     // data['fromPlace'] = fromPlace;
-    if (toPlace != null) {
-      data['toPlace'] = toPlace!.toJson();
-    }
-    if (fromPlace != null) {
-      data['fromPlace'] = fromPlace!.toJson();
-    }
+    data['toPlace'] = toPlace?.toJson();
+    data['fromPlace'] = fromPlace?.toJson();
     // if (repeat != null) {
     //   data['repeat'] = repeat!.toJson();
     // }
@@ -75,7 +71,7 @@ class Schedule {
 
   @override
   String toString() {
-    return "Schedule: {categoryId: $categoryId, title: $title, startDate: $startDate, endDate: $endDate, startTime: $startTime, endTime: $endTime, alertBefore: $alertBefore, memo: $memo, toPlace: $toPlace, fromPlace: $fromPlace}, repeat: $repeat, isDone: $isDone";
+    return "Schedule: { categoryId: $categoryId, title: $title, startDate: $startDate, endDate: $endDate, startTime: $startTime, endTime: $endTime, alertBefore: $alertBefore, memo: $memo, toPlace: $toPlace, fromPlace: $fromPlace, repeat: $repeat, isDone: $isDone }";
   }
 }
 
@@ -99,20 +95,23 @@ class Place {
     data['lng'] = lng;
     return data;
   }
+
+  @override
+  String toString() {
+    return "Place: { name: $name, lat: $lat, lng: $lng }";
+  }
 }
 
-class repeat {
+class Repeat {
   String? cycle;
   String? endDate;
-  int? repeatTerm;
   int? repeatAt;
 
-  repeat({this.cycle, this.endDate, this.repeatTerm, this.repeatAt});
+  Repeat({this.cycle, this.endDate, this.repeatAt});
 
-  repeat.fromJson(Map<String, dynamic> json) {
+  Repeat.fromJson(Map<String, dynamic> json) {
     cycle = json['cycle'];
     endDate = json['endDate'];
-    repeatTerm = json['repeatTerm'];
     repeatAt = json['repeatAt'];
   }
 
@@ -120,8 +119,12 @@ class repeat {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['cycle'] = cycle;
     data['endDate'] = endDate;
-    data['repeatTerm'] = repeatTerm;
     data['repeatAt'] = repeatAt;
     return data;
+  }
+
+  @override
+  String toString() {
+    return "Repeat: { cycle: $cycle, endDate: $endDate, repeatAt: $repeatAt }";
   }
 }
