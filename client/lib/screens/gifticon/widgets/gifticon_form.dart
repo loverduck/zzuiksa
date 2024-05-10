@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import '../../../constants.dart';
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
 
@@ -6,12 +7,14 @@ class GifticonForm extends StatefulWidget {
   final Gifticon? initialGifticon;
   final Function(Gifticon) onSubmit;
   final bool isEdit;
+  final String? selectedImagePath;
 
   const GifticonForm({
     Key? key,
     required this.onSubmit,
     this.initialGifticon,
     this.isEdit = false,
+    this.selectedImagePath,
   }) : super(key: key);
 
   @override
@@ -44,13 +47,12 @@ class _GifticonFormState extends State<GifticonForm> {
       child: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
-          SizedBox(
-            width: 300,
-            height: 300,
-            child: const Image(
-              image: AssetImage('assets/images/tempGifticon.jpeg'),
+          if (widget.selectedImagePath != null)
+            SizedBox(
+              width: 300,
+              height: 300,
+              child: Image.file(File(widget.selectedImagePath!)),
             ),
-          ),
           const SizedBox(height: 30),
           ListTile(
             title: Text('금액권인가요?', style: Theme.of(context).textTheme.displayMedium),
@@ -80,7 +82,9 @@ class _GifticonFormState extends State<GifticonForm> {
             label: '바코드',
             value: _gifticon.couponNum,
             onChanged: (value) => _gifticon.couponNum = value,
+            isBarcode: true,
           ),
+
           _buildTextFormField(
             label: '유효기간',
             value: _gifticon.endDate,
@@ -113,6 +117,7 @@ class _GifticonFormState extends State<GifticonForm> {
     String? value,
     required Function(String) onChanged,
     TextInputType keyboardType = TextInputType.text,
+    bool isBarcode = false,
   }) {
     return TextFormField(
       initialValue: value,
@@ -127,10 +132,11 @@ class _GifticonFormState extends State<GifticonForm> {
       onChanged: onChanged,
       keyboardType: keyboardType,
       validator: (value) {
-        if (value == null || value.isEmpty) {
-          return '$label을(를) 입력해주세요.';
+        if (isBarcode) {
+          return value != null && value.isNotEmpty ? null : '바코드를 입력해주세요.';
+        } else {
+          return null;
         }
-        return null;
       },
     );
   }

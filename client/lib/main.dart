@@ -1,10 +1,8 @@
-import 'package:client/service/member_api.dart';
 import 'package:client/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:provider/provider.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 import 'screens/login/login_check_screen.dart';
@@ -19,6 +17,7 @@ import 'screens/gifticon/gifticon_detail_screen.dart';
 import 'screens/gifticon/gifticon_select_screen.dart';
 import 'screens/gifticon/gifticon_update_screen.dart';
 import 'screens/gifticon/gifticon_map_screen.dart';
+import 'screens/gifticon/service/merged_field.dart';
 import 'screens/gifticon/model/gifticon_model.dart';
 import 'screens/home/home_screen.dart';
 import 'styles.dart' as style;
@@ -39,16 +38,7 @@ void main() async {
   AuthRepository.initialize(
       appKey: dotenv.get("KAKAO_JAVASCRIPT_KEY"), baseUrl: baseUrl);
 
-  // runApp(const MyApp());
-  runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-              create: (context) => MemberApi(),
-          ),
-        ],
-        child: MyApp(),)
-      );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -67,7 +57,9 @@ class MyApp extends StatelessWidget {
         '/schedule/detail': (context) => const ScheduleDetailScreen(),
         '/gifticon': (context) => const GifticonListScreen(),
         '/gifticon_select_screen': (context) => const GifticonSelectScreen(),
-        '/gifticon_add_screen': (context) => const GifticonAddScreen(),
+        '/gifticon_add_screen': (context) => GifticonAddScreen(
+          ocrFields: ModalRoute.of(context)?.settings.arguments as List<MergedField>,
+        ),
         '/gifticon_detail_screen': (context) => GifticonDetailScreen(
           gifticonId: ModalRoute.of(context)!.settings.arguments as int,
         ),
