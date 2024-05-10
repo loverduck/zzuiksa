@@ -1,3 +1,4 @@
+import 'package:client/screens/gifticon/service/merged_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -51,7 +52,9 @@ class MyApp extends StatelessWidget {
         '/schedule/detail': (context) => const ScheduleDetailScreen(),
         '/gifticon': (context) => const GifticonListScreen(),
         '/gifticon_select_screen': (context) => const GifticonSelectScreen(),
-        '/gifticon_add_screen': (context) => const GifticonAddScreen(),
+        '/gifticon_add_screen': (context) => GifticonAddScreen(
+          ocrFields: ModalRoute.of(context)?.settings.arguments as List<MergedField>,
+        ),
         '/gifticon_detail_screen': (context) => GifticonDetailScreen(
           gifticonId: ModalRoute.of(context)!.settings.arguments as int,
         ),

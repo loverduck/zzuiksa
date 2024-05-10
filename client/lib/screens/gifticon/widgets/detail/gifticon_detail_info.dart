@@ -1,8 +1,8 @@
-import 'package:client/screens/gifticon/widgets/use_button.dart';
+import 'package:client/screens/gifticon/widgets/detail/use_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
-import 'package:client/screens/gifticon/widgets/gifticon_barcode_modal.dart';
+import 'package:client/screens/gifticon/widgets/detail/gifticon_barcode_modal.dart';
 import 'package:client/styles.dart';
 
 import 'gifticon_store_map_button.dart';
@@ -68,7 +68,7 @@ class GifticonDetailInfo extends StatelessWidget {
                 style: myTheme.textTheme.displayMedium,
               ),
               GifticonStoreMapButton(
-                onPressed: () => Navigator.pushNamed(context, '/gifticon_select_screen', arguments: gifticon.id),
+                onPressed: () => Navigator.pushNamed(context, '/gifticon_map_screen', arguments: gifticon.id),
               )
             ],
           ),
