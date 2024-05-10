@@ -9,12 +9,14 @@ import javax.crypto.SecretKey;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.zzuiksa.server.domain.auth.data.MemberDetail;
 import com.zzuiksa.server.domain.auth.service.MemberDetailService;
 import com.zzuiksa.server.global.config.TokenConfig;
-import com.zzuiksa.server.global.exception.AuthenticationException;
+import com.zzuiksa.server.global.exception.AuthException;
 import com.zzuiksa.server.global.exception.custom.ErrorCodes;
 import com.zzuiksa.server.global.token.data.Jwt;
 
@@ -61,9 +63,9 @@ public class TokenProvider implements AuthenticationProvider {
                     .build()
                     .parseSignedClaims(token);
         } catch (ExpiredJwtException e) {
-            throw new AuthenticationException(ErrorCodes.TOKEN_EXPIRED);
+            throw new AuthException(ErrorCodes.TOKEN_EXPIRED);
         } catch (Exception e) {
-            throw new AuthenticationException(ErrorCodes.NOT_VALID_TOKEN);
+            throw new AuthException(ErrorCodes.NOT_VALID_TOKEN);
         }
     }
 
@@ -75,9 +77,9 @@ public class TokenProvider implements AuthenticationProvider {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (ExpiredJwtException e) {
-            throw new AuthenticationException(ErrorCodes.TOKEN_EXPIRED);
+            throw new AuthException(ErrorCodes.TOKEN_EXPIRED);
         } catch (Exception e) {
-            throw new AuthenticationException(ErrorCodes.NOT_VALID_TOKEN);
+            throw new AuthException(ErrorCodes.NOT_VALID_TOKEN);
         }
     }
 
@@ -87,16 +89,19 @@ public class TokenProvider implements AuthenticationProvider {
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws
-            org.springframework.security.core.AuthenticationException {
-        MemberDetail memberDetail = (MemberDetail)memberDetailService.loadUserByUsername(
-                (String)authentication.getPrincipal());
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        try {
+            MemberDetail memberDetail = (MemberDetail)memberDetailService.loadUserByUsername(
+                    (String)authentication.getPrincipal());
 
-        return new UsernamePasswordAuthenticationToken(
-                memberDetail,
-                memberDetail.getPassword(),
-                memberDetail.getAuthorities()
-        );
+            return new UsernamePasswordAuthenticationToken(
+                    memberDetail,
+                    memberDetail.getPassword(),
+                    memberDetail.getAuthorities()
+            );
+        } catch (UsernameNotFoundException ex) {
+            throw new AuthException(ErrorCodes.MEMBER_NOT_FOUND);
+        }
     }
 
     @Override

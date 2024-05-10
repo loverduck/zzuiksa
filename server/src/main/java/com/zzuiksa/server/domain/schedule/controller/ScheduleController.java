@@ -2,10 +2,6 @@ package com.zzuiksa.server.domain.schedule.controller;
 
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zzuiksa.server.domain.auth.data.MemberDetail;
 import com.zzuiksa.server.domain.member.entity.Member;
+import com.zzuiksa.server.domain.route.data.request.RouteTimeRequest;
+import com.zzuiksa.server.domain.route.data.response.RouteTimeResponse;
+import com.zzuiksa.server.domain.route.service.RouteService;
 import com.zzuiksa.server.domain.schedule.data.CategoryDto;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
 import com.zzuiksa.server.domain.schedule.data.request.GetScheduleListRequest;
@@ -26,6 +25,9 @@ import com.zzuiksa.server.domain.schedule.data.response.GetScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.ScheduleSummaryDto;
 import com.zzuiksa.server.domain.schedule.service.ScheduleService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final RouteService routeService;
 
     @Operation(
             summary = "일정 추가",
@@ -44,7 +47,7 @@ public class ScheduleController {
     )
     @PostMapping
     public AddScheduleResponse add(@Valid @RequestBody AddScheduleRequest request,
-                                   @AuthenticationPrincipal MemberDetail memberDetail) {
+            @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
         return scheduleService.add(request, member);
     }
@@ -67,11 +70,10 @@ public class ScheduleController {
     )
     @GetMapping
     public List<ScheduleSummaryDto> getList(@Valid @RequestBody GetScheduleListRequest request,
-                                            @AuthenticationPrincipal MemberDetail memberDetail) {
+            @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
         return scheduleService.getList(request.getFrom(), request.getTo(), request.getCategoryId(), member);
     }
-
 
     @Operation(
             summary = "일정 삭제",
@@ -79,7 +81,8 @@ public class ScheduleController {
             security = {@SecurityRequirement(name = "bearer-key")}
     )
     @DeleteMapping("/{scheduleId}")
-    public DeleteScheduleResponse delete(@PathVariable Long scheduleId, @AuthenticationPrincipal MemberDetail memberDetail) {
+    public DeleteScheduleResponse delete(@PathVariable Long scheduleId,
+            @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
         return scheduleService.delete(scheduleId, member);
     }
@@ -92,5 +95,11 @@ public class ScheduleController {
     @GetMapping("/categories")
     public List<CategoryDto> getCategoryList() {
         return scheduleService.getCategoryList();
+    }
+
+    @PostMapping("/route")
+    public RouteTimeResponse getRouteTime(@Valid @RequestBody RouteTimeRequest request) {
+        Integer time = routeService.calcRouteTime(request);
+        return RouteTimeResponse.of(time);
     }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../model/member_model.dart';
 import 'modify_info.dart';
 import 'package:client/constants.dart';
 import 'package:client/widgets/custom_button.dart';
@@ -7,6 +8,7 @@ import 'package:client/widgets/custom_button.dart';
 class MyInfo extends StatelessWidget {
   static const title = 'Profile';
   static const androidIcon = Icon(Icons.person);
+  Member me = Member(name: '임시이름', birthday: '임시생일', profileImage: '임시프로필');
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +28,14 @@ class MyInfo extends StatelessWidget {
                 Text('닉네임',
                     style: TextStyle(color: Constants.main400, fontSize: 22),
                     textAlign: TextAlign.center),
-                Text('김싸피',
+                Text(me.name!,
                     style: textTheme.displaySmall, textAlign: TextAlign.center)
               ]),
               TableRow(children: [
                 Text('생일',
                     style: TextStyle(color: Constants.main400, fontSize: 22),
                     textAlign: TextAlign.center),
-                Text('2000년 1월 1일',
+                Text(me.birthday!,
                     style: textTheme.displaySmall, textAlign: TextAlign.center)
               ]),
               TableRow(children: [

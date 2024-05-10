@@ -35,9 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const CalendarScreen();
       case 2:
-        return GifticonListScreen();
+        return const GifticonListScreen();
       case 3:
-        return const ProfileScreen();
+        return ProfileScreen();
       default:
         return const DashboardScreen();
     }

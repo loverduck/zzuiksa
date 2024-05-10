@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.zzuiksa.server.global.exception.AuthenticationException;
+import com.zzuiksa.server.global.exception.AuthException;
 import com.zzuiksa.server.global.token.data.Jwt;
 
 @SpringBootTest
@@ -33,6 +33,6 @@ public class TokenProviderTests {
 
         // when & then
         Assertions.assertThatThrownBy(() -> tokenProvider.getTokenClaims(token))
-                .isInstanceOf(AuthenticationException.class);
+                .isInstanceOf(AuthException.class);
     }
 }

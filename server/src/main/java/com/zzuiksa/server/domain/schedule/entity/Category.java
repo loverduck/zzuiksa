@@ -1,7 +1,5 @@
 package com.zzuiksa.server.domain.schedule.entity;
 
-import com.zzuiksa.server.global.entity.BaseEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,8 +20,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-@EqualsAndHashCode(callSuper = true)
-public class Category extends BaseEntity {
+@EqualsAndHashCode
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

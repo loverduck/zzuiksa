@@ -3,15 +3,11 @@ package com.zzuiksa.server.domain.schedule.data.request;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-
-import org.springframework.boot.convert.DurationUnit;
 
 import com.zzuiksa.server.domain.schedule.data.PlaceDto;
 import com.zzuiksa.server.domain.schedule.data.RepeatDto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -52,8 +48,7 @@ public class AddScheduleRequest {
     private LocalTime endTime;
 
     @Schema(description = "알림 시간")
-    @DurationUnit(ChronoUnit.MINUTES)
-    private Duration alertBefore;
+    private Integer alertBefore;
 
     @Schema(description = "메모")
     @NotNull
@@ -67,6 +62,18 @@ public class AddScheduleRequest {
 
     @Schema(description = "반복")
     private RepeatDto repeat;
+
+    public Duration getAlertBefore() {
+        return alertBefore == null ? null : Duration.ofMinutes(alertBefore);
+    }
+
+    public PlaceDto getToPlace() {
+        return toPlace == null ? PlaceDto.EMPTY : toPlace;
+    }
+
+    public PlaceDto getFromPlace() {
+        return fromPlace == null ? PlaceDto.EMPTY : fromPlace;
+    }
 
     public boolean isRepeat() {
         return repeat != null;

@@ -22,14 +22,19 @@ public enum ErrorCodes implements ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "ZME001", "사용자가 존재하지 않습니다."),
 
     KAKAO_CLIENT_EXCEPTION(HttpStatus.BAD_REQUEST, "ZKE001", "형식에 맞지 않는 요청입니다."),
-    KAKAO_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ZKE002", "Kakao Server Error."),
+    KAKAO_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ZKE002", "카카오 API가 작동하지 않습니다. 잠시 후 다시 시도해주세요."),
 
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "ZSE001", "해당하는 일정이 없습니다."),
     SCHEDULE_TOO_FAR(HttpStatus.BAD_REQUEST, "ZSE004", "2년 뒤까지의 일정만 추가할 수 있습니다."),
     BAD_SCHEDULE_REPEAT(HttpStatus.BAD_REQUEST, "ZSE005", "잘못된 반복 일정입니다. (기간 내에 생성된 일정이 없음)"),
+    ROUTE_CLIENT_EXCEPTION(HttpStatus.BAD_REQUEST, "ZSE010", "길찾기 과정에서 오류가 발생했습니다."),
+    ROUTE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ZSE011", "길찾기 API가 작동하지 않습니다. 잠시 후 다시 시도해주세요."),
 
     PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "ZPE001", "장소를 찾을 수 없습니다."),
     PLACE_FORBIDDEN(HttpStatus.FORBIDDEN, "ZPE002", "장소 접근 권한이 없습니다."),
+
+    GIFTICON_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "ZGE001", "이미 등록된 기프티콘입니다."),
+    GIFTICON_NOT_FOUND(HttpStatus.NOT_FOUND, "ZGE002", "기프티콘 정보를 찾을 수 없습니다."),
     ;
 
     private final HttpStatusCode status;
