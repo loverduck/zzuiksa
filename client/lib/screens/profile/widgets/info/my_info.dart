@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../model/member_model.dart';
 import 'modify_info.dart';
 import 'package:client/constants.dart';
 import 'package:client/widgets/custom_button.dart';
+import '../../model/member_model.dart';
+import '../logout_button.dart';
 
 class MyInfo extends StatelessWidget {
   static const title = 'Profile';
   static const androidIcon = Icon(Icons.person);
-  Member me = Member(name: '임시이름', birthday: '임시생일', profileImage: '임시프로필');
+
+  final Member member;
+  const MyInfo(this.member, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,59 +31,35 @@ class MyInfo extends StatelessWidget {
                 Text('닉네임',
                     style: TextStyle(color: Constants.main400, fontSize: 22),
                     textAlign: TextAlign.center),
-                Text(me.name!,
+                Text(member.name!,
                     style: textTheme.displaySmall, textAlign: TextAlign.center)
               ]),
               TableRow(children: [
                 Text('생일',
                     style: TextStyle(color: Constants.main400, fontSize: 22),
                     textAlign: TextAlign.center),
-                Text(me.birthday!,
+                Text(member.birthday==null? '생일을 설정해주세요' : member.birthday!,
                     style: textTheme.displaySmall, textAlign: TextAlign.center)
               ]),
               TableRow(children: [
                 Text('카카오 ID',
                     style: TextStyle(color: Constants.main400, fontSize: 22),
                     textAlign: TextAlign.center),
-                Text('kim@ssafy.com',
+                Text('게스트 로그인 상태입니다',
                     style: textTheme.displaySmall, textAlign: TextAlign.center)
               ]),
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 32),
           CustomButton(
             text: '수정하기',
             func: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ModifyInfo()));
+                  MaterialPageRoute(builder: (context) => ModifyInfo(member: member,)));
             },
           ),
           SizedBox(height: 8),
-          CustomButton(
-            text: '탈퇴하기',
-            color: 200,
-            func: () {
-              showDialog<void>(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('회원 탈퇴'),
-                    content: Text('정말 탈퇴하시겠어요?'),
-                    actions: [
-                      TextButton(
-                        child: const Text('예'),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      TextButton(
-                        child: const Text('아니오'),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
+          LogoutButton(),
         ],
       ),
     );
