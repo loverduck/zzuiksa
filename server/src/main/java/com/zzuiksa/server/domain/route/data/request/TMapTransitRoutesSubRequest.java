@@ -41,10 +41,10 @@ public class TMapTransitRoutesSubRequest {
             LocalDateTime startDateTime, int count) {
         DateTimeFormatter searchDttmFormatter = DateTimeFormatter.ofPattern("yyyyMMddhhmm");
         return TMapTransitRoutesSubRequest.builder()
-                .startX(String.valueOf(startLat))
-                .startY(String.valueOf(startLng))
-                .endX(String.valueOf(endLat))
-                .endY(String.valueOf(endLng))
+                .startX(String.valueOf(startLng))
+                .startY(String.valueOf(startLat))
+                .endX(String.valueOf(endLng))
+                .endY(String.valueOf(endLat))
                 .format("json")
                 .searchDttm(startDateTime.format(searchDttmFormatter))
                 .count(count)
