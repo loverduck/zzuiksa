@@ -1,9 +1,11 @@
 import 'package:client/service/member_api.dart';
+import 'package:client/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 import 'screens/login/login_check_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
@@ -34,6 +36,10 @@ void main() async {
     nativeAppKey: dotenv.get("KAKAO_NATIVE_APP_KEY"),
   );
 
+  AuthRepository.initialize(
+      appKey: dotenv.get("KAKAO_JAVASCRIPT_KEY"), baseUrl: baseUrl);
+
+  // runApp(const MyApp());
   runApp(
       MultiProvider(
         providers: [
