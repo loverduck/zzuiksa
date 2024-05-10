@@ -4,7 +4,9 @@ import 'package:client/screens/profile/profile_screen.dart';
 import 'package:client/screens/schedule/schedule_calendar_screen.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:client/widgets/footer.dart';
+import 'package:client/service/member_api.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,7 +39,14 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         return const GifticonListScreen();
       case 3:
-        return const ProfileScreen();
+      // return ProfileScreen(member);
+        return Consumer<MemberApi>(
+          builder: (context, memberProvider, child) {
+            return memberProvider.member != null
+                ? ProfileScreen(memberProvider.member)
+                : Container();
+          },
+        );
       default:
         return const DashboardScreen();
     }

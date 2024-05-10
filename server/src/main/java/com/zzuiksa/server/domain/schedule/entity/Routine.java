@@ -39,7 +39,6 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class Routine extends BaseEntity {
 
-    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -197,14 +196,10 @@ public class Routine extends BaseEntity {
     }
 
     public void setAlertBefore(Duration alertBefore) {
-        if (alertBefore == null) {
-            throw new IllegalArgumentException("alertBefore is null");
-        }
-        if (alertBefore.compareTo(Duration.ofMinutes(1)) < 0) {
+        if (alertBefore != null && alertBefore.compareTo(Duration.ofMinutes(1)) < 0) {
             throw new IllegalArgumentException("alertBefore is negative");
         }
-        ;
-        if (alertBefore.compareTo(Duration.ofDays(7)) > 0) {
+        if (alertBefore != null && alertBefore.compareTo(Duration.ofDays(7)) > 0) {
             throw new IllegalArgumentException("alertBefore is greater than 7 days");
         }
         this.alertBefore = alertBefore;

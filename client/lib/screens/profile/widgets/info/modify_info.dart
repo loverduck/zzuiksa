@@ -1,22 +1,39 @@
-import 'package:client/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:client/constants.dart';
 import 'package:client/widgets/header.dart';
 import 'package:client/widgets/input_box.dart';
 import 'package:client/widgets/custom_button.dart';
+import 'package:client/service/member_api.dart';
+
+import '../../model/member_model.dart';
 
 class ModifyInfo extends StatefulWidget {
-  const ModifyInfo({super.key});
+  final Member member;
+  const ModifyInfo({super.key, required this.member});
 
   @override
   State<ModifyInfo> createState() => _ModifyInfoState();
 }
 
 class _ModifyInfoState extends State<ModifyInfo> {
+  late Member member; // 멤버 정보를 저장할 변수 추가
+  var nickname = TextEditingController(); // 닉네임 입력 저장
+  var birthday = TextEditingController(); // 생일 입력 저장
+
+  @override
+  void initState() {
+    super.initState();
+    member = widget.member; // widget의 member를 초기화
+    nickname.text = member.name!;
+    if (member.birthday!=null) birthday.text = member.birthday!;
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final provider = Provider.of<MemberApi>(context);
 
     return Scaffold(
         appBar: PreferredSize(
@@ -26,8 +43,11 @@ class _ModifyInfoState extends State<ModifyInfo> {
               icon: Icon(Icons.check),
               padding: EdgeInsets.all(32),
               iconSize: 32,
-              onPressed: () {
-                print('complete button clicked');
+              onPressed: () async {
+                if (nickname.text!=null && birthday.text!=null) {
+                  provider.updateMemberInfo(Member(name: nickname.text, birthday: birthday.text));
+                  Navigator.pop(context);
+                }
               },
             )],
           ),
@@ -72,6 +92,7 @@ class _ModifyInfoState extends State<ModifyInfo> {
                         ]),
                   ),
                   InputBox(
+                    controller: nickname,
                     name: 'nickname',
                     placeholder: '닉네임',
                     prefixIcon: IconButton(
@@ -83,8 +104,9 @@ class _ModifyInfoState extends State<ModifyInfo> {
                     ),
                   ),
                   InputBox(
+                    controller: birthday,
                     name: 'birthday',
-                    placeholder: '생일 (MM-DD 형식)',
+                    placeholder: '생일 (YYYY-MM-DD 형식)',
                     prefixIcon: IconButton(
                       icon: Icon(Icons.cake),
                       iconSize: 32,

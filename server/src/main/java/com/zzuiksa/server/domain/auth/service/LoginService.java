@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.zzuiksa.server.domain.auth.data.response.LoginResponse;
+import com.zzuiksa.server.domain.auth.repository.RandomNameRepository;
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.member.repository.MemberRepository;
 import com.zzuiksa.server.global.exception.custom.CustomException;
@@ -24,6 +25,7 @@ public class LoginService {
 
     private final KakaoLoginApiService kakaoLoginApiService;
     private final MemberRepository memberRepository;
+    private final RandomNameRepository randomNameRepository;
     private final TokenProvider tokenProvider;
 
     @Transactional
@@ -35,8 +37,7 @@ public class LoginService {
 
     @Transactional
     public LoginResponse guestLogin() {
-        // TODO: 닉네임 랜덤 생성
-        String randomName = "랜덤";
+        String randomName = randomNameRepository.getRandomName();
         Member guestMember = Member.builder()
                 .name(randomName)
                 .build();
