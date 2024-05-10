@@ -191,12 +191,16 @@ public class RoutineTests {
     }
 
     @Test
-    public void setAlertBefore_null_throwIllegalArgumentException() {
+    public void setAlertBefore_null_success() {
         // given
+        Duration alertBefore = null;
         Routine routine = new Routine();
 
-        // when & then
-        assertThatThrownBy(() -> routine.setAlertBefore(null)).isInstanceOf(IllegalArgumentException.class);
+        // when
+        routine.setAlertBefore(alertBefore);
+
+        // then
+        assertThat(routine.getAlertBefore()).isEqualTo(alertBefore);
     }
 
     @Test
