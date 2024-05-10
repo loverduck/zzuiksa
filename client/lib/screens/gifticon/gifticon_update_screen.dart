@@ -1,3 +1,4 @@
+import 'package:client/screens/gifticon/service/gifticon_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
@@ -43,7 +44,9 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              // Update gifticon using API or whatever necessary
+              if (gifticon.id != null) {
+                patchGifticon(gifticon.id!, gifticon);
+              }
             },
             child: Text(
               '수정하기',
