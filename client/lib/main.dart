@@ -1,7 +1,9 @@
+import 'package:client/service/member_api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:provider/provider.dart';
 
 import 'screens/login/login_check_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
@@ -32,7 +34,15 @@ void main() async {
     nativeAppKey: dotenv.get("KAKAO_NATIVE_APP_KEY"),
   );
 
-  runApp(const MyApp());
+  runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+              create: (context) => MemberApi(),
+          ),
+        ],
+        child: MyApp(),)
+      );
 }
 
 class MyApp extends StatelessWidget {

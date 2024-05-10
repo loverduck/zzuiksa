@@ -13,6 +13,9 @@ class AddPlace extends StatefulWidget {
 }
 
 class _AddPlaceState extends State<AddPlace> {
+  var address1 = TextEditingController(); // 닉네임 입력 저장
+  var name = TextEditingController(); // 생일 입력 저장
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -74,6 +77,7 @@ class _AddPlaceState extends State<AddPlace> {
                         ]),
                   ),
                   InputBox(
+                    controller: address1,
                     name: 'address1',
                     placeholder: '지도에서 장소를 선택하세요',
                     suffixIcon: IconButton(
@@ -83,6 +87,7 @@ class _AddPlaceState extends State<AddPlace> {
                         onPressed: () {}),
                   ),
                   InputBox(
+                    controller: name,
                     name: 'name',
                     placeholder: '장소명을 입력하세요',
                     suffixIcon: IconButton(

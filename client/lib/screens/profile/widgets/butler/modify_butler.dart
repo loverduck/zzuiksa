@@ -13,6 +13,8 @@ class ModifyButler extends StatefulWidget {
 }
 
 class _ModifyButlerState extends State<ModifyButler> {
+  var nickname = TextEditingController(); // 닉네임 입력 저장
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -44,6 +46,7 @@ class _ModifyButlerState extends State<ModifyButler> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                       InputBox(
+                        controller: nickname,
                         name: 'nickname',
                         placeholder: '집사 닉네임',
                       ),

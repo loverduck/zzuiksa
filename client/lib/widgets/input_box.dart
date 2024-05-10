@@ -2,6 +2,7 @@ import 'package:client/constants.dart';
 import 'package:flutter/material.dart';
 
 class InputBox extends StatelessWidget {
+  final TextEditingController controller;
   final String name;
   final String placeholder;
   final IconButton? prefixIcon;
@@ -11,6 +12,7 @@ class InputBox extends StatelessWidget {
     super.key,
     required this.name,
     required this.placeholder,
+    required this.controller,
     this.prefixIcon,
     this.suffixIcon,
   });
@@ -20,6 +22,7 @@ class InputBox extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
             filled: true,
             fillColor: Constants.main100,
