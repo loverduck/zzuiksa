@@ -1,7 +1,6 @@
 package com.zzuiksa.server.domain.schedule.service;
 
 import java.time.Clock;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
@@ -133,7 +132,7 @@ public class ScheduleService {
                 .endDate(request.getEndDate())
                 .startTime(request.getStartTime())
                 .endTime(request.getEndTime())
-                .alertBefore(Duration.ofMinutes(request.getAlertBefore()))
+                .alertBefore(request.getAlertBefore())
                 .memo(request.getMemo())
                 .toPlaceName(request.getToPlace().getName())
                 .toPlaceLat(request.getToPlace().getLat())
@@ -160,7 +159,7 @@ public class ScheduleService {
                 .endDate(request.getEndDate())
                 .startTime(request.getStartTime())
                 .endTime(request.getEndTime())
-                .alertBefore(Duration.ofMinutes(request.getAlertBefore()))
+                .alertBefore(request.getAlertBefore())
                 .memo(request.getMemo())
                 .toPlaceName(request.getToPlace().getName())
                 .toPlaceLat(request.getToPlace().getLat())
