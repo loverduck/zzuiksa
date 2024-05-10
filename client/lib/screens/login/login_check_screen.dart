@@ -5,7 +5,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:client/constants.dart';
 import 'package:client/widgets/custom_button.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'model/login_model.dart';
+import 'package:client/service/notification/notification.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -24,12 +26,19 @@ class _LoginScreenState extends State<LoginScreen> {
   //flutter_secure_storage 사용을 위한 초기화 작업
   @override
   void initState() {
+    FlutterLocalNotification.init();
     super.initState();
+
+    _permissionWithNotification();
 
     // 비동기로 flutter secure storage 정보를 불러오는 작업
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _asyncMethod();
     });
+  }
+
+  void _permissionWithNotification() async {
+    await [Permission.notification].request();
   }
 
   _asyncMethod() async {
