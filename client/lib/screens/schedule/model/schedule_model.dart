@@ -15,36 +15,37 @@ class Schedule {
 
   Schedule(
       {this.scheduleId,
-        this.categoryId,
-        this.title,
-        this.startDate,
-        this.endDate,
-        this.startTime,
-        this.endTime,
-        this.alertBefore,
-        this.memo,
-        this.toPlace,
-        this.fromPlace,
-        this.repeat,
-        this.isDone});
+      this.categoryId,
+      this.title,
+      this.startDate,
+      this.endDate,
+      this.startTime,
+      this.endTime,
+      this.alertBefore,
+      this.memo,
+      this.toPlace,
+      this.fromPlace,
+      this.repeat,
+      this.isDone});
 
-  Schedule.fromJson(Map<String, dynamic> json) {
-    categoryId = json['categoryId'];
-    title = json['title'];
-    startDate = json['startDate'];
-    endDate = json['endDate'];
-    startTime = json['startTime'];
-    endTime = json['endTime'];
-    alertBefore = json['alertBefore'];
-    memo = json['memo'];
-    // toPlace = json['toPlace'];
-    // fromPlace = json['fromPlace'];
-    toPlace = json['toPlace'] != null ? Place.fromJson(json['toPlace']) : null;
-    fromPlace =
-    json['fromPlace'] != null ? Place.fromJson(json['fromPlace']) : null;
-    // repeat = json['repeat'] != null ? repeat.fromJson(json['repeat']) : null;
-    repeat = json['repeat'];
-    isDone = json['isDone'];
+  factory Schedule.fromJson(Map<String, dynamic> json) {
+    return Schedule(
+        scheduleId: json["scheduleId"],
+        categoryId: json['categoryId'],
+        title: json['title'],
+        startDate: json['startDate'],
+        endDate: json['endDate'],
+        startTime: json['startTime'],
+        endTime: json['endTime'],
+        alertBefore: json['alertBefore'],
+        memo: json['memo'],
+        toPlace:
+            json['toPlace'] != null ? Place.fromJson(json['toPlace']) : null,
+        fromPlace: json['fromPlace'] != null
+            ? Place.fromJson(json['fromPlace'])
+            : null,
+        repeat: json['repeat'],
+        isDone: json['isDone']);
   }
 
   Map<String, dynamic> toJson() {
@@ -57,13 +58,8 @@ class Schedule {
     data['endTime'] = endTime;
     data['alertBefore'] = alertBefore;
     data['memo'] = memo;
-    // data['toPlace'] = toPlace;
-    // data['fromPlace'] = fromPlace;
     data['toPlace'] = toPlace?.toJson();
     data['fromPlace'] = fromPlace?.toJson();
-    // if (repeat != null) {
-    //   data['repeat'] = repeat!.toJson();
-    // }
     data['repeat'] = repeat;
     data['isDone'] = isDone;
     return data;
@@ -71,7 +67,7 @@ class Schedule {
 
   @override
   String toString() {
-    return "Schedule: { categoryId: $categoryId, title: $title, startDate: $startDate, endDate: $endDate, startTime: $startTime, endTime: $endTime, alertBefore: $alertBefore, memo: $memo, toPlace: $toPlace, fromPlace: $fromPlace, repeat: $repeat, isDone: $isDone }";
+    return "Schedule: { categoryId: $scheduleId, categoryId: $categoryId, title: $title, startDate: $startDate, endDate: $endDate, startTime: $startTime, endTime: $endTime, alertBefore: $alertBefore, memo: $memo, toPlace: $toPlace, fromPlace: $fromPlace, repeat: $repeat, isDone: $isDone }";
   }
 }
 
@@ -82,10 +78,12 @@ class Place {
 
   Place({this.name, this.lat, this.lng});
 
-  Place.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    lat = json['lat'];
-    lng = json['lng'];
+  factory Place.fromJson(Map<String, dynamic> json) {
+    return Place(
+      name: json['name'],
+      lat: json['lat'],
+      lng: json['lng'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -109,10 +107,12 @@ class Repeat {
 
   Repeat({this.cycle, this.endDate, this.repeatAt});
 
-  Repeat.fromJson(Map<String, dynamic> json) {
-    cycle = json['cycle'];
-    endDate = json['endDate'];
-    repeatAt = json['repeatAt'];
+  factory Repeat.fromJson(Map<String, dynamic> json) {
+    return Repeat(
+      cycle: json['cycle'],
+      endDate: json['endDate'],
+      repeatAt: json['repeatAt'],
+    );
   }
 
   Map<String, dynamic> toJson() {
