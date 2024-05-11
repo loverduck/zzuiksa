@@ -1,4 +1,6 @@
+import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
+import 'package:client/screens/schedule/service/schedule_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -15,9 +17,63 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? selectedDay;
+  Map<DateTime, List<Schedule>> monthSchedules = {};
 
-  void moveToDetail() {
+  void moveToDetail(int scheduleId) {
     Navigator.pushNamed(context, '/schedule/detail');
+  }
+
+  void onChangeMonth(day) {
+    getMonthSchdulesData(
+        DateFormat("yyyy-MM-dd").format(DateTime(day.year, day.month, 1)),
+        DateFormat("yyyy-MM-dd").format(DateTime(day.year, day.month + 1, 0)));
+  }
+
+  void getMonthSchdulesData(String from, String to) async {
+    monthSchedules = {};
+
+    Map<String, dynamic> json = await getMonthSchedules(from, to);
+    List<Schedule> scheduleList = [];
+
+    if (json["status"] == "success") {
+      List<dynamic> jsonList = json["data"];
+      scheduleList = jsonList.map((e) {
+        return Schedule.fromJson(e);
+      }).toList();
+    }
+
+    for (Schedule schedule in scheduleList) {
+      DateTime startDate = DateTime.parse(schedule.startDate!);
+      DateTime endDate = DateTime.parse(schedule.endDate!);
+
+      DateTime currentDate = startDate;
+      while (currentDate.isBefore(endDate.add(const Duration(days: 1)))) {
+        // endDate를 포함하기 위해 1일 추가
+        DateTime key =
+            DateTime(currentDate.year, currentDate.month, currentDate.day)
+                .toUtc();
+
+        if (monthSchedules[key] == null) {
+          monthSchedules[key] = [];
+        }
+
+        monthSchedules[key]!.add(schedule);
+
+        // 다음 날짜로 이동
+        currentDate = currentDate.add(const Duration(days: 1));
+      }
+    }
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    onChangeMonth(DateTime.now());
+
+    setState(() {});
+
+    super.initState();
   }
 
   @override
@@ -30,6 +86,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             foucsedDay: DateTime.now(),
             onDaySelected: onDaySelected,
             selectedDayPredicate: selectedDayPredicate,
+            monthSchedules: monthSchedules,
+            onChangeMonth: onChangeMonth,
           ),
         ),
       ),
@@ -42,6 +100,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       this.selectedDay = selectedDay;
     });
 
+    List<Schedule> selectedDaySchedules = monthSchedules[selectedDay] ?? [];
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -49,7 +109,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
         return AlertDialog(
           titlePadding:
               const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-          // titlePadding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
           contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
           backgroundColor: Constants.main200,
           shape: RoundedRectangleBorder(
@@ -70,14 +129,57 @@ class _CalendarScreenState extends State<CalendarScreen> {
             child: Column(
               children: [
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      GestureDetector(
-                        onTap: moveToDetail,
-                        child: const Text("할일 1"),
+                  child: Scrollbar(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ...selectedDaySchedules.map((Schedule schedule) {
+                            return GestureDetector(
+                              onTap: () => {moveToDetail(schedule.scheduleId!)},
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 6.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                        border: Border.all(
+                                          color: Colors.black,
+                                          width: 2.0,
+                                        ),
+                                        color: categoryType[
+                                                schedule.categoryId]![1]
+                                            .withOpacity(0.5)),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          categoryType[schedule.categoryId]![0],
+                                          style:
+                                              const TextStyle(fontSize: 20.0),
+                                        ),
+                                        Text(
+                                          schedule.title!,
+                                          style:
+                                              const TextStyle(fontSize: 24.0),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 6.0,
+                                  )
+                                ],
+                              ),
+                            );
+                          })
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 Row(

@@ -31,13 +31,26 @@ Future<dynamic> postSchedule(Schedule schedule) async {
   }
 }
 
-Future<void> getSchedule(int scheduleId) async {
-  try {
-    final res = await http.get(Uri.parse("$baseUrl/api/schedules/$scheduleId"));
+Future<dynamic> getMonthSchedules(String from, String to) async {
+  getToken();
 
-    print(res);
+  try {
+    var uri = Uri.https(
+        baseUrl.split("//")[1], "/api/schedules", {"from": from, "to": to});
+    print(uri);
+    final res = await http.get(
+      uri,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    Map<String, dynamic> json = jsonDecode(res.body);
+
+    return json;
   } catch (e) {
-    print("get schedule error: $e");
+    print("get month schedules error: $e");
   }
 }
 
