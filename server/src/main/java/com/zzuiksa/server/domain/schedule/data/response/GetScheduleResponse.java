@@ -52,9 +52,8 @@ public class GetScheduleResponse {
     @Schema(description = "종료시간")
     private LocalTime endTime;
 
-    @Schema(description = "알림 시간")
-    @DurationUnit(ChronoUnit.MINUTES)
-    private Duration alertBefore;
+    @Schema(description = "알림 시간 (분)")
+    private Long alertBefore;
 
     @Schema(description = "메모")
     @NotNull
@@ -80,13 +79,20 @@ public class GetScheduleResponse {
                 .endDate(schedule.getEndDate())
                 .startTime(schedule.getStartTime())
                 .endTime(schedule.getEndTime())
-                .alertBefore(schedule.getAlertBefore())
+                .alertBefore(getAlertBeforeMinutes(schedule))
                 .memo(schedule.getMemo())
                 .toPlace(getToPlace(schedule))
                 .fromPlace(getFromPlace(schedule))
                 .repeat(getRepeat(schedule))
                 .isDone(schedule.isDone())
                 .build();
+    }
+
+    private static Long getAlertBeforeMinutes(Schedule schedule) {
+        if (schedule.getAlertBefore() == null) {
+            return null;
+        }
+        return schedule.getAlertBefore().toMinutes();
     }
 
     private static PlaceDto getToPlace(Schedule schedule) {
