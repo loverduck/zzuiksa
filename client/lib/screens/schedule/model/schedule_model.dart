@@ -44,7 +44,7 @@ class Schedule {
         fromPlace: json['fromPlace'] != null
             ? Place.fromJson(json['fromPlace'])
             : null,
-        repeat: json['repeat'],
+        repeat: json['repeat'] != null ? Repeat.fromJson(json['repeat']) : null,
         isDone: json['isDone']);
   }
 

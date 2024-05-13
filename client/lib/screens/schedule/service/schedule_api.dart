@@ -23,7 +23,8 @@ Future<dynamic> postSchedule(Schedule schedule) async {
       },
       body: jsonEncode(schedule.toJson()),
     );
-    dynamic res = jsonDecode(resBody.body);
+    dynamic res = jsonDecode(utf8.decode(resBody.bodyBytes));
+    print(res);
 
     return res;
   } catch (e) {
@@ -45,7 +46,7 @@ Future<dynamic> getMonthSchedules(String from, String to) async {
       },
     );
 
-    Map<String, dynamic> json = jsonDecode(res.body);
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
 
     return json;
   } catch (e) {
@@ -65,7 +66,7 @@ Future<dynamic> getSchedule(int scheduleId) async {
       },
     );
 
-    Map<String, dynamic> json = jsonDecode(res.body);
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
 
     return json;
   } catch (e) {

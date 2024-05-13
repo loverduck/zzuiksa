@@ -62,7 +62,6 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
   }
 
   void _getSchedule(int scheduleId) async {
-    print("api 연결");
     Map<String, dynamic> res = await getSchedule(scheduleId);
 
     if (res['status'] == 'success') {
@@ -70,7 +69,6 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
         schedule = Schedule.fromJson(res['data']);
         schedule.scheduleId = scheduleId;
       });
-      print("schedule: $schedule");
     } else {
       print("다시 시도해주세요");
     }
@@ -122,9 +120,9 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                       width: 16.0,
                     ),
                     Text(
-                      "${schedule.title}",
+                      schedule.title == null ? "" : "${schedule.title}",
                       style: const TextStyle(
-                        fontSize: 24.0,
+                        fontSize: fontSizeMedium,
                       ),
                     ),
                   ],
@@ -168,10 +166,14 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                       child: const Icon(Icons.replay),
                     ),
                     textMargin,
-                    Text(
-                      "반복 없음",
-                      style: noneTextStyle,
-                    ),
+                    schedule.repeat == null
+                        ? Text(
+                            "반복 없음",
+                            style: noneTextStyle,
+                          )
+                        : RepeatText(
+                            repeat: schedule.repeat!,
+                          ),
                   ],
                 ),
               ),
@@ -182,30 +184,49 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                   children: [
                     const Icon(Icons.notifications_none),
                     textMargin,
-                    Text(
-                      "알림 없음",
-                      style: noneTextStyle,
-                    ),
+                    schedule.alertBefore == null
+                        ? Text(
+                            "알림 없음",
+                            style: noneTextStyle,
+                          )
+                        : Text(
+                            "${schedule.alertBefore}분 전 알림",
+                            style: const TextStyle(fontSize: fontSizeMedium),
+                          ),
                   ],
                 ),
               ),
               containerMargin,
               // 위치
               DetailContainer(
-                child: Row(
+                child: Column(
                   children: [
-                    const Icon(Icons.place_outlined),
-                    textMargin,
-                    Text(
-                      "장소 없음",
-                      style: noneTextStyle,
+                    Row(
+                      children: [
+                        const Icon(Icons.place_outlined),
+                        textMargin,
+                        Text(
+                          "장소: ${schedule.toPlace?.name ?? ""}",
+                          style: const TextStyle(fontSize: fontSizeMedium),
+                        ),
+                      ],
                     ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    schedule.toPlace == null
+                        ? Text(
+                            "장소 없음",
+                            style: noneTextStyle,
+                          )
+                        : PlaceContainer(place: schedule.toPlace!),
                   ],
                 ),
               ),
               containerMargin,
               DetailContainer(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
@@ -218,7 +239,28 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                           ),
                         ),
                       ],
-                    )
+                    ),
+                    const Divider(
+                      thickness: 1.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: schedule.memo == null || schedule.memo!.isEmpty
+                          ? const Text(
+                              "없음",
+                              style: TextStyle(
+                                  fontSize: fontSizeMedium,
+                                  color: Colors.black54),
+                            )
+                          : Text(
+                              schedule.memo!,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                fontSize: fontSizeMedium,
+                                color: Colors.black54,
+                              ),
+                            ),
+                    ),
                   ],
                 ),
               ),
@@ -226,6 +268,62 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class RepeatText extends StatefulWidget {
+  const RepeatText({super.key, required this.repeat});
+
+  final Repeat repeat;
+
+  @override
+  State<RepeatText> createState() => _RepeatTextState();
+}
+
+class _RepeatTextState extends State<RepeatText> {
+  @override
+  Widget build(BuildContext context) {
+    String text = "${cycleType[widget.repeat.cycle]} ";
+
+    switch (widget.repeat.cycle) {
+      case "MONTHLY":
+      case "DAILY":
+        text += "${widget.repeat.repeatAt}일";
+        break;
+      case "WEEKLY":
+        int weeklyRepeatAt = widget.repeat.repeatAt!;
+        for (int i = 1; i <= 7; i++) {
+          if ((weeklyRepeatAt & (1 << i)) != 0) {
+            text += "${week[i]}";
+          }
+        }
+        break;
+      case "YEARLY":
+        String date = widget.repeat.repeatAt.toString().padLeft(4, "0");
+        text += "${date.substring(0, 2)}월 ${date.substring(2, 4)}일";
+        break;
+    }
+
+    text += "마다 반복";
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: fontSizeMedium,
+          ),
+        ),
+        widget.repeat.endDate != null
+            ? Text(
+                "${widget.repeat.endDate}까지",
+                style: const TextStyle(
+                    fontSize: fontSizeSmall, color: Colors.black54),
+              )
+            : Container()
+      ],
     );
   }
 }
@@ -249,13 +347,11 @@ class DateTimeText extends StatefulWidget {
 class _DateTimeTextState extends State<DateTimeText> {
   @override
   Widget build(BuildContext context) {
-    print(widget.schedule);
     DateTime? parsedTime;
 
     try {
       parsedTime = DateFormat("H:mm:ss").parse(widget.time);
     } catch (e) {
-      print("schedule detail 시간 파싱 실패");
       parsedTime = DateTime.now();
     }
     return Column(
@@ -277,6 +373,44 @@ class _DateTimeTextState extends State<DateTimeText> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class PlaceContainer extends StatefulWidget {
+  const PlaceContainer({super.key, required this.place});
+
+  final Place place;
+
+  @override
+  State<PlaceContainer> createState() => _PlaceContainerState();
+}
+
+class _PlaceContainerState extends State<PlaceContainer> {
+  late KakaoMapController mapController;
+  List<Marker> marker = [];
+
+  @override
+  void initState() {
+    super.initState();
+    marker.add(Marker(
+        markerId: '0', latLng: LatLng(widget.place.lat!, widget.place.lng!)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final LatLng latLng = LatLng(widget.place.lat!, widget.place.lng!);
+
+    return SizedBox(
+      height: 200.0,
+      child: KakaoMap(
+        onMapCreated: (controller) {
+          mapController = controller;
+          mapController.addMarker(markers: marker);
+        },
+        center: latLng,
+        markers: marker,
+      ),
     );
   }
 }
