@@ -74,6 +74,16 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
     }
   }
 
+  void _deleteSchedule(int shceduleId) async {
+    Map<String, dynamic> res = await deleteSchedule(scheduleId);
+
+    if (res['status'] == 'success') {
+      print(res);
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -205,21 +215,42 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                       children: [
                         const Icon(Icons.place_outlined),
                         textMargin,
-                        Text(
-                          "장소: ${schedule.toPlace?.name ?? ""}",
-                          style: const TextStyle(fontSize: fontSizeMedium),
+                        Row(
+                          children: [
+                            const Text(
+                              "장소: ",
+                              style: TextStyle(
+                                fontSize: fontSizeMedium,
+                              ),
+                            ),
+                            schedule.toPlace != null
+                                ? Text(
+                                    schedule.toPlace!.name!,
+                                    style: const TextStyle(
+                                      fontSize: 24.0,
+                                    ),
+                                  )
+                                : const Text(
+                                    "장소 없음",
+                                    style: TextStyle(
+                                      fontSize: 24.0,
+                                      color: Colors.black45,
+                                    ),
+                                  )
+                          ],
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
                     schedule.toPlace == null
-                        ? Text(
-                            "장소 없음",
-                            style: noneTextStyle,
-                          )
-                        : PlaceContainer(place: schedule.toPlace!),
+                        ? Container()
+                        : Column(
+                            children: [
+                              PlaceContainer(place: schedule.toPlace!),
+                              const SizedBox(
+                                height: 10.0,
+                              )
+                            ],
+                          ),
                   ],
                 ),
               ),
@@ -261,6 +292,28 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                   ],
                 ),
               ),
+              containerMargin,
+              GestureDetector(
+                onTap: () => _deleteSchedule(scheduleId),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 12.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.red, width: 2.0),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: const Text(
+                    "삭제하기",
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+              containerMargin,
             ],
           ),
         ),

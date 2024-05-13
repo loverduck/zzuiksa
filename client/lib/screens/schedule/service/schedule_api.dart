@@ -68,9 +68,31 @@ Future<dynamic> getSchedule(int scheduleId) async {
 
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
 
+    print("get schedule api: $json");
+
     return json;
   } catch (e) {
     print("get schedule error: $e");
+  }
+}
+
+Future<dynamic> deleteSchedule(int scheduleId) async {
+  try {
+    getToken();
+
+    final res = await http.delete(
+      Uri.parse("$baseUrl/api/schedules/$scheduleId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+
+    print("delete schedule api: $json");
+    return json;
+  } catch (e) {
+    print("delete schedule error: $e");
   }
 }
 
