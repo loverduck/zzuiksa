@@ -131,7 +131,7 @@ public class ScheduleRepositoryQImpl implements ScheduleRepositoryQ {
         return queryFactory.select(getQScheduleSummaryDto())
                 .from(schedule)
                 .where(schedule.member.eq(member))
-                .where(schedule.startDate.before(date).and(schedule.endDate.after(date)))
+                .where(schedule.startDate.loe(date).and(schedule.endDate.goe(date)))
                 .where(schedule.isDone.isFalse())
                 .fetch();
     }
