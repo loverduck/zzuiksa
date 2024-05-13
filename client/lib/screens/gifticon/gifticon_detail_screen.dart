@@ -12,7 +12,7 @@ class GifticonDetailScreen extends StatefulWidget {
     required this.gifticonId,
   });
 
-  final int gifticonId;
+  final int? gifticonId; // 타입 변경: int -> int?
 
   @override
   State<GifticonDetailScreen> createState() => _GifticonDetailScreenState();
@@ -24,12 +24,14 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
   @override
   void initState() {
     super.initState();
-    fetchGifticonDetail();
+    if (widget.gifticonId != null) {
+      fetchGifticonDetail();
+    }
   }
 
   Future<void> fetchGifticonDetail() async {
     try {
-      Gifticon fetchedGifticon = await getGifticonDetail(widget.gifticonId);
+      Gifticon fetchedGifticon = await getGifticonDetail(widget.gifticonId!);
       setState(() {
         gifticon = fetchedGifticon;
       });
@@ -41,6 +43,8 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
   }
 
   void _showDeleteDialog() {
+    if (widget.gifticonId == null) return;  // ID가 null인 경우 삭제 대화 상자를 표시하지 않음
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -58,7 +62,7 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
               child: Text('삭제하기'),
               onPressed: () async {
                 try {
-                  bool deleted = await deleteGifticon(widget.gifticonId);
+                  bool deleted = await deleteGifticon(widget.gifticonId!);
                   if (deleted) {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();  // 삭제 후 이전 화면으로 이동
@@ -79,6 +83,22 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.gifticonId == null) {
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          backgroundColor: Constants.main200,
+        ),
+        body: Center(
+          child: Text('유효한 기프티콘 ID가 제공되지 않았습니다.'),
+        ),
+      );
+    }
+
+    // ID가 유효한 경우의 UI 렌더링
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -113,9 +133,9 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
       ),
       body: gifticon == null
           ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(  // 스크롤 가능하게 변경
+          : SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18.0),  // 좌우 패딩 적용
+          padding: EdgeInsets.symmetric(horizontal: 18.0),
           child: Column(
             children: [
               Image(
