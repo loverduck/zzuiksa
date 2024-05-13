@@ -243,24 +243,21 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                     const Divider(
                       thickness: 1.0,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: schedule.memo == null || schedule.memo!.isEmpty
-                          ? const Text(
-                              "없음",
-                              style: TextStyle(
-                                  fontSize: fontSizeMedium,
-                                  color: Colors.black54),
-                            )
-                          : Text(
-                              schedule.memo!,
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(
+                    schedule.memo == null || schedule.memo!.isEmpty
+                        ? const Text(
+                            "없음",
+                            style: TextStyle(
                                 fontSize: fontSizeMedium,
-                                color: Colors.black54,
-                              ),
+                                color: Colors.black54),
+                          )
+                        : Text(
+                            schedule.memo!,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              fontSize: fontSizeMedium,
+                              color: Colors.black,
                             ),
-                    ),
+                          ),
                   ],
                 ),
               ),

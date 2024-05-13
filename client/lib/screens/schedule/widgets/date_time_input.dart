@@ -1,6 +1,7 @@
 import 'package:client/screens/schedule/widgets/time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class DateTimeInput extends StatefulWidget {
   const DateTimeInput({
@@ -43,22 +44,24 @@ class _DateTimeInputState extends State<DateTimeInput> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
+        Container(
           width: 140,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          padding: const EdgeInsets.only(bottom: 4.0),
           child: TextField(
             textAlign: TextAlign.center,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               isDense: true,
-              contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+              contentPadding: EdgeInsets.zero,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16.0),
                 borderSide: BorderSide.none,
               ),
-              filled: true,
-              fillColor: Colors.white,
             ),
             style: const TextStyle(
-              fontSize: 16.0,
+              fontSize: 24.0,
             ),
             controller: widget.dateController,
             readOnly: true,

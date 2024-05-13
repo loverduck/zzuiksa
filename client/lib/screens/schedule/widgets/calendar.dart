@@ -190,7 +190,7 @@ class _CalendarState extends State<Calendar> {
               color: Colors.white.withOpacity(0.7),
             ),
             child: Transform.translate(
-              offset: const Offset(0, -2),
+              offset: const Offset(0, -4),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
@@ -324,6 +324,7 @@ Widget startDayContainer(Color color, Widget child) {
         child: Column(
           children: [
             Container(
+              width: double.infinity,
               height: 22.0,
               padding: const EdgeInsets.only(left: 4.0),
               decoration: BoxDecoration(
@@ -366,8 +367,9 @@ Widget endDayContainer(Color color) {
         child: Column(
           children: [
             Container(
+              width: double.infinity,
               height: 22.0,
-              padding: const EdgeInsets.fromLTRB(4.0, 0, 4.0, 0),
+              padding: const EdgeInsets.only(right: 4.0),
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(4.0),

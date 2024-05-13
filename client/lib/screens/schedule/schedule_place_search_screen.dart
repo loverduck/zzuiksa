@@ -142,7 +142,7 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
                     onSubmitted: searchPlaces,
                     textAlignVertical: TextAlignVertical.center,
                     style: const TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 24.0,
                       height: 1.0,
                     ),
                     decoration: InputDecoration(
@@ -182,14 +182,29 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
                           index: index,
                           controller: scrollController,
                           child: ListTile(
-                            title: Text(list[index].placeName ?? ""),
+                            title: Text(
+                              list[index].placeName ?? "",
+                              style: const TextStyle(
+                                fontSize: 24.0,
+                              ),
+                            ),
                             subtitle: Row(
                               children: [
-                                Text(list[index].addressName ?? ""),
+                                Text(
+                                  list[index].addressName ?? "",
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
                                 const SizedBox(
                                   width: 20.0,
                                 ),
-                                Text("${list[index].distance}m"),
+                                Text(
+                                  "${list[index].distance}m",
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
                               ],
                             ),
                             trailing: selectedPlaceIndex == index
