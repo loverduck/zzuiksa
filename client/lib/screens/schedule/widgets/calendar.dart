@@ -1,5 +1,5 @@
 import 'package:client/screens/schedule/model/schedule_model.dart';
-import 'package:client/screens/schedule/utils/data.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:client/constants.dart';
@@ -9,49 +9,27 @@ class Calendar extends StatefulWidget {
   final DateTime foucsedDay;
   final OnDaySelected onDaySelected;
   final bool Function(DateTime day) selectedDayPredicate;
+  final Map<DateTime, List<Schedule>> monthSchedules;
+  final Function onChangeMonth;
 
   const Calendar({
     super.key,
     required this.foucsedDay,
     required this.onDaySelected,
     required this.selectedDayPredicate,
+    required this.monthSchedules,
+    required this.onChangeMonth,
   });
 
   @override
   State<Calendar> createState() => _CalendarState();
 }
 
-Map<int, Color> categoryColor = {
-  0: Constants.green300,
-  1: Constants.blue300,
-  2: Constants.pink300,
-  3: Constants.violet300,
-};
+SizedBox boxMargin = const SizedBox(
+  height: 3.0,
+);
 
 class _CalendarState extends State<Calendar> {
-  Map<DateTime, List<Schedule>> groupSchedules = {};
-
-  @override
-  void initState() {
-    getGroupSchedules();
-    super.initState();
-  }
-
-  void getGroupSchedules() {
-    groupSchedules = {};
-
-    for (Schedule schedule in schedulesData) {
-      DateTime date = DateTime.parse(schedule.startDate!);
-      DateTime key = DateTime(date.year, date.month, date.day).toUtc();
-
-      if (groupSchedules[key] == null) {
-        groupSchedules[key] = [];
-      }
-
-      groupSchedules[key]!.add(schedule);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Container defaultContainer(
@@ -59,7 +37,6 @@ class _CalendarState extends State<Calendar> {
         Color? color = Constants.textColor,
         BoxDecoration? boxDecoration}) {
       return Container(
-        padding: const EdgeInsets.all(4),
         alignment: Alignment.topCenter,
         decoration: boxDecoration,
         child: Text(
@@ -71,7 +48,7 @@ class _CalendarState extends State<Calendar> {
       );
     }
 
-    const double containerBorderRadius = 16;
+    const double containerBorderRadius = 16.0;
 
     return TableCalendar(
       locale: "ko_KR",
@@ -81,8 +58,9 @@ class _CalendarState extends State<Calendar> {
       lastDay: DateTime(2400),
       daysOfWeekHeight: 30,
       eventLoader: (day) {
-        return groupSchedules[day] ?? [];
+        return widget.monthSchedules[day] ?? [];
       },
+      onPageChanged: (day) => widget.onChangeMonth(day),
       headerStyle: const HeaderStyle(
         leftChevronVisible: false,
         rightChevronVisible: false,
@@ -94,14 +72,12 @@ class _CalendarState extends State<Calendar> {
         ),
       ),
       onDaySelected: widget.onDaySelected,
-      // selectedDayPredicate: selectedDayPredicate,
       calendarBuilders: CalendarBuilders(
         // 이벤트 표시
-        markerBuilder: (context, date, groupSchedules) {
-          if (groupSchedules.isNotEmpty) {
+        markerBuilder: (context, date, monthSchedules) {
+          if (monthSchedules.isNotEmpty) {
             return Container(
-              padding: const EdgeInsets.fromLTRB(2.0, 0, 2.0, 0),
-              child: buildEventMarker(date, groupSchedules),
+              child: buildEventMarker(date, monthSchedules),
             );
           }
           return null;
@@ -246,35 +222,51 @@ Widget buildEventMarker(DateTime date, List events) {
     padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 8.0),
     child: Column(
       children: [
-        ...events.take(3).map(
-              (e) => Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(4.0, 0, 4.0, 0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4.0),
-                      color: categoryColor[e.categoryId]!.withOpacity(0.7),
-                    ),
-                    child: Text(
-                      "${e.title}",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        decoration: e.isDone
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                      ),
-                    ),
+        ...events.take(3).map((schedule) {
+          if (date.compareTo(DateTime.parse(schedule.startDate)) == 0) {
+            // 하루 일정
+            if (schedule.startDate == schedule.endDate) {
+              return oneDayContainer(
+                categoryType[schedule.categoryId]![1],
+                Text(
+                  "${schedule.title}",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    decoration: schedule.isDone!
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
                   ),
-                  const SizedBox(
-                    height: 3.0,
+                ),
+              );
+              // 여러날 일정 중 시작일
+            } else {
+              return startDayContainer(
+                categoryType[schedule.categoryId]![1],
+                Text(
+                  "${schedule.title}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    decoration: schedule.isDone!
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            }
+            // 여러 날 중 마지막 날
+          } else if (date.compareTo(DateTime.parse(schedule.endDate)) == 0) {
+            return endDayContainer(categoryType[schedule.categoryId]![1]);
+          } else {
+            // 여러 날 중 중간 날
+            return middleDayContainer(
+              categoryType[schedule.categoryId]![1],
+            );
+          }
+        }),
         if (events.length > 3)
           Row(
             children: [
@@ -292,5 +284,102 @@ Widget buildEventMarker(DateTime date, List events) {
           )
       ],
     ),
+  );
+}
+
+SizedBox scheduleMargin = const SizedBox(
+  width: 2.0,
+);
+
+Widget oneDayContainer(Color color, Widget child) {
+  return Column(
+    children: [
+      Row(
+        children: [
+          scheduleMargin,
+          Expanded(
+            child: Container(
+              height: 22.0,
+              padding: const EdgeInsets.fromLTRB(4.0, 0, 4.0, 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4.0),
+                color: color.withOpacity(0.7),
+              ),
+              child: child,
+            ),
+          ),
+          scheduleMargin
+        ],
+      ),
+      boxMargin,
+    ],
+  );
+}
+
+Widget startDayContainer(Color color, Widget child) {
+  return Row(
+    children: [
+      scheduleMargin,
+      Expanded(
+        child: Column(
+          children: [
+            Container(
+              height: 22.0,
+              padding: const EdgeInsets.only(left: 4.0),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(4.0),
+                    bottomLeft: Radius.circular(4.0)),
+                color: color.withOpacity(0.7),
+              ),
+              child: child,
+            ),
+            boxMargin,
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+Widget middleDayContainer(Color color) {
+  return Column(
+    children: [
+      Container(
+        width: double.infinity,
+        height: 22.0,
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.7),
+        ),
+        child: const Text(""),
+      ),
+      boxMargin,
+    ],
+  );
+}
+
+Widget endDayContainer(Color color) {
+  return Row(
+    children: [
+      scheduleMargin,
+      Expanded(
+        child: Column(
+          children: [
+            Container(
+              height: 22.0,
+              padding: const EdgeInsets.fromLTRB(4.0, 0, 4.0, 0),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(4.0),
+                    bottomRight: Radius.circular(4.0)),
+                color: color.withOpacity(0.7),
+              ),
+              child: const Text(""),
+            ),
+            boxMargin,
+          ],
+        ),
+      ),
+    ],
   );
 }
