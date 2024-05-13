@@ -1,10 +1,14 @@
 import 'package:client/constants.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
+import 'package:client/screens/schedule/service/schedule_api.dart';
 import 'package:client/screens/schedule/widgets/detail/detail_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'dart:math' as math;
+
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 const double fontSizeMedium = 24.0;
 const double fontSizeSmall = 20.0;
@@ -17,13 +21,8 @@ class ScheduleDetailScreen extends StatefulWidget {
 }
 
 class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
-  Schedule schedule = Schedule(
-    title: "저녁 약속",
-    startDate: "2024-04-27",
-    startTime: "19:00",
-    endDate: "2024-04-17",
-    endTime: "20:00",
-  );
+  late int scheduleId;
+  late Schedule schedule;
 
   SizedBox textMargin = const SizedBox(
     width: 10.0,
@@ -41,7 +40,6 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
   Widget menuButton() {
     return PopupMenuButton(
       onSelected: (val) {
-        print(val);
         if (val == "수정") {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return ScheduleFormScreen(
@@ -61,6 +59,35 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
         ),
       ],
     );
+  }
+
+  void _getSchedule(int scheduleId) async {
+    print("api 연결");
+    Map<String, dynamic> res = await getSchedule(scheduleId);
+
+    if (res['status'] == 'success') {
+      setState(() {
+        schedule = Schedule.fromJson(res['data']);
+        schedule.scheduleId = scheduleId;
+      });
+      print("schedule: $schedule");
+    } else {
+      print("다시 시도해주세요");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    schedule = Schedule();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ModalRoute.of(context)?.settings.arguments != null) {
+        final args = ModalRoute.of(context)?.settings.arguments as Map;
+        scheduleId = args['scheduleId'];
+        _getSchedule(scheduleId);
+      }
+    });
   }
 
   @override
@@ -87,16 +114,16 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                     Container(
                       width: 24.0,
                       height: 24.0,
-                      decoration: const BoxDecoration(
-                        color: Constants.green300,
+                      decoration: BoxDecoration(
+                        color: categoryType[schedule.categoryId]?[1],
                       ),
                     ),
                     const SizedBox(
                       width: 16.0,
                     ),
-                    const Text(
-                      "저녁 약속",
-                      style: TextStyle(
+                    Text(
+                      "${schedule.title}",
+                      style: const TextStyle(
                         fontSize: 24.0,
                       ),
                     ),
@@ -110,14 +137,22 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                   children: [
                     const Icon(Icons.alarm),
                     textMargin,
-                    const DateTimeText(date: "4월 17일", time: "7:00 PM"),
+                    schedule.startDate != null && schedule.startTime != null
+                        ? DateTimeText(
+                            date: "${schedule.startDate}",
+                            time: "${schedule.startTime}")
+                        : Container(),
                     textMargin,
                     const Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.black54,
                     ),
                     textMargin,
-                    const DateTimeText(date: "4월 17일", time: "8:00 PM"),
+                    schedule.endDate != null && schedule.endTime != null
+                        ? DateTimeText(
+                            date: "${schedule.endDate}",
+                            time: "${schedule.endTime}")
+                        : Container(),
                   ],
                 ),
               ),
@@ -200,10 +235,12 @@ class DateTimeText extends StatefulWidget {
     super.key,
     required this.date,
     required this.time,
+    this.schedule,
   });
 
   final String date;
   final String time;
+  final Schedule? schedule;
 
   @override
   State<DateTimeText> createState() => _DateTimeTextState();
@@ -212,18 +249,27 @@ class DateTimeText extends StatefulWidget {
 class _DateTimeTextState extends State<DateTimeText> {
   @override
   Widget build(BuildContext context) {
+    print(widget.schedule);
+    DateTime? parsedTime;
+
+    try {
+      parsedTime = DateFormat("H:mm:ss").parse(widget.time);
+    } catch (e) {
+      print("schedule detail 시간 파싱 실패");
+      parsedTime = DateTime.now();
+    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          widget.date,
+          "${widget.date.split("-")[1]}월 ${widget.date.split("-")[2]}일",
           style: const TextStyle(
             height: 1.0,
             fontSize: fontSizeSmall,
           ),
         ),
         Text(
-          widget.time,
+          DateFormat("h:mm a").format(parsedTime),
           style: const TextStyle(
             height: 1.0,
             fontSize: fontSizeMedium,
