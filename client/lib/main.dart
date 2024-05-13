@@ -1,4 +1,5 @@
 import 'package:client/service/member_api.dart';
+import 'package:client/screens/profile/service/place_api.dart';
 import 'package:client/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -45,6 +46,9 @@ void main() async {
         providers: [
           ChangeNotifierProvider(
               create: (context) => MemberApi(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => PlaceApi(),
           ),
         ],
         child: MyApp(),)

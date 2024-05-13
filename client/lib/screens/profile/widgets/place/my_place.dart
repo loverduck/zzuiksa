@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:client/screens/profile/widgets/place/add_place.dart';
 import 'package:client/constants.dart';
+import 'package:client/screens/profile/widgets/place/search_place.dart';
 
 class MyPlace extends StatefulWidget {
   const MyPlace({super.key});
@@ -87,7 +87,7 @@ class _MyPlaceState extends State<MyPlace> {
           child: TextButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddPlace()));
+                    MaterialPageRoute(builder: (context) => SearchPlace()));
               },
               child: Icon(
                 Icons.add,
