@@ -67,7 +67,7 @@ class Schedule {
 
   @override
   String toString() {
-    return "Schedule: { categoryId: $scheduleId, categoryId: $categoryId, title: $title, startDate: $startDate, endDate: $endDate, startTime: $startTime, endTime: $endTime, alertBefore: $alertBefore, memo: $memo, toPlace: $toPlace, fromPlace: $fromPlace, repeat: $repeat, isDone: $isDone }";
+    return "Schedule: { scheduleId: $scheduleId, categoryId: $categoryId, title: $title, startDate: $startDate, endDate: $endDate, startTime: $startTime, endTime: $endTime, alertBefore: $alertBefore, memo: $memo, toPlace: $toPlace, fromPlace: $fromPlace, repeat: $repeat, isDone: $isDone }";
   }
 }
 

@@ -20,7 +20,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Map<DateTime, List<Schedule>> monthSchedules = {};
 
   void moveToDetail(int scheduleId) {
-    Navigator.pushNamed(context, '/schedule/detail');
+    Navigator.pushNamed(context, '/schedule/detail',
+        arguments: {"scheduleId": scheduleId});
   }
 
   void onChangeMonth(day) {
@@ -63,6 +64,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
         currentDate = currentDate.add(const Duration(days: 1));
       }
     }
+
+    print("month schedules: $monthSchedules");
 
     setState(() {});
   }

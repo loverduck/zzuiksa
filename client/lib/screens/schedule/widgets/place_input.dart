@@ -40,8 +40,11 @@ class _PlaceInputState extends State<PlaceInput> {
   String _selectedType = "PUBTRANS";
   Place _toPlace = Place();
   Place _fromPlace = Place();
+  Map<String, dynamic>? routeRes;
+  String transportTimeText = "";
+  String errorMsg = "";
 
-  ButtonStyle PlaceInputtyle = ElevatedButton.styleFrom(
+  ButtonStyle placeInputtyle = ElevatedButton.styleFrom(
     padding: const EdgeInsets.symmetric(horizontal: 32.0),
     elevation: 0,
     backgroundColor: Constants.main200.withOpacity(0.5),
@@ -57,8 +60,8 @@ class _PlaceInputState extends State<PlaceInput> {
       prevPlace = widget.toPlace!;
     }
     // 사용자가 검색한 위치 저장
-    final Place place = await Navigator.pushNamed(context, "/schedule/search",
-        arguments: prevPlace.name) as Place;
+    final Place place =
+        await Navigator.pushNamed(context, "/schedule/search") as Place;
 
     setState(() {
       if (type == "from") {
@@ -68,9 +71,32 @@ class _PlaceInputState extends State<PlaceInput> {
         _toPlace = place;
         widget.setPlace("to", _toPlace);
       }
+      getTransport(_selectedType);
     });
+  }
 
-    getRoute(_selectedType, _fromPlace, _toPlace);
+  void getTransport(String item) async {
+    _selectedType = item;
+    widget.setType(item);
+
+    if (_fromPlace.name != null &&
+        _fromPlace.name!.isNotEmpty &&
+        _toPlace.name != null &&
+        _toPlace.name!.isNotEmpty) {
+      routeRes = await getRoute(_selectedType, _fromPlace, _toPlace);
+      if (routeRes?["status"] == "success") {
+        int time = routeRes?["data"]["time"];
+        transportTimeText = (time / 60).round().toString();
+      } else {
+        errorMsg = "잠시 후 다시 시도해주세요.";
+      }
+
+      setState(() {});
+    } else {
+      setState(() {
+        errorMsg = "잠시 후 다시 시도해주세요.";
+      });
+    }
   }
 
   @override
@@ -148,7 +174,7 @@ class _PlaceInputState extends State<PlaceInput> {
                 children: transports.entries.map((item) {
                   return ElevatedButton(
                     style: item.key == widget.selectedType
-                        ? PlaceInputtyle.copyWith(
+                        ? placeInputtyle.copyWith(
                             backgroundColor: const MaterialStatePropertyAll(
                                 Constants.main100),
                             side: const MaterialStatePropertyAll(
@@ -158,12 +184,8 @@ class _PlaceInputState extends State<PlaceInput> {
                               ),
                             ),
                           )
-                        : PlaceInputtyle,
-                    onPressed: () => {
-                      _selectedType = item.key,
-                      widget.setType(item.key),
-                      getRoute(_selectedType, _fromPlace, _toPlace),
-                    },
+                        : placeInputtyle,
+                    onPressed: () => {getTransport(item.key)},
                     child: Text(
                       item.value,
                       style: TextStyle(
@@ -182,14 +204,22 @@ class _PlaceInputState extends State<PlaceInput> {
               const SizedBox(
                 height: 10.0,
               ),
-              const Text(
-                "예상 이동 시간: ",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black54,
-                ),
-              ),
+              errorMsg.isNotEmpty
+                  ? Text(
+                      "예상 이동 시간: 약 $transportTimeText분",
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.black54,
+                      ),
+                    )
+                  : Text(
+                      errorMsg,
+                      style: const TextStyle(
+                        fontSize: 24.0,
+                        color: Colors.red,
+                      ),
+                    ),
             ],
           ),
         ]

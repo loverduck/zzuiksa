@@ -37,7 +37,6 @@ Future<dynamic> getMonthSchedules(String from, String to) async {
   try {
     var uri = Uri.https(
         baseUrl.split("//")[1], "/api/schedules", {"from": from, "to": to});
-    print(uri);
     final res = await http.get(
       uri,
       headers: <String, String>{
@@ -54,12 +53,27 @@ Future<dynamic> getMonthSchedules(String from, String to) async {
   }
 }
 
-Future<void> getRoute(String type, Place from, Place to) async {
-  print(jsonEncode({
-    "type": type,
-    "from": {"lat": from.lat, "lng": from.lng},
-    "to": {"lat": to.lat, "lng": to.lng}
-  }));
+Future<dynamic> getSchedule(int scheduleId) async {
+  getToken();
+
+  try {
+    final res = await http.get(
+      Uri.parse("$baseUrl/api/schedules/$scheduleId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    Map<String, dynamic> json = jsonDecode(res.body);
+
+    return json;
+  } catch (e) {
+    print("get schedule error: $e");
+  }
+}
+
+Future<dynamic> getRoute(String type, Place from, Place to) async {
   try {
     final resBody = await http.post(
       Uri.parse(("$baseUrl/api/schedules/route")),
@@ -74,8 +88,8 @@ Future<void> getRoute(String type, Place from, Place to) async {
       }),
     );
 
-    dynamic res = jsonDecode(resBody.body);
-    print(res);
+    Map<String, dynamic> res = jsonDecode(resBody.body);
+    return res;
   } catch (e) {
     print("getRoute error: $e");
   }
