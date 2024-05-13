@@ -47,7 +47,7 @@ public class Gifticon extends BaseEntity {
     private String store;
 
     @NotBlank
-    @Column(length = 20, nullable = false)
+    @Column(length = 48, nullable = false)
     private String couponNum;
     
     @Column

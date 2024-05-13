@@ -259,9 +259,15 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
         isDone: false,
       );
 
-      dynamic res = await postSchedule(schedule);
+      Map<String, dynamic> res = await postSchedule(schedule);
 
-      print(res);
+      if (res["status"] == "success") {
+        Navigator.pushNamed(context, "/calendar");
+      } else {
+        setState(() {
+          errorMsg = "잠시 후 다시 시도해주세요.";
+        });
+      }
     }
 
     return Scaffold(

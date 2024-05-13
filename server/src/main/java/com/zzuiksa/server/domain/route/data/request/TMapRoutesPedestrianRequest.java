@@ -32,10 +32,10 @@ public class TMapRoutesPedestrianRequest {
 
     public static TMapRoutesPedestrianRequest of(float startLat, float startLng, float endLat, float endLng) {
         return TMapRoutesPedestrianRequest.builder()
-                .startX(startLat)
-                .startY(startLng)
-                .endX(endLat)
-                .endY(endLng)
+                .startX(startLng)
+                .startY(startLat)
+                .endX(endLng)
+                .endY(endLat)
                 .startName("start")
                 .endName("end")
                 .build();

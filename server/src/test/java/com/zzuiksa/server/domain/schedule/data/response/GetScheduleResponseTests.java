@@ -50,7 +50,7 @@ public class GetScheduleResponseTests {
                     "endDate": "2024-04-19",
                     "startTime": "08:50:30",
                     "endTime": "15:59:40",
-                    "alertBefore": "PT10M",
+                    "alertBefore": 10,
                     "memo": "memo",
                     "toPlace": {
                         "name": "To place",
@@ -86,7 +86,7 @@ public class GetScheduleResponseTests {
                     "title": "Title",
                     "startDate": "2024-04-15",
                     "endDate": "2024-04-19",
-                    "alertBefore": "PT10M",
+                    "alertBefore": 10,
                     "memo": "memo",
                     "toPlace": {
                         "name": "To place",

@@ -1,3 +1,4 @@
+import 'package:client/screens/gifticon/service/gifticon_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
@@ -29,6 +30,29 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
     gifticon = widget.gifticon;
   }
 
+  Future<void> updateGifticon() async {
+    if (gifticon.id == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("유효한 기프티콘 ID가 없습니다."),
+        backgroundColor: Colors.red,
+      ));
+      return;
+    }
+
+    try {
+      Gifticon updatedGifticon = await patchGifticon(gifticon.id!, gifticon);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("기프티콘 정보가 성공적으로 수정되었습니다."),
+      ));
+      Navigator.of(context).pop(updatedGifticon);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("기프티콘 정보 수정에 실패했습니다. 오류: $e"),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +66,7 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
         backgroundColor: Constants.main200,
         actions: [
           TextButton(
-            onPressed: () {
-              // Update gifticon using API or whatever necessary
-            },
+            onPressed: updateGifticon,
             child: Text(
               '수정하기',
               style: TextStyle(
@@ -58,7 +80,10 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
       body: GifticonForm(
         initialGifticon: gifticon,
         onSubmit: (updatedGifticon) {
-          gifticon = updatedGifticon;
+          setState(() {
+            gifticon = updatedGifticon;
+          });
+          updateGifticon();
         },
       ),
     );

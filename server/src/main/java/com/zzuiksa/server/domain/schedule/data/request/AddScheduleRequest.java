@@ -47,8 +47,8 @@ public class AddScheduleRequest {
     @Schema(description = "일정 종료시간")
     private LocalTime endTime;
 
-    @Schema(description = "알림 시간")
-    private Integer alertBefore;
+    @Schema(description = "알림 시간 (분)")
+    private Long alertBefore;
 
     @Schema(description = "메모")
     @NotNull

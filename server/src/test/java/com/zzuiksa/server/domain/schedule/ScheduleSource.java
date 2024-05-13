@@ -25,7 +25,7 @@ public class ScheduleSource {
     public static final LocalDate endDate = LocalDate.of(2024, 4, 19);
     public static final LocalTime startTime = LocalTime.of(8, 50, 30);
     public static final LocalTime endTime = LocalTime.of(15, 59, 40);
-    public static final Integer alertBefore = 10;
+    public static final Long alertBefore = 10L;
     public static final String memo = "memo";
     public static final String toPlaceName = "To place";
     public static final Float toPlaceLat = 123.4f;
@@ -107,7 +107,7 @@ public class ScheduleSource {
                 .endDate(endDate)
                 .startTime(startTime)
                 .endTime(endTime)
-                .alertBefore(Duration.ofMinutes(alertBefore))
+                .alertBefore(alertBefore)
                 .memo(memo)
                 .toPlace(getTestToPlaceDto())
                 .fromPlace(getTestFromPlaceDto())

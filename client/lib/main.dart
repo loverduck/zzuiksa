@@ -20,6 +20,7 @@ import 'screens/gifticon/gifticon_detail_screen.dart';
 import 'screens/gifticon/gifticon_select_screen.dart';
 import 'screens/gifticon/gifticon_update_screen.dart';
 import 'screens/gifticon/gifticon_map_screen.dart';
+import 'screens/gifticon/service/merged_field.dart';
 import 'screens/gifticon/model/gifticon_model.dart';
 import 'screens/home/home_screen.dart';
 import 'styles.dart' as style;
@@ -71,7 +72,9 @@ class MyApp extends StatelessWidget {
         '/schedule/detail': (context) => const ScheduleDetailScreen(),
         '/gifticon': (context) => const GifticonListScreen(),
         '/gifticon_select_screen': (context) => const GifticonSelectScreen(),
-        '/gifticon_add_screen': (context) => const GifticonAddScreen(),
+        '/gifticon_add_screen': (context) => GifticonAddScreen(
+          ocrFields: ModalRoute.of(context)?.settings.arguments as List<MergedField>,
+        ),
         '/gifticon_detail_screen': (context) => GifticonDetailScreen(
           gifticonId: ModalRoute.of(context)!.settings.arguments as int,
         ),

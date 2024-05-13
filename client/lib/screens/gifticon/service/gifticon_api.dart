@@ -1,20 +1,29 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:client/constants.dart';
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../model/gifticon_preview_model.dart';
+
 Future<Gifticon> postGifticon(Gifticon gifticon) async {
+  const storage = FlutterSecureStorage();
+  dynamic userInfo = await storage.read(key: 'login');
+  String token = json.decode(userInfo)['accessToken'];
+
   try {
     final res = await http.post(
       Uri.parse("$baseUrl/api/gifticons"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
       },
       body: jsonEncode(gifticon.toJson()),
     );
     if (res.statusCode == 200) {
-      return Gifticon.fromJson(json.decode(res.body));
+      return Gifticon.fromJson(json.decode(utf8.decode(res.bodyBytes))['data']);
     } else {
       throw Exception('Failed to create gifticon.');
     }
@@ -23,50 +32,99 @@ Future<Gifticon> postGifticon(Gifticon gifticon) async {
   }
 }
 
-Future<void> getGifticonDetail(int gifticonId) async {
-  try {
-    final res = await http.get(Uri.parse("$baseUrl/api/gifticons/$gifticonId"));
+Future<Gifticon> getGifticonDetail(int gifticonId) async {
+  const storage = FlutterSecureStorage();
+  dynamic userInfo = await storage.read(key: 'login');
+  String token = json.decode(userInfo)['accessToken'];
 
-    print(res);
+  try {
+    final res = await http.get(
+      Uri.parse("$baseUrl/api/gifticons/$gifticonId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (res.statusCode == 200) {
+      return Gifticon.fromJson(json.decode(utf8.decode(res.bodyBytes))['data']);
+    } else {
+      throw Exception('Failed to load gifticon detail.');
+    }
   } catch (e) {
-    print("get schedule error: $e");
+    throw Exception('gifticon detail error: $e');
   }
 }
 
-Future<void> getGifticonList() async {
-  try {
-    final res = await http.get(Uri.parse("$baseUrl/api/gifticons"));
+Future<List<GifticonPreview>> getGifticonList() async {
+  const storage = FlutterSecureStorage();
+  dynamic userInfo = await storage.read(key: 'login');
+  String token = json.decode(userInfo)['accessToken'];
 
-    print(res);
+  try {
+    final res = await http.get(
+      Uri.parse("$baseUrl/api/gifticons"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (res.statusCode == 200) {
+      List<dynamic> jsonData = json.decode(utf8.decode(res.bodyBytes));
+      return jsonData.map((item) => GifticonPreview.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load gifticon list.');
+    }
   } catch (e) {
-    print("get schedule error: $e");
+    throw Exception('load gifticon list error: $e');
   }
 }
 
-Future<void> patchGifticon(int gifticonId, Gifticon gifticon) async {
+Future<Gifticon> patchGifticon(int gifticonId, Gifticon gifticon) async {
+  const storage = FlutterSecureStorage();
+  dynamic userInfo = await storage.read(key: 'login');
+  String token = json.decode(userInfo)['accessToken'];
+
   try {
     final res = await http.patch(
       Uri.parse("$baseUrl/api/gifticons/$gifticonId"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
       },
       body: jsonEncode(gifticon.toJson()),
     );
 
-    print(res);
+    if (res.statusCode == 200) {
+      return Gifticon.fromJson(json.decode(utf8.decode(res.bodyBytes))['data']);
+    } else {
+      throw Exception('Failed to update gifticon.');
+    }
   } catch (e) {
-    print("create schedule error: $e");
+    throw Exception('update gifticon error: $e');
   }
 }
 
-Future<void> deleteGifticon(int gifticonId) async {
+Future<bool> deleteGifticon(int gifticonId) async {
+  const storage = FlutterSecureStorage();
+  dynamic userInfo = await storage.read(key: 'login');
+  String token = json.decode(userInfo)['accessToken'];
+
   try {
     final res = await http.delete(
       Uri.parse("$baseUrl/api/gifticons/$gifticonId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
     );
 
-    print(res);
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete gifticon.');
+    }
   } catch (e) {
-    print("create schedule error: $e");
+    throw Exception('delelte gifticon error: $e');
   }
 }
