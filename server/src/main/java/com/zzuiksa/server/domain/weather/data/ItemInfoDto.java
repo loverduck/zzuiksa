@@ -19,6 +19,7 @@ public class ItemInfoDto {
     }
 
     public int getFcstValueAsInt() {
-        return Integer.parseInt(fcstValue);
+        float value = Float.parseFloat(fcstValue);
+        return Math.round(value);
     }
 }
