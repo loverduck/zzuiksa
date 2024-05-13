@@ -126,18 +126,26 @@ public class Routine extends BaseEntity {
         setTitle(title);
         setStartDate(startDate);
         setEndDate(endDate);
-        setTime(startTime, endTime);
+        if (startTime != null && endTime != null) {
+            setTime(startTime, endTime);
+        } else {
+            setAllDay();
+        }
         setAlertBefore(alertBefore);
         setMemo(memo);
-        if (toPlaceLat != null && toPlaceLng != null) {
-            setToPlace(toPlaceName, toPlaceLat, toPlaceLng);
-        } else {
-            setToPlace(toPlaceName);
+        if (toPlaceName != null) {
+            if (toPlaceLat != null && toPlaceLng != null) {
+                setToPlace(toPlaceName, toPlaceLat, toPlaceLng);
+            } else {
+                setToPlace(toPlaceName);
+            }
         }
-        if (fromPlaceLat != null && fromPlaceLng != null) {
-            setFromPlace(fromPlaceName, fromPlaceLat, fromPlaceLng);
-        } else {
-            setFromPlace(fromPlaceName);
+        if (fromPlaceName != null) {
+            if (fromPlaceLat != null && fromPlaceLng != null) {
+                setFromPlace(fromPlaceName, fromPlaceLat, fromPlaceLng);
+            } else {
+                setFromPlace(fromPlaceName);
+            }
         }
         if (repeatCycle == null) {
             throw new IllegalArgumentException("Repeat Cycle is null");
