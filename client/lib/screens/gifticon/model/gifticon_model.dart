@@ -1,7 +1,7 @@
 class Gifticon {
   int? id;
-  String? name;
   String? url;
+  String? name;
   String? store;
   String? couponNum;
   String? endDate;
@@ -11,8 +11,8 @@ class Gifticon {
 
   Gifticon({
     this.id,
-    this.name,
     this.url,
+    this.name,
     this.store,
     this.couponNum,
     this.endDate,
@@ -23,9 +23,9 @@ class Gifticon {
 
   factory Gifticon.fromJson(Map<String, dynamic> json) {
     return Gifticon(
-      id: json['id'],
-      name: json['name'],
+      id: json['gifticonId'],
       url: json['url'],
+      name: json['name'],
       store: json['store'],
       couponNum: json['couponNum'],
       endDate: json['endDate'],
@@ -36,23 +36,19 @@ class Gifticon {
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['name'] = name;
     data['url'] = url;
+    data['name'] = name;
     data['store'] = store;
     data['couponNum'] = couponNum;
     data['endDate'] = endDate;
     data['isUsed'] = isUsed;
-    if (remainMoney != null) {
-      data['remainMoney'] = remainMoney;
-    }
-    if (memo != null) {
-      data['memo'] = memo;
-    }
+    data['remainMoney'] = remainMoney;
+    data['memo'] = memo;
     return data;
   }
 
   @override
   String toString() {
-    return "Gifticon: name: $name, url: $url, store: $store, couponNum: $couponNum, endDate: $endDate, isUsed: $isUsed, remainMoney: $remainMoney, memo: $memo";
+    return "Gifticon: url: $url, name: $name, store: $store, couponNum: $couponNum, endDate: $endDate, isUsed: $isUsed, remainMoney: $remainMoney, memo: $memo";
   }
 }

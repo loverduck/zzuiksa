@@ -5,7 +5,6 @@ import 'widgets/completeRate.dart';
 import 'widgets/sentences.dart';
 import 'widgets/zzuiksa.dart';
 import 'widgets/timeline/timeline.dart';
-import '../login/logout_button.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const title = 'DashBoard';
@@ -46,7 +45,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             )),
         const Timeline(),
-        const LogoutButton(),
         const SizedBox(height: 32)
       ],
     )));

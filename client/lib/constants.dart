@@ -19,3 +19,10 @@ class Constants {
 }
 
 String baseUrl = "https://k10a202.p.ssafy.io";
+
+Map<int, List> categoryType = <int, List>{
+  1: ["일정", Constants.green300],
+  2: ["업무", Constants.blue300],
+  3: ["기념일", Constants.pink300],
+  4: ["공부", Constants.violet300],
+};

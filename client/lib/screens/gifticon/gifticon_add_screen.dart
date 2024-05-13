@@ -1,4 +1,6 @@
 import 'package:client/screens/gifticon/service/gifticon_api.dart';
+import 'package:client/screens/gifticon/service/merged_field.dart';
+import 'package:client/screens/gifticon/util/ocr_sample_parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
@@ -12,13 +14,25 @@ class GifticonAddScreen extends StatefulWidget {
   static const androidIcon = Icon(Icons.card_giftcard);
   static const iosIcon = Icon(CupertinoIcons.news);
 
-  const GifticonAddScreen({super.key});
+  final List<MergedField> ocrFields;
+  final String? selectedImagePath;
+
+  const GifticonAddScreen({super.key, required this.ocrFields, this.selectedImagePath});
 
   @override
   State<GifticonAddScreen> createState() => _GifticonAddScreenState();
 }
 
 class _GifticonAddScreenState extends State<GifticonAddScreen> {
+
+  late Gifticon _initialGifticon;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialGifticon = parseOcrResultsToGifticon(widget.ocrFields);  // 함수 호출 변경
+  }
+
   void _navigateToDetailScreen(Gifticon createdGifticon) {
     if (createdGifticon.id == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,10 +67,6 @@ class _GifticonAddScreenState extends State<GifticonAddScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              // Gifticon newGifticon = Gifticon(name: "새 기프티콘");
-              // postGifticon(newGifticon).then((createdGifticon) {
-              //   _navigateToDetailScreen(createdGifticon);
-              // });
               Navigator.pushNamed(context, '/gifticon_detail_screen', arguments: 1);
             },
             child: Text(
@@ -69,7 +79,12 @@ class _GifticonAddScreenState extends State<GifticonAddScreen> {
           ),
         ],
       ),
-      body: GifticonForm(onSubmit: _navigateToDetailScreen),
+      body: GifticonForm(
+        onSubmit: _navigateToDetailScreen,
+        initialGifticon: _initialGifticon,
+        selectedImagePath: widget.selectedImagePath, // 이미지 경로를 GifticonForm에 전달
+        isEdit: false,
+      ),
     );
   }
 }

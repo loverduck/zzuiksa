@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../constants.dart';
+import 'gifticon_add_screen.dart';
 import 'model/gifticon_ocr_request_model.dart';
 import 'model/gifticon_ocr_response_model.dart';
 import 'service/gifticon_ocr_api.dart';
@@ -82,8 +83,13 @@ class _GifticonSelectScreenState extends State<GifticonSelectScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/gifticon_add_screen');
-            },
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GifticonAddScreen(ocrFields: _ocrResults, selectedImagePath: _selectedImagePath),
+                ),
+              );
+              },
             child: Text(
               '다음',
               style: TextStyle(
@@ -100,15 +106,20 @@ class _GifticonSelectScreenState extends State<GifticonSelectScreen> {
           children: [
             ElevatedButton(
               onPressed: _pickImage,
-              child: const Text('Select Image'),
+              child: const Text('사진 선택하기'),
             ),
-            const SizedBox(height: 20),
-            if (_selectedImagePath != null)
-              Image.file(
-                File(_selectedImagePath!),
-                height: 200,
-              ),
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
+            // if (_selectedImagePath != null)
+            //   Column(
+            //     children: [
+            //       Text('현재 선택한 사진:', style: textTheme.bodyMedium),
+            //       Image.file(
+            //         File(_selectedImagePath!),
+            //         height: 200,
+            //       ),
+            //     ],
+            //   ),
+              // const SizedBox(height: 20),
             ..._ocrResults.map((field) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Column(

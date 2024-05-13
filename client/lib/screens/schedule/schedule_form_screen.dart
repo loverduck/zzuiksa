@@ -4,7 +4,7 @@ import 'package:client/screens/schedule/widgets/date_time_input.dart';
 import 'package:client/screens/schedule/widgets/input_container.dart';
 import 'package:client/screens/schedule/widgets/routine_input.dart';
 import 'package:client/screens/schedule/widgets/switch_button.dart';
-import 'package:client/screens/schedule/widgets/transport_type_buttons.dart';
+import 'package:client/screens/schedule/widgets/place_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
@@ -42,10 +42,12 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
   bool isValid = false;
 
   int selectedCategory = 1;
-  Place toPlace = Place(name: "");
-  Place fromPlace = Place(name: "");
-  String selectedType = "";
-  String selectedCycle = "";
+  Place? toPlace = Place();
+  Place? fromPlace = Place();
+  String selectedType = "TRANSIT";
+  Repeat? _repeat;
+
+  String? errorMsg;
 
   final formKey = GlobalKey<FormState>();
 
@@ -67,16 +69,11 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
     selectedCategory = widget.schedule?.categoryId ?? 1;
     alertEditController.text = widget.schedule?.alertBefore.toString() ?? "";
     memoEditController.text = widget.schedule?.memo ?? "";
-    toPlace.name = widget.schedule?.toPlace?.name ?? "";
+    toPlace!.name = widget.schedule?.toPlace?.name;
     placeEditController.text = widget.schedule?.toPlace?.name ?? "";
-    fromPlace.name = widget.schedule?.fromPlace?.name ?? "";
-    isRepeat = widget.schedule?.repeat ?? false;
+    fromPlace!.name = widget.schedule?.fromPlace?.name;
+    _repeat = widget.schedule?.repeat;
     isDone = widget.schedule?.isDone ?? false;
-
-    if (widget.schedule != null) {
-      print(widget.schedule);
-      print(placeEditController.text);
-    }
 
     titleEditConteroller.addListener(() {
       setState(() {});
@@ -95,6 +92,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
       1: ["일정", Constants.green300],
       2: ["업무", Constants.blue600],
       3: ["기념일", Constants.pink300],
+      4: ["공부", Constants.violet300],
     };
 
     TextField titleInputField = TextField(
@@ -186,14 +184,30 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
       height: 12.0,
     );
 
-    void moveToSearch() async {
-      // 사용자가 검색한 위치 저장
-      final place = await Navigator.pushNamed(context, "/schedule/search",
-          arguments: toPlace.name);
-
+    void toggleAllDay(val) {
       setState(() {
-        toPlace.name = place.toString();
+        isAllDay = val;
       });
+
+      if (!val) {
+        startTimeEditController.text =
+            "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 10)))}:00";
+        endTimeEditController.text =
+            "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 11)))}:00";
+      }
+    }
+
+    void setPlace(String type, Place place) {
+      print("set ${type}place: $place");
+      if (type == "from") {
+        setState(() {
+          fromPlace = place;
+        });
+      } else {
+        setState(() {
+          toPlace = place;
+        });
+      }
     }
 
     void setType(type) {
@@ -202,29 +216,58 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
       });
     }
 
-    void setCycle(cycle) {
+    void setRepeat(repeat) {
       setState(() {
-        selectedCycle = cycle;
+        _repeat = repeat;
       });
     }
 
-    void createSchedule() {
+    void createSchedule() async {
+      DateTime startDateTime = DateTime.parse(
+          "${startDateEditController.text} ${startTimeEditController.text}");
+      DateTime endDateTime = DateTime.parse(
+          "${endDateEditController.text} ${endTimeEditController.text}");
+
+      if (startDateTime.isAfter(endDateTime)) {
+        setState(() {
+          errorMsg = "종료 시간이 시작 시간보다 빠를 수 없습니다.";
+        });
+        return;
+      } else {
+        setState(() {
+          errorMsg = null;
+        });
+      }
+
       Schedule schedule = Schedule(
         categoryId: selectedCategory,
         title: titleEditConteroller.text,
         startDate: startDateEditController.text,
         endDate: endDateEditController.text,
-        startTime: startTimeEditController.text,
-        endTime: endTimeEditController.text,
-        alertBefore: 0,
+        startTime: "${startTimeEditController.text}:00",
+        endTime: "${endTimeEditController.text}:00",
+        alertBefore: alertEditController.text.isEmpty
+            ? null
+            : int.parse(alertEditController.text),
         memo: memoEditController.text,
-        toPlace: toPlace,
-        fromPlace: fromPlace,
-        repeat: isRepeat,
+        toPlace:
+            (toPlace!.name == null || toPlace!.name!.isEmpty) ? null : toPlace,
+        fromPlace: (fromPlace!.name == null || fromPlace!.name!.isEmpty)
+            ? null
+            : fromPlace,
+        repeat: _repeat,
         isDone: false,
       );
 
-      // postSchedule(schedule);
+      Map<String, dynamic> res = await postSchedule(schedule);
+
+      if (res["status"] == "success") {
+        Navigator.pushNamed(context, "/calendar");
+      } else {
+        setState(() {
+          errorMsg = "잠시 후 다시 시도해주세요.";
+        });
+      }
     }
 
     return Scaffold(
@@ -256,6 +299,29 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
             key: formKey,
             child: Column(
               children: [
+                if (errorMsg != null) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.3),
+                      border: Border.all(
+                        color: Colors.red,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: Text(
+                      errorMsg!,
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        color: Colors.red[900],
+                      ),
+                    ),
+                  ),
+                  marginBox,
+                ],
                 // 제목
                 InputContainer(
                   child: SizedBox(
@@ -285,11 +351,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                       inputTitleText("종일"),
                       SwitchButton(
                         value: isAllDay,
-                        onChanged: (val) {
-                          setState(() {
-                            isAllDay = val;
-                          });
-                        },
+                        onChanged: toggleAllDay,
                       ),
                     ],
                   ),
@@ -321,7 +383,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                           children: [
                             inputTitleText("종료"),
                             DateTimeInput(
-                              dateController: startDateEditController,
+                              dateController: endDateEditController,
                               requiredTime: !isAllDay,
                               timeEditController: endTimeEditController,
                             )
@@ -333,48 +395,16 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                   ],
                 ),
                 // 장소 입력
-                InputContainer(
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        inputTitleText("장소"),
-                        GestureDetector(
-                          onTap: moveToSearch,
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: 230.0,
-                            height: 40.0,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16.0),
-                            ),
-                            child: Text(
-                              toPlace.name ?? "",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 24.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    // 도착지가 있는 경우 출발지 선택 및 이동 방법 선택
-                    if (toPlace.name!.isNotEmpty)
-                      TransportTypeButtons(
-                        inputTitleText: inputTitleText("출발지"),
-                        selectedType: selectedType,
-                        marginBox: marginBox,
-                        setType: setType,
-                        fromPlace: fromPlace,
-                      ),
-                  ]),
-                ),
+                PlaceInput(
+                    selectedType: selectedType,
+                    inputTitleText: inputTitleText,
+                    marginBox: marginBox,
+                    setType: setType,
+                    setPlace: setPlace),
                 marginBox,
                 // 알림
                 // 장소가 있는 경우에만 입력 가능
-                if (placeEditController.text.isNotEmpty) ...[
+                if (toPlace?.name != null && toPlace!.name!.isNotEmpty) ...[
                   InputContainer(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -396,7 +426,11 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),
                                 child: TextField(
+                                  onChanged: (val) {
+                                    print(alertEditController.text);
+                                  },
                                   keyboardType: TextInputType.number,
+                                  controller: alertEditController,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
                                   ],
@@ -436,10 +470,10 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                           setState(() {
                             isRepeat = val;
 
-                            // 종일이면
                             if (val) {
-                              startTimeEditController.text = "00:00";
-                              endTimeEditController.text = "23:59";
+                              _repeat = Repeat();
+                            } else {
+                              _repeat = null;
                             }
                           });
                         },
@@ -452,7 +486,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                   RoutineInput(
                     inputTitleText: inputTitleText,
                     marginBox: marginBox,
-                    setCycle: setCycle,
+                    setRepeat: setRepeat,
                   ),
                 // 메모
                 InputContainer(
@@ -481,6 +515,9 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                     ],
                   ),
                 ),
+                const SizedBox(
+                  height: 16.0,
+                )
               ],
             ),
           ),

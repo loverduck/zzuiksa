@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:client/styles.dart';
 import 'package:client/constants.dart';
 import 'package:client/widgets/header.dart';
+import 'model/member_model.dart';
 
 import 'widgets/butler/my_butler.dart';
 import 'widgets/statistic/my_staticstic.dart';
 import 'widgets/place/my_place.dart';
 import 'widgets/info/my_info.dart';
 
+
 class ProfileScreen extends StatelessWidget {
   static const title = 'Profile';
   static const androidIcon = Icon(Icons.person);
+
+  final Member member;
+  const ProfileScreen(this.member, {super.key});
 
   @override
   Widget build(context) {
@@ -47,7 +52,7 @@ class ProfileScreen extends StatelessWidget {
               height: 120,
             ),
             SizedBox(height: 16),
-            Text('김싸피 님', style: textTheme.displayLarge),
+            Text('${member.name} 님', style: textTheme.displayLarge),
             DefaultTabController(
               length: 3,
               child: Column(children: [
@@ -68,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
                 Container(
                     height: 800,
                     child: TabBarView(children: [
-                      MyInfo(),
+                      MyInfo(member),
                       MyPlace(),
                       MyStatistic(),
                     ]))
