@@ -23,6 +23,8 @@ import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.DeleteScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.GetScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.ScheduleSummaryDto;
+import com.zzuiksa.server.domain.schedule.data.response.TodaySummaryResponse;
+import com.zzuiksa.server.domain.schedule.service.DashboardService;
 import com.zzuiksa.server.domain.schedule.service.ScheduleService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +41,7 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
     private final RouteService routeService;
+    private final DashboardService dashboardService;
 
     @Operation(
             summary = "일정 추가",
@@ -101,5 +104,16 @@ public class ScheduleController {
     public RouteTimeResponse getRouteTime(@Valid @RequestBody RouteTimeRequest request) {
         Integer time = routeService.calcRouteTime(request);
         return RouteTimeResponse.of(time);
+    }
+
+    @Operation(
+            summary = "오늘의 일정 요약 조회",
+            description = "오늘 일정 정보를 요약하여 제공합니다.",
+            security = {@SecurityRequirement(name = "bearer-key")}
+    )
+    @GetMapping("/summary")
+    public TodaySummaryResponse getTodaySummary(@AuthenticationPrincipal MemberDetail memberDetail) {
+        Member member = memberDetail.getMember();
+        return dashboardService.getTodaySummary(member);
     }
 }

@@ -13,4 +13,6 @@ public interface ScheduleRepositoryQ {
 
     List<ScheduleSummaryDto> findAllSummaryByMemberAndDateBetweenAndCategory(Member member, LocalDate from,
             LocalDate to, Category category);
+
+    List<ScheduleSummaryDto> findAllSummaryByMemberAndDateAndIsNotDone(Member member, LocalDate date);
 }
