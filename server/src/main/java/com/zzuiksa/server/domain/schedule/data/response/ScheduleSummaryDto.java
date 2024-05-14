@@ -53,7 +53,7 @@ public class ScheduleSummaryDto {
     @Schema(description = "목적지")
     private PlaceDto toPlace;
 
-    @Schema(description = "출발지")
+    @Schema(description = "완료 여부")
     @NotNull
     private Boolean isDone;
 
