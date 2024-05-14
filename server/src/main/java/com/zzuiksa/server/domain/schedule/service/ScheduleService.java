@@ -63,7 +63,8 @@ public class ScheduleService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new CustomException(ErrorCodes.CATEGORY_NOT_FOUND));
         String content = request.getContent();
-        ScheduleRecognitionResponse recognized = recognitionService.recognize(content, LocalDate.now());
+        LocalDate baseDate = request.getBaseDate();
+        ScheduleRecognitionResponse recognized = recognitionService.recognize(content, baseDate);
         Schedule schedule = convertScheduleRecognitionResponseToSchedule(recognized, member, category);
         schedule = scheduleRepository.save(schedule);
         return AddScheduleRecognitionResponse.from(schedule);
