@@ -33,10 +33,10 @@ public class StatisticsService {
     }
 
     public Long getTotalScheduleCount(LocalDate date, Member member) {
-        return scheduleRepository.countByMemberAndDateBeforeOrEqual(member, date);
+        return scheduleRepository.countByMemberAndDateEqual(member, date);
     }
 
     public Long getDoneScheduleCount(LocalDate date, Member member) {
-        return scheduleRepository.countByMemberAndDateBeforeOrEqualAndIsDone(member, date);
+        return scheduleRepository.countByMemberAndDateEqualAndIsDone(member, date);
     }
 }

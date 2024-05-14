@@ -46,7 +46,7 @@ public class ScheduleRepositoryQImpl implements ScheduleRepositoryQ {
     }
 
     @Override
-    public Long countByMemberAndDateBeforeOrEqual(Member member, LocalDate endDate) {
+    public Long countByMemberAndDateEqual(Member member, LocalDate endDate) {
         return queryFactory.select(schedule.count())
                 .from(schedule)
                 .where(schedule.member.eq(member))
@@ -55,7 +55,7 @@ public class ScheduleRepositoryQImpl implements ScheduleRepositoryQ {
     }
 
     @Override
-    public Long countByMemberAndDateBeforeOrEqualAndIsDone(Member member, LocalDate endDate) {
+    public Long countByMemberAndDateEqualAndIsDone(Member member, LocalDate endDate) {
         return queryFactory.select(schedule.count())
                 .from(schedule)
                 .where(schedule.member.eq(member))

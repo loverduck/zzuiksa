@@ -17,9 +17,9 @@ public interface ScheduleRepositoryQ {
     List<ScheduleSummaryDto> findAllSummaryByMemberAndDateBetweenAndCategory(Member member, LocalDate from,
             LocalDate to, Category category);
 
-    Long countByMemberAndDateBeforeOrEqual(Member member, LocalDate endDate);
+    Long countByMemberAndDateEqual(Member member, LocalDate endDate);
 
-    Long countByMemberAndDateBeforeOrEqualAndIsDone(Member member, LocalDate endDate);
+    Long countByMemberAndDateEqualAndIsDone(Member member, LocalDate endDate);
 
     AllAndDoneCountDto countAllAndDoneByMemberAndDateBeforeOrEqual(Member member, LocalDate endDate);
 
