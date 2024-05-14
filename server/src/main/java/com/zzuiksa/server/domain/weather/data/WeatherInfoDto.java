@@ -1,5 +1,7 @@
 package com.zzuiksa.server.domain.weather.data;
 
+import com.zzuiksa.server.domain.weather.constant.WeatherType;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,4 +18,7 @@ public class WeatherInfoDto {
 
     @Schema(description = "최고 기온")
     private Integer maxTmp;
+
+    @Schema(description = "날씨 상태")
+    private WeatherType weatherType;
 }
