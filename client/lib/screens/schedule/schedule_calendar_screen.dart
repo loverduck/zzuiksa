@@ -2,6 +2,7 @@ import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/schedule_detail_screen.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
 import 'package:client/screens/schedule/service/schedule_api.dart';
+import 'package:client/widgets/footer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:client/constants.dart';
 import 'package:client/screens/schedule/widgets/calendar.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -25,8 +27,53 @@ class _CalendarScreenState extends State<CalendarScreen> {
       TextEditingController();
 
   void moveToDetail(int scheduleId) {
+    Navigator.pop(context);
     Navigator.pushNamed(context, '/schedule/detail',
-        arguments: {"scheduleId": scheduleId});
+            arguments: {"scheduleId": scheduleId})
+        .then((value) => onChangeMonth(DateTime.now()));
+  }
+
+  void onPressedAddButton(selectedDay) async {
+    if (scheduleSentenceEditController.text.isEmpty) {
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return ScheduleFormScreen(
+              selectedDay: selectedDay,
+            );
+          },
+        ),
+      ).then((value) => onChangeMonth(selectedDay));
+    } else {
+      FocusManager.instance.primaryFocus?.unfocus();
+
+      Map<String, dynamic> body = {
+        "categoryId": 1,
+        "content": scheduleSentenceEditController.text,
+        "baseDate": DateFormat("yyyy-MM-dd").format(selectedDay),
+      };
+
+      try {
+        Map<String, dynamic> res = await postRecognize(body);
+        if (res["status"] == "success") {
+          Navigator.pop(context);
+          scheduleSentenceEditController.text = "";
+          onChangeMonth(DateTime.now());
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("잠시 후 다시 시도해주세요"),
+          ),
+        );
+      }
+    }
+  }
+
+  void postSentence(categoryId) {
+    print("$categoryId post");
   }
 
   void onChangeMonth(DateTime day) {
@@ -42,36 +89,43 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void getMonthSchdulesData(String from, String to) async {
     monthSchedules = {};
 
-    Map<String, dynamic> json = await getMonthSchedules(from, to);
-    List<Schedule> scheduleList = [];
+    try {
+      Map<String, dynamic> json = await getMonthSchedules(from, to);
+      List<Schedule> scheduleList = [];
 
-    if (json["status"] == "success") {
-      List<dynamic> jsonList = json["data"];
-      scheduleList = jsonList.map((e) {
-        return Schedule.fromJson(e);
-      }).toList();
-    }
+      if (json["status"] == "success") {
+        List<dynamic> jsonList = json["data"];
+        scheduleList = jsonList.map((e) {
+          return Schedule.fromJson(e);
+        }).toList();
+        for (Schedule schedule in scheduleList) {
+          DateTime startDate = DateTime.parse(schedule.startDate!);
+          DateTime endDate = DateTime.parse(schedule.endDate!);
 
-    for (Schedule schedule in scheduleList) {
-      DateTime startDate = DateTime.parse(schedule.startDate!);
-      DateTime endDate = DateTime.parse(schedule.endDate!);
+          DateTime currentDate = startDate;
+          while (currentDate.isBefore(endDate.add(const Duration(days: 1)))) {
+            // endDate를 포함하기 위해 1일 추가
+            DateTime key =
+                DateTime(currentDate.year, currentDate.month, currentDate.day)
+                    .toUtc();
 
-      DateTime currentDate = startDate;
-      while (currentDate.isBefore(endDate.add(const Duration(days: 1)))) {
-        // endDate를 포함하기 위해 1일 추가
-        DateTime key =
-            DateTime(currentDate.year, currentDate.month, currentDate.day)
-                .toUtc();
+            if (monthSchedules[key] == null) {
+              monthSchedules[key] = [];
+            }
 
-        if (monthSchedules[key] == null) {
-          monthSchedules[key] = [];
+            monthSchedules[key]!.add(schedule);
+
+            // 다음 날짜로 이동
+            currentDate = currentDate.add(const Duration(days: 1));
+          }
         }
-
-        monthSchedules[key]!.add(schedule);
-
-        // 다음 날짜로 이동
-        currentDate = currentDate.add(const Duration(days: 1));
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("잠시 후 다시 시도해주세요"),
+        ),
+      );
     }
 
     print("month schedules: $monthSchedules");
@@ -227,18 +281,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     Transform.translate(
                       offset: const Offset(8, 0),
                       child: IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return ScheduleFormScreen(
-                                  selectedDay: selectedDay,
-                                );
-                              },
-                            ),
-                          );
-                        },
+                        onPressed: () => onPressedAddButton(selectedDay),
                         icon: const Icon(
                           Icons.add_circle,
                           color: Constants.main600,

@@ -3,6 +3,7 @@ import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
 import 'package:client/screens/schedule/service/schedule_api.dart';
 import 'package:client/screens/schedule/widgets/detail/detail_container.dart';
+import 'package:client/screens/schedule/widgets/snackbar_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -61,7 +62,44 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
     );
   }
 
-  void _getSchedule(int scheduleId) async {
+  Future<void> deleteConfirmDialog(BuildContext context, int scheduleId) {
+    print("delete confirm dialog $scheduleId");
+    return showDialog<void>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("해당 일정을 삭제하시겠습니까?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  "취소",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _deleteSchedule(context);
+                },
+                child: const Text(
+                  "삭제하기",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  void _getSchedule(int scheduleId, BuildContext context) async {
     Map<String, dynamic> res = await getSchedule(scheduleId);
 
     if (res['status'] == 'success') {
@@ -70,17 +108,29 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
         schedule.scheduleId = scheduleId;
       });
     } else {
-      print("다시 시도해주세요");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: SnackBarText(
+            message: "로딩에 실패했습니다. 잠시 후 다시 시도해주세요",
+          ),
+        ),
+      );
     }
   }
 
-  void _deleteSchedule(int shceduleId) async {
+  void _deleteSchedule(BuildContext context) async {
     Map<String, dynamic> res = await deleteSchedule(scheduleId);
 
     if (res['status'] == 'success') {
-      print(res);
+      Navigator.pushNamed(context, '/calendar');
     } else {
-      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: SnackBarText(
+            message: "일정 삭제에 실패했습니다. 다시 시도해주세요",
+          ),
+        ),
+      );
     }
   }
 
@@ -93,7 +143,7 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
       if (ModalRoute.of(context)?.settings.arguments != null) {
         final args = ModalRoute.of(context)?.settings.arguments as Map;
         scheduleId = args['scheduleId'];
-        _getSchedule(scheduleId);
+        _getSchedule(scheduleId, context);
       }
     });
   }
@@ -145,10 +195,12 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                   children: [
                     const Icon(Icons.alarm),
                     textMargin,
-                    schedule.startDate != null && schedule.startTime != null
+                    schedule.startDate != null
                         ? DateTimeText(
                             date: "${schedule.startDate}",
-                            time: "${schedule.startTime}")
+                            time: schedule.startTime != null
+                                ? "${schedule.startTime}"
+                                : "00:00:00")
                         : Container(),
                     textMargin,
                     const Icon(
@@ -156,10 +208,12 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                       color: Colors.black54,
                     ),
                     textMargin,
-                    schedule.endDate != null && schedule.endTime != null
+                    schedule.endDate != null
                         ? DateTimeText(
                             date: "${schedule.endDate}",
-                            time: "${schedule.endTime}")
+                            time: schedule.endTime != null
+                                ? "${schedule.endTime}"
+                                : "23:59:00")
                         : Container(),
                   ],
                 ),
@@ -241,16 +295,17 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                         ),
                       ],
                     ),
-                    schedule.toPlace == null
-                        ? Container()
-                        : Column(
+                    schedule.toPlace?.lat != null &&
+                            schedule.toPlace?.lng != null
+                        ? Column(
                             children: [
                               PlaceContainer(place: schedule.toPlace!),
                               const SizedBox(
                                 height: 10.0,
                               )
                             ],
-                          ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),
@@ -294,7 +349,7 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
               ),
               containerMargin,
               GestureDetector(
-                onTap: () => _deleteSchedule(scheduleId),
+                onTap: () => deleteConfirmDialog(context, scheduleId),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(
@@ -404,6 +459,7 @@ class _DateTimeTextState extends State<DateTimeText> {
     } catch (e) {
       parsedTime = DateTime.now();
     }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -443,8 +499,10 @@ class _PlaceContainerState extends State<PlaceContainer> {
   @override
   void initState() {
     super.initState();
-    marker.add(Marker(
-        markerId: '0', latLng: LatLng(widget.place.lat!, widget.place.lng!)));
+    if (widget.place.lat != null && widget.place.lng != null) {
+      marker.add(Marker(
+          markerId: '0', latLng: LatLng(widget.place.lat!, widget.place.lng!)));
+    }
   }
 
   @override

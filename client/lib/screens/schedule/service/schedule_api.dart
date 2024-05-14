@@ -8,14 +8,18 @@ const storage = FlutterSecureStorage();
 String? token;
 
 Future<void> getToken() async {
-  dynamic userInfo = await storage.read(key: "login");
-  token = json.decode(userInfo)['accessToken'];
+  try {
+    dynamic userInfo = await storage.read(key: "login");
+    token = json.decode(userInfo)['accessToken'];
+  } catch (e) {
+    print("token error: $e");
+  }
 }
 
 Future<dynamic> postSchedule(Schedule schedule) async {
+  print("post schedule api: $schedule");
   try {
-    print("postSchedule: ${schedule.toJson()}");
-    var resBody = await http.post(
+    final res = await http.post(
       Uri.parse("$baseUrl/api/schedules"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -23,12 +27,34 @@ Future<dynamic> postSchedule(Schedule schedule) async {
       },
       body: jsonEncode(schedule.toJson()),
     );
-    dynamic res = jsonDecode(utf8.decode(resBody.bodyBytes));
-    print(res);
+    dynamic json = jsonDecode(utf8.decode(res.bodyBytes));
 
-    return res;
+    return json;
   } catch (e) {
     print("create schedule error: $e");
+  }
+}
+
+Future<dynamic> postRecognize(Map<String, dynamic> body) async {
+  getToken();
+
+  print(body);
+
+  try {
+    final res = await http.post(
+      Uri.parse("$baseUrl/api/schedules/recognize"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(body),
+    );
+
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+
+    return json;
+  } catch (e) {
+    print("recognize error: $e");
   }
 }
 
@@ -36,7 +62,7 @@ Future<dynamic> getMonthSchedules(String from, String to) async {
   getToken();
 
   try {
-    var uri = Uri.https(
+    final uri = Uri.https(
         baseUrl.split("//")[1], "/api/schedules", {"from": from, "to": to});
     final res = await http.get(
       uri,
@@ -47,6 +73,7 @@ Future<dynamic> getMonthSchedules(String from, String to) async {
     );
 
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+    print("get month schedule: $res");
 
     return json;
   } catch (e) {
@@ -98,7 +125,7 @@ Future<dynamic> deleteSchedule(int scheduleId) async {
 
 Future<dynamic> getRoute(String type, Place from, Place to) async {
   try {
-    final resBody = await http.post(
+    final res = await http.post(
       Uri.parse(("$baseUrl/api/schedules/route")),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -111,8 +138,8 @@ Future<dynamic> getRoute(String type, Place from, Place to) async {
       }),
     );
 
-    Map<String, dynamic> res = jsonDecode(resBody.body);
-    return res;
+    Map<String, dynamic> json = jsonDecode(res.body);
+    return json;
   } catch (e) {
     print("getRoute error: $e");
   }
