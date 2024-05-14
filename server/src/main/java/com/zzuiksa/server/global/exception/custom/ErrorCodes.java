@@ -30,6 +30,8 @@ public enum ErrorCodes implements ErrorCode {
     ROUTE_CLIENT_EXCEPTION(HttpStatus.BAD_REQUEST, "ZSE010", "길찾기 과정에서 오류가 발생했습니다."),
     ROUTE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ZSE011", "길찾기 API가 작동하지 않습니다. 잠시 후 다시 시도해주세요."),
 
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "ZCE001", "카테고리를 찾을 수 없습니다"),
+
     PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "ZPE001", "장소를 찾을 수 없습니다."),
     PLACE_FORBIDDEN(HttpStatus.FORBIDDEN, "ZPE002", "장소 접근 권한이 없습니다."),
 

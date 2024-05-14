@@ -10,7 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.domain.schedule.data.CategoryDto;
+import com.zzuiksa.server.domain.schedule.data.ScheduleRecognitionResponse;
+import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRecognitionRequest;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
+import com.zzuiksa.server.domain.schedule.data.response.AddScheduleRecognitionResponse;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.DeleteScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.GetScheduleResponse;
@@ -34,6 +37,7 @@ public class ScheduleService {
     private final CategoryRepository categoryRepository;
     private final ScheduleRepository scheduleRepository;
     private final RoutineRepository routineRepository;
+    private final RecognitionService recognitionService;
     private final Clock clock;
 
     @Transactional
@@ -50,6 +54,17 @@ public class ScheduleService {
             Schedule schedule = addSchedule(request, member);
             return AddScheduleResponse.from(schedule.getId());
         }
+    }
+
+    @Transactional
+    public AddScheduleRecognitionResponse addRecognized(@NotNull AddScheduleRecognitionRequest request, Member member) {
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new CustomException(ErrorCodes.CATEGORY_NOT_FOUND));
+        String content = request.getContent();
+        ScheduleRecognitionResponse recognized = recognitionService.recognize(content, LocalDate.now());
+        Schedule schedule = convertScheduleRecognitionResponseToSchedule(recognized, member, category);
+        schedule = scheduleRepository.save(schedule);
+        return AddScheduleRecognitionResponse.from(schedule);
     }
 
     @Transactional(readOnly = true)
@@ -171,6 +186,23 @@ public class ScheduleService {
                 .repeatStartDate(request.getStartDate())
                 .repeatEndDate(request.getRepeat().getEndDate())
                 .repeatAt(request.getRepeat().getRepeatAt())
+                .build();
+    }
+
+    protected Schedule convertScheduleRecognitionResponseToSchedule(ScheduleRecognitionResponse response, Member member,
+            Category category) {
+        return Schedule.builder()
+                .member(member)
+                .category(category)
+                .routine(null)
+                .title(response.getTitle())
+                .startDate(response.getStartDate())
+                .endDate(response.getEndDate())
+                .startTime(response.getStartTime())
+                .endTime(response.getEndTime())
+                .memo("")
+                .toPlaceName(response.getPlaceName())
+                .isDone(false)
                 .build();
     }
 
