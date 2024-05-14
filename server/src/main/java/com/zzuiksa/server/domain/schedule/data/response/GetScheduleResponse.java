@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import org.springframework.boot.convert.DurationUnit;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,6 +12,7 @@ import com.zzuiksa.server.domain.schedule.data.PlaceDto;
 import com.zzuiksa.server.domain.schedule.data.RepeatDto;
 import com.zzuiksa.server.domain.schedule.entity.Schedule;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

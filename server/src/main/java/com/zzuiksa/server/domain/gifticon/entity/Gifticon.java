@@ -1,11 +1,21 @@
 package com.zzuiksa.server.domain.gifticon.entity;
 
+import java.time.LocalDate;
+
 import com.zzuiksa.server.domain.gifticon.constant.IsUsed;
 import com.zzuiksa.server.domain.member.entity.Member;
 import com.zzuiksa.server.global.entity.BaseEntity;
 import com.zzuiksa.server.global.util.Utils;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,8 +25,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -49,7 +57,7 @@ public class Gifticon extends BaseEntity {
     @NotBlank
     @Column(length = 48, nullable = false)
     private String couponNum;
-    
+
     @Column
     private LocalDate endDate;
 

@@ -4,7 +4,12 @@ import com.zzuiksa.server.domain.schedule.entity.Category;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
@@ -24,8 +29,8 @@ public class CategoryDto {
 
     public static CategoryDto from(Category category) {
         return CategoryDto.builder()
-            .id(category.getId())
-            .title(category.getTitle())
-            .build();
+                .id(category.getId())
+                .title(category.getTitle())
+                .build();
     }
 }
