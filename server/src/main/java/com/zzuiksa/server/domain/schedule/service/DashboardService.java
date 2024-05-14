@@ -25,17 +25,18 @@ import lombok.RequiredArgsConstructor;
 public class DashboardService {
 
     private final WeatherService weatherService;
+    private final StatisticsService statisticsService;
     private final ScheduleRepository scheduleRepository;
 
     @Transactional(readOnly = true)
     public TodaySummaryResponse getTodaySummary(Member member) {
         LocalDate today = LocalDate.now();
-        // TODO: 진행도 추가
-        int progress = 100;
+        long doneScheduleCount = statisticsService.getDoneScheduleCount(today, member);
+        long totalScheduleCount = statisticsService.getTotalScheduleCount(today, member);
         // TODO: 쮝사 한마디 추가
-        String comment = "테스트";
+        String comment = "쮝";
         List<TodaySummaryResponse.TodayScheduleSummaryDto> schedules = getScheduleSummaries(today, member);
-        return TodaySummaryResponse.of(today, progress, comment, schedules);
+        return TodaySummaryResponse.of(today, doneScheduleCount, totalScheduleCount, comment, schedules);
     }
 
     public List<TodaySummaryResponse.TodayScheduleSummaryDto> getScheduleSummaries(LocalDate date, Member member) {

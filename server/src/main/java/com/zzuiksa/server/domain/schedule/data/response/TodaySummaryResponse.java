@@ -16,8 +16,11 @@ public class TodaySummaryResponse {
     @Schema(description = "날짜")
     private LocalDate date;
 
-    @Schema(description = "진행도")
-    private Integer progress;
+    @Schema(description = "완료한 일정 개수")
+    private Long doneScheduleCount;
+
+    @Schema(description = "전체 일정 개수")
+    private Long totalScheduleCount;
 
     @Schema(description = "쮝사 한마디")
     private String comment;
@@ -43,11 +46,13 @@ public class TodaySummaryResponse {
         }
     }
 
-    public static TodaySummaryResponse of(LocalDate date, int progress, String comment,
+    public static TodaySummaryResponse of(LocalDate date, long doneScheduleCount, long totalScheduleCount,
+            String comment,
             List<TodayScheduleSummaryDto> schedules) {
         return TodaySummaryResponse.builder()
                 .date(date)
-                .progress(progress)
+                .doneScheduleCount(doneScheduleCount)
+                .totalScheduleCount(totalScheduleCount)
                 .comment(comment)
                 .schedules(schedules)
                 .build();
