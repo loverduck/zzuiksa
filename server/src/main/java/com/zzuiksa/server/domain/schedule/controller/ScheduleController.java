@@ -3,6 +3,9 @@ package com.zzuiksa.server.domain.schedule.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRecognitionRequest;
+import com.zzuiksa.server.domain.schedule.data.response.AddScheduleRecognitionResponse;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +60,18 @@ public class ScheduleController {
             @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
         return scheduleService.add(request, member);
+    }
+
+    @Operation(
+            summary = "자연어 일정 추가",
+            description = "자연어를 인식하여 일정을 추가합니다.",
+            security = @SecurityRequirement(name = "bearer-key")
+    )
+    @PostMapping("/recognize")
+    public AddScheduleRecognitionResponse addRecognized(@Valid @RequestBody AddScheduleRecognitionRequest request,
+            @AuthenticationPrincipal MemberDetail memberDetail) {
+        Member member = memberDetail.getMember();
+        return scheduleService.addRecognized(request, member);
     }
 
     @Operation(
