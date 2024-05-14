@@ -13,11 +13,13 @@ import com.zzuiksa.server.domain.schedule.data.CategoryDto;
 import com.zzuiksa.server.domain.schedule.data.ScheduleRecognitionResponse;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRecognitionRequest;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
+import com.zzuiksa.server.domain.schedule.data.request.UpdateScheduleRequest;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleRecognitionResponse;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.DeleteScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.GetScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.ScheduleSummaryDto;
+import com.zzuiksa.server.domain.schedule.data.response.UpdateScheduleResponse;
 import com.zzuiksa.server.domain.schedule.entity.Category;
 import com.zzuiksa.server.domain.schedule.entity.Routine;
 import com.zzuiksa.server.domain.schedule.entity.Schedule;
@@ -89,6 +91,18 @@ public class ScheduleService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid CategoryId"));
 
         return scheduleRepository.findAllSummaryByMemberAndDateBetweenAndCategory(member, from, to, category);
+    }
+
+    @Transactional
+    public UpdateScheduleResponse update(@NotNull Long id, @NotNull UpdateScheduleRequest request,
+            @NotNull Member member) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND));
+        if (!member.getId().equals(schedule.getMember().getId())) {
+            throw new CustomException(ErrorCodes.SCHEDULE_NOT_FOUND);
+        }
+        schedule = request.update(schedule);
+        return UpdateScheduleResponse.from(schedule);
     }
 
     @Transactional
