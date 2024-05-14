@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -39,6 +40,7 @@ public class Place extends BaseEntity {
     private Member member;
 
     @NotBlank
+    @Size(max = 100)
     @Column(length = 100, nullable = false)
     private String name;
 
