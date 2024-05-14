@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:client/constants.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/widgets/date_time_input.dart';
 import 'package:client/screens/schedule/widgets/input_container.dart';
@@ -25,23 +26,6 @@ class RoutineInput extends StatefulWidget {
   @override
   State<RoutineInput> createState() => _RoutineInputState();
 }
-
-const Map<String, String> cycleType = {
-  "DAILY": "매일",
-  "WEEKLY": "매주",
-  "MONTHLY": "매월",
-  "YEARLY": "매년",
-};
-
-const Map<int, String> week = {
-  1: "월요일",
-  2: "화요일",
-  3: "수요일",
-  4: "목요일",
-  5: "금요일",
-  6: "토요일",
-  7: "일요일",
-};
 
 class _RoutineInputState extends State<RoutineInput> {
   String cycle = cycleType.keys.first;

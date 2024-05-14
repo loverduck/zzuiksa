@@ -1,8 +1,10 @@
 import 'package:client/screens/schedule/model/schedule_model.dart';
+import 'package:client/screens/schedule/schedule_detail_screen.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
 import 'package:client/screens/schedule/service/schedule_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:client/constants.dart';
@@ -17,17 +19,24 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? selectedDay;
+  DateTime focusedDay = DateTime.now();
   Map<DateTime, List<Schedule>> monthSchedules = {};
+  TextEditingController scheduleSentenceEditController =
+      TextEditingController();
 
   void moveToDetail(int scheduleId) {
     Navigator.pushNamed(context, '/schedule/detail',
         arguments: {"scheduleId": scheduleId});
   }
 
-  void onChangeMonth(day) {
+  void onChangeMonth(DateTime day) {
     getMonthSchdulesData(
         DateFormat("yyyy-MM-dd").format(DateTime(day.year, day.month, 1)),
         DateFormat("yyyy-MM-dd").format(DateTime(day.year, day.month + 1, 0)));
+
+    setState(() {
+      focusedDay = DateTime(DateTime.now().year, day.month, DateTime.now().day);
+    });
   }
 
   void getMonthSchdulesData(String from, String to) async {
@@ -74,8 +83,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     onChangeMonth(DateTime.now());
 
-    setState(() {});
-
     super.initState();
   }
 
@@ -86,7 +93,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 8),
           child: Calendar(
-            foucsedDay: DateTime.now(),
+            foucsedDay: focusedDay,
             onDaySelected: onDaySelected,
             selectedDayPredicate: selectedDayPredicate,
             monthSchedules: monthSchedules,
@@ -112,7 +119,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         return AlertDialog(
           titlePadding:
               const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-          contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+          contentPadding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
           backgroundColor: Constants.main200,
           shape: RoundedRectangleBorder(
             side: const BorderSide(
@@ -122,9 +129,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
             borderRadius: BorderRadius.circular(20),
           ),
           title: Text(
-            DateFormat("MM월 dd일").format(selectedDay),
+            DateFormat("MM월 dd일(E)", "ko_KR").format(selectedDay),
             style: const TextStyle(
-              fontSize: 20.0,
+              fontSize: 28.0,
             ),
           ),
           content: SizedBox(
@@ -139,19 +146,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         children: [
                           ...selectedDaySchedules.map((Schedule schedule) {
                             return GestureDetector(
-                              onTap: () => {moveToDetail(schedule.scheduleId!)},
+                              onTap: () => moveToDetail(schedule.scheduleId!),
                               child: Column(
                                 children: [
                                   Container(
                                     width: double.infinity,
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 6.0),
+                                        horizontal: 16.0, vertical: 6.0),
                                     decoration: BoxDecoration(
                                         borderRadius:
-                                            BorderRadius.circular(16.0),
+                                            BorderRadius.circular(20.0),
                                         border: Border.all(
                                           color: Colors.black,
-                                          width: 2.0,
+                                          width: 1.0,
                                         ),
                                         color: categoryType[
                                                 schedule.categoryId]![1]
@@ -162,19 +169,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       children: [
                                         Text(
                                           categoryType[schedule.categoryId]![0],
-                                          style:
-                                              const TextStyle(fontSize: 20.0),
+                                          style: const TextStyle(
+                                            fontSize: 18.0,
+                                            height: 1.0,
+                                            color: Colors.black54,
+                                          ),
                                         ),
                                         Text(
                                           schedule.title!,
-                                          style:
-                                              const TextStyle(fontSize: 24.0),
+                                          style: const TextStyle(
+                                            fontSize: 24.0,
+                                            height: 1.0,
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
                                   const SizedBox(
-                                    height: 6.0,
+                                    height: 8.0,
                                   )
                                 ],
                               ),
@@ -188,7 +200,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("할 일을 입력해주세요"),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: TextField(
+                          controller: scheduleSentenceEditController,
+                          decoration: const InputDecoration(
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 12.0),
+                            hintText: "일정을 입력해주세요",
+                            hintStyle: TextStyle(
+                              color: Colors.black54,
+                              fontSize: fontSizeSmall,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          style: const TextStyle(
+                            fontSize: fontSizeSmall,
+                          ),
+                        ),
+                      ),
+                    ),
                     Transform.translate(
                       offset: const Offset(8, 0),
                       child: IconButton(

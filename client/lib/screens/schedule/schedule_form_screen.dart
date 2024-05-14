@@ -88,13 +88,6 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map<int, List> categoryType = <int, List>{
-      1: ["일정", Constants.green300],
-      2: ["업무", Constants.blue600],
-      3: ["기념일", Constants.pink300],
-      4: ["공부", Constants.violet300],
-    };
-
     TextField titleInputField = TextField(
       onChanged: (title) => {
         if (titleEditConteroller.text.isEmpty)
@@ -119,7 +112,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
         isDense: true,
       ),
       style: const TextStyle(
-        fontSize: 20.0,
+        fontSize: 24.0,
       ),
     );
 
@@ -426,9 +419,6 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),
                                 child: TextField(
-                                  onChanged: (val) {
-                                    print(alertEditController.text);
-                                  },
                                   keyboardType: TextInputType.number,
                                   controller: alertEditController,
                                   inputFormatters: [
@@ -439,7 +429,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                                     isDense: true,
                                   ),
                                   style: const TextStyle(
-                                      fontSize: 20.0, height: 1.0),
+                                      fontSize: 24.0, height: 1.0),
                                 ),
                               ),
                             ),
@@ -502,7 +492,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                         child: TextField(
                           controller: memoEditController,
                           style: const TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 24.0,
                           ),
                           expands: true,
                           maxLines: null,
