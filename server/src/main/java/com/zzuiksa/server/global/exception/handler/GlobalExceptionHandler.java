@@ -1,5 +1,7 @@
 package com.zzuiksa.server.global.exception.handler;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -26,10 +28,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        FieldError error = ex.getBindingResult().getFieldErrors().get(0);
-        String message = error.getField() + ": " + error.getDefaultMessage();
-        return new ResponseEntity<>(
-                new ErrorResponse("ZBE002", message), ex.getStatusCode());
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+        StringBuilder messageBuilder = new StringBuilder();
+        for (FieldError fieldError : fieldErrors) {
+            messageBuilder.append(
+                    String.format("%s: %s, actual=%s%n", fieldError.getField(), fieldError.getDefaultMessage(),
+                            fieldError.getRejectedValue()));
+        }
+        String message = messageBuilder.toString();
+        return new ResponseEntity<>(new ErrorResponse("ZBE002", message), ex.getStatusCode());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
