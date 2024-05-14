@@ -2,12 +2,11 @@ package com.zzuiksa.server.domain.member.data.request;
 
 import java.time.LocalDate;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import org.springframework.util.StringUtils;
 
 import com.zzuiksa.server.domain.member.entity.Member;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

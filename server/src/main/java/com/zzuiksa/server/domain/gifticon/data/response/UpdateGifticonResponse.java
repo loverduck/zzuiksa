@@ -1,9 +1,6 @@
 package com.zzuiksa.server.domain.gifticon.data.response;
 
-import com.zzuiksa.server.domain.gifticon.constant.IsUsed;
-
 import com.zzuiksa.server.domain.gifticon.entity.Gifticon;
-import com.zzuiksa.server.domain.place.data.response.UpdatePlaceResponse;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -13,8 +10,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
