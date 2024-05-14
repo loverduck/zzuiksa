@@ -10,6 +10,7 @@ import com.zzuiksa.server.domain.schedule.data.RepeatDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -31,6 +32,7 @@ public class AddScheduleRequest {
 
     @Schema(description = "일정 제목")
     @NotBlank
+    @Size(max = 100)
     private String title;
 
     @Schema(description = "일정 시작일")
