@@ -126,6 +126,16 @@ public class ScheduleRepositoryQImpl implements ScheduleRepositoryQ {
         return total;
     }
 
+    @Override
+    public List<ScheduleSummaryDto> findAllSummaryByMemberAndDateAndIsNotDone(Member member, LocalDate date) {
+        return queryFactory.select(getQScheduleSummaryDto())
+                .from(schedule)
+                .where(schedule.member.eq(member))
+                .where(schedule.startDate.loe(date).and(schedule.endDate.goe(date)))
+                .where(schedule.isDone.isFalse())
+                .fetch();
+    }
+
     private QScheduleSummaryDto getQScheduleSummaryDto() {
         return new QScheduleSummaryDto(
                 schedule.id,

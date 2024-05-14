@@ -27,13 +27,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         FieldError error = ex.getBindingResult().getFieldErrors().get(0);
-        String message = error.getField() + ": " +  error.getDefaultMessage();
+        String message = error.getField() + ": " + error.getDefaultMessage();
         return new ResponseEntity<>(
                 new ErrorResponse("ZBE002", message), ex.getStatusCode());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return new ResponseEntity<>(new ErrorResponse("ZGE001", ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponse("ZBE003", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

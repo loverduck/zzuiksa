@@ -24,4 +24,6 @@ public interface ScheduleRepositoryQ {
 
     List<LocalDateAllAndDoneCountDto> countAllAndDoneByMemberAndDateBetweenGroupByDate(Member member, LocalDate from,
             LocalDate to);
+
+    List<ScheduleSummaryDto> findAllSummaryByMemberAndDateAndIsNotDone(Member member, LocalDate date);
 }
