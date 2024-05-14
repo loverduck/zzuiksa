@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zzuiksa.server.domain.weather.client.WeatherClient;
 import com.zzuiksa.server.domain.weather.data.GpsTransfer;
 import com.zzuiksa.server.domain.weather.data.GridDto;
@@ -56,13 +58,20 @@ public class WeatherService {
 
     private List<ItemInfoDto> getWeatherItems(LocalDate date, double lat, double lng) {
         GridDto grid = GpsTransfer.transfer(lat, lng);
-        Map<String, Object> weatherRequest = WeatherRequest.of(serviceKey, date, grid.getX(), grid.getY());
-        WeatherResponse weatherResponse = weatherClient.getWeather(weatherRequest);
+        WeatherRequest weatherRequest = WeatherRequest.of(serviceKey, date, grid.getX(), grid.getY());
+        Map<String, Object> weatherRequestQuery = convertWeatherRequestToMap(weatherRequest);
+        WeatherResponse weatherResponse = weatherClient.getWeather(weatherRequestQuery);
         return weatherResponse.getResponse().getBody().getItems().getItem();
     }
 
     private boolean isWeatherItemBetween(ItemInfoDto weatherItem, LocalTime startTime, LocalTime endTime) {
         int fcstHour = weatherItem.getFcstHour();
         return startTime.getHour() <= fcstHour && fcstHour <= endTime.getHour();
+    }
+
+    private Map<String, Object> convertWeatherRequestToMap(WeatherRequest weatherRequest) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.convertValue(weatherRequest, new TypeReference<>() {
+        });
     }
 }
