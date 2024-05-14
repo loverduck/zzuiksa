@@ -1,5 +1,7 @@
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
 
+import '../updateRemainMoney.dart';
+
 class KakaoOCRParser {
   static Gifticon parse(String ocrText) {
     Gifticon gifticon = Gifticon();
@@ -21,6 +23,7 @@ class KakaoOCRParser {
           barcodeIndex = i;  // 바코드 위치 저장
           if (i > 0) {
             gifticon.name = lines[i - 1].trim();
+            updateRemainMoney(gifticon);
           }
         }
       }

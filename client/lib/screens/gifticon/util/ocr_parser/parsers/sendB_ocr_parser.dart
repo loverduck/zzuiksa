@@ -1,5 +1,7 @@
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
 
+import '../updateRemainMoney.dart';
+
 class SendBOCRParser {
   static Gifticon parse(String ocrText) {
     Gifticon gifticon = Gifticon();
@@ -21,6 +23,7 @@ class SendBOCRParser {
           if (bracketIndex != -1) {
             gifticon.store = previousLine.substring(1, bracketIndex).trim();
             gifticon.name = previousLine.substring(bracketIndex + 1).trim();
+            updateRemainMoney(gifticon);
           }
         }
       } else if (RegExp(r'^[\d\s]+$').hasMatch(line)) {
@@ -37,6 +40,7 @@ class SendBOCRParser {
       for (String line in lines) {
         if (line.startsWith('상품명 : ')) {
           gifticon.name = line.replaceFirst('상품명 : ', '').trim();
+          updateRemainMoney(gifticon);
           foundReplacement = true;
           break;
         }

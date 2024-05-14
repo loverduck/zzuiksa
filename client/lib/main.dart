@@ -58,7 +58,8 @@ class MyApp extends StatelessWidget {
         '/gifticon': (context) => const GifticonListScreen(),
         '/gifticon_select_screen': (context) => const GifticonSelectScreen(),
         '/gifticon_add_screen': (context) => GifticonAddScreen(
-          ocrFields: ModalRoute.of(context)?.settings.arguments as List<MergedField>,
+          ocrFields: ModalRoute.of(context)!.settings.arguments as List<MergedField>,
+          selectedImagePath: ModalRoute.of(context)!.settings.arguments as String,
         ),
         '/gifticon_detail_screen': (context) => GifticonDetailScreen(
           gifticonId: ModalRoute.of(context)!.settings.arguments as int,

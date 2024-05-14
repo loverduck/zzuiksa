@@ -1,5 +1,7 @@
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
 
+import '../updateRemainMoney.dart';
+
 class gsnOCRParser {
   static Gifticon parse(String ocrText) {
     Gifticon gifticon = Gifticon();
@@ -9,6 +11,7 @@ class gsnOCRParser {
     if (endDateIndex > 0) {
       // "유효기간" 윗줄에 오는 줄들을 합쳐서 name으로 설정
       gifticon.name = lines.sublist(0, endDateIndex).join('');
+      updateRemainMoney(gifticon);
 
       if (endDateIndex + 1 < lines.length) {
         String endDateLine = lines[endDateIndex + 1];

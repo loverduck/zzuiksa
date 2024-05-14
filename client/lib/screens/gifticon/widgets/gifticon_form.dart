@@ -103,10 +103,10 @@ class _GifticonFormState extends State<GifticonForm> {
             onChanged: (value) => _gifticon.memo = value,
           ),
           const SizedBox(height: 30),
-          ElevatedButton(
-            onPressed: _handleSubmit,
-            child: Text(widget.isEdit ? '수정하기' : '저장하기'),
-          ),
+          // ElevatedButton(
+          //   onPressed: _handleSubmit,
+          //   child: Text(widget.isEdit ? '수정하기' : '저장하기'),
+          // ),
         ],
       ),
     );

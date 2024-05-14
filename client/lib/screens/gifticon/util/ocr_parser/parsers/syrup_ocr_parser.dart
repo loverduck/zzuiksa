@@ -1,5 +1,7 @@
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
 
+import '../updateRemainMoney.dart';
+
 class SyrupOCRParser {
   static Gifticon parse(List<dynamic> fields) {
     Gifticon gifticon = Gifticon();
@@ -14,6 +16,7 @@ class SyrupOCRParser {
 
       if (text.contains("기프티콘명")) {
         gifticon.name = extractTextAfterKeyword(text, "기프티콘명");
+        updateRemainMoney(gifticon);
       } else if (text.contains("사용기한")) {
         String dateStr = extractTextAfterKeyword(text, "사용기한");
         gifticon.endDate = formatDate(dateStr);
