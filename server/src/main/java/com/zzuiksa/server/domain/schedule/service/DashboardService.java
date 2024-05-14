@@ -2,7 +2,11 @@ package com.zzuiksa.server.domain.schedule.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,10 +40,29 @@ public class DashboardService {
 
     public List<TodaySummaryResponse.TodayScheduleSummaryDto> getScheduleSummaries(LocalDate date, Member member) {
         List<ScheduleSummaryDto> todayScheduleSummaries = getTodaySchedules(member);
-        return todayScheduleSummaries.stream().map(schedule -> {
-            WeatherInfoDto weatherInfo = getWeatherOfSchedule(date, schedule);
-            return TodaySummaryResponse.TodayScheduleSummaryDto.of(schedule, weatherInfo);
-        }).toList();
+
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+        return todayScheduleSummaries.stream()
+                .map(schedule -> CompletableFuture.supplyAsync(() -> {
+                    WeatherInfoDto weatherInfo = getWeatherOfSchedule(date, schedule);
+                    return TodaySummaryResponse.TodayScheduleSummaryDto.of(schedule, weatherInfo);
+                }, executor))
+                .toList()
+                .stream()
+                .map(CompletableFuture::join)
+                .sorted(getComparator())
+                .toList();
+    }
+
+    private Comparator<TodaySummaryResponse.TodayScheduleSummaryDto> getComparator() {
+        return Comparator.<TodaySummaryResponse.TodayScheduleSummaryDto, LocalDate>comparing(
+                        dto -> dto.getScheduleSummary().getStartDate())
+                .thenComparing(dto -> dto.getScheduleSummary().getStartTime(),
+                        Comparator.nullsFirst(Comparator.naturalOrder()))
+                .thenComparing(dto -> dto.getScheduleSummary().getEndDate())
+                .thenComparing(dto -> dto.getScheduleSummary().getEndTime(),
+                        Comparator.nullsFirst(Comparator.naturalOrder()))
+                .thenComparingLong(dto -> dto.getScheduleSummary().getScheduleId());
     }
 
     private List<ScheduleSummaryDto> getTodaySchedules(Member member) {
