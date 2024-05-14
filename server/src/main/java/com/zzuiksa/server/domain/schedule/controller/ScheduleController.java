@@ -3,12 +3,10 @@ package com.zzuiksa.server.domain.schedule.controller;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRecognitionRequest;
-import com.zzuiksa.server.domain.schedule.data.response.AddScheduleRecognitionResponse;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,13 +20,17 @@ import com.zzuiksa.server.domain.route.data.request.RouteTimeRequest;
 import com.zzuiksa.server.domain.route.data.response.RouteTimeResponse;
 import com.zzuiksa.server.domain.route.service.RouteService;
 import com.zzuiksa.server.domain.schedule.data.CategoryDto;
+import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRecognitionRequest;
 import com.zzuiksa.server.domain.schedule.data.request.AddScheduleRequest;
+import com.zzuiksa.server.domain.schedule.data.request.UpdateScheduleRequest;
+import com.zzuiksa.server.domain.schedule.data.response.AddScheduleRecognitionResponse;
 import com.zzuiksa.server.domain.schedule.data.response.AddScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.DeleteScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.GetScheduleResponse;
 import com.zzuiksa.server.domain.schedule.data.response.ScheduleStatisticsResponse;
 import com.zzuiksa.server.domain.schedule.data.response.ScheduleSummaryDto;
 import com.zzuiksa.server.domain.schedule.data.response.TodaySummaryResponse;
+import com.zzuiksa.server.domain.schedule.data.response.UpdateScheduleResponse;
 import com.zzuiksa.server.domain.schedule.service.DashboardService;
 import com.zzuiksa.server.domain.schedule.service.ScheduleService;
 import com.zzuiksa.server.domain.schedule.service.StatisticsService;
@@ -95,6 +97,18 @@ public class ScheduleController {
             @RequestParam(required = false) Long categoryId, @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
         return scheduleService.getList(from, to, categoryId, member);
+    }
+
+    @Operation(
+            summary = "일정 수정",
+            description = "일정을 수정합니다.",
+            security = @SecurityRequirement(name = "bearer-key")
+    )
+    @PatchMapping("/{scheduleId}")
+    public UpdateScheduleResponse update(@PathVariable Long scheduleId,
+            @Valid @RequestBody UpdateScheduleRequest request, @AuthenticationPrincipal MemberDetail memberDetail) {
+        Member member = memberDetail.getMember();
+        return scheduleService.update(scheduleId, request, member);
     }
 
     @Operation(
