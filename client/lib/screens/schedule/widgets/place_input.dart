@@ -44,11 +44,11 @@ class _PlaceInputState extends State<PlaceInput> {
   String transportTimeText = "";
   String errorMsg = "";
 
-  ButtonStyle placeInputtyle = ElevatedButton.styleFrom(
+  ButtonStyle placeInputStyle = ElevatedButton.styleFrom(
     padding: const EdgeInsets.symmetric(horizontal: 32.0),
     elevation: 0,
     backgroundColor: Constants.main200.withOpacity(0.5),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
   );
 
   void moveToSearch(String type) async {
@@ -165,6 +165,9 @@ class _PlaceInputState extends State<PlaceInput> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(
+                height: 10.0,
+              ),
               const Divider(
                 thickness: 1.0,
               ),
@@ -174,25 +177,22 @@ class _PlaceInputState extends State<PlaceInput> {
                 children: transports.entries.map((item) {
                   return ElevatedButton(
                     style: item.key == widget.selectedType
-                        ? placeInputtyle.copyWith(
+                        ? placeInputStyle.copyWith(
                             backgroundColor: const MaterialStatePropertyAll(
                                 Constants.main100),
                             side: const MaterialStatePropertyAll(
                               BorderSide(
                                 color: Constants.main400,
-                                width: 3.0,
+                                width: 2.0,
                               ),
                             ),
                           )
-                        : placeInputtyle,
-                    onPressed: () => {getTransport(item.key)},
+                        : placeInputStyle,
+                    onPressed: () => getTransport(item.key),
                     child: Text(
                       item.value,
                       style: TextStyle(
                         fontSize: 24.0,
-                        fontWeight: item.key == widget.selectedType
-                            ? FontWeight.bold
-                            : FontWeight.normal,
                         color: item.key == widget.selectedType
                             ? Constants.main400
                             : Constants.main500,

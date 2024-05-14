@@ -29,6 +29,7 @@ class Schedule {
       this.isDone});
 
   factory Schedule.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Schedule(
         scheduleId: json["scheduleId"],
         categoryId: json['categoryId'],
@@ -37,14 +38,16 @@ class Schedule {
         endDate: json['endDate'],
         startTime: json['startTime'],
         endTime: json['endTime'],
-        alertBefore: json['alertBefore'],
+        alertBefore: json['alertBefore'] != null
+            ? int.parse(json['alertBefore'].substring(2, 4))
+            : null,
         memo: json['memo'],
         toPlace:
             json['toPlace'] != null ? Place.fromJson(json['toPlace']) : null,
         fromPlace: json['fromPlace'] != null
             ? Place.fromJson(json['fromPlace'])
             : null,
-        repeat: json['repeat'],
+        repeat: json['repeat'] != null ? Repeat.fromJson(json['repeat']) : null,
         isDone: json['isDone']);
   }
 

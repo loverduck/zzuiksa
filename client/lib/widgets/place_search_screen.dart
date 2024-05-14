@@ -44,10 +44,8 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
   void onChangeKeywordHandler(keyword) {
     selectedPlaceIndex = null;
 
-    const duration = Duration(microseconds: 2000);
-    if (searchTimer != null) {
-      searchTimer!.cancel();
-    }
+    const duration = Duration(milliseconds: 1000);
+    searchTimer?.cancel();
     searchTimer = Timer(duration, () => searchPlaces(keyword));
   }
 
@@ -62,40 +60,44 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
   void searchPlaces(text) async {
     list.clear();
 
-    final center = await mapController.getCenter();
+    try {
+      final center = await mapController.getCenter();
 
-    final result = await mapController.keywordSearch(
-      KeywordSearchRequest(
-        keyword: text,
-        y: center.latitude,
-        x: center.longitude,
-        radius: 3000,
-        sort: SortBy.distance,
-      ),
-    );
-
-    List<LatLng> bounds = [];
-    for (var item in result.list) {
-      LatLng latLng =
-          LatLng(double.parse(item.y ?? ""), double.parse(item.x ?? ""));
-
-      bounds.add(latLng);
-
-      Marker marker = Marker(
-        markerId: item.id ?? UniqueKey().toString(),
-        latLng: latLng,
+      final result = await mapController.keywordSearch(
+        KeywordSearchRequest(
+          keyword: text,
+          y: center.latitude,
+          x: center.longitude,
+          radius: 3000,
+          sort: SortBy.distance,
+        ),
       );
 
-      markers.add(marker);
-    }
+      List<LatLng> bounds = [];
+      for (var item in result.list) {
+        LatLng latLng =
+            LatLng(double.parse(item.y ?? "0"), double.parse(item.x ?? "0"));
 
-    if (bounds.isNotEmpty) {
-      await mapController.fitBounds(bounds);
-    }
+        bounds.add(latLng);
 
-    setState(() {
-      list.addAll(result.list);
-    });
+        Marker marker = Marker(
+          markerId: item.id ?? UniqueKey().toString(),
+          latLng: latLng,
+        );
+
+        markers.add(marker);
+      }
+
+      if (bounds.isNotEmpty) {
+        await mapController.fitBounds(bounds);
+      }
+
+      setState(() {
+        list.addAll(result.list);
+      });
+    } catch (e) {
+      print("search error: $e");
+    }
   }
 
   @override
@@ -142,7 +144,7 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
                     onSubmitted: searchPlaces,
                     textAlignVertical: TextAlignVertical.center,
                     style: const TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 24.0,
                       height: 1.0,
                     ),
                     decoration: InputDecoration(
@@ -182,14 +184,29 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
                           index: index,
                           controller: scrollController,
                           child: ListTile(
-                            title: Text(list[index].placeName ?? ""),
+                            title: Text(
+                              list[index].placeName ?? "",
+                              style: const TextStyle(
+                                fontSize: 24.0,
+                              ),
+                            ),
                             subtitle: Row(
                               children: [
-                                Text(list[index].addressName ?? ""),
+                                Text(
+                                  list[index].addressName ?? "",
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
                                 const SizedBox(
                                   width: 20.0,
                                 ),
-                                Text("${list[index].distance}m"),
+                                Text(
+                                  "${list[index].distance}m",
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
                               ],
                             ),
                             trailing: selectedPlaceIndex == index

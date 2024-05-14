@@ -23,7 +23,8 @@ Future<dynamic> postSchedule(Schedule schedule) async {
       },
       body: jsonEncode(schedule.toJson()),
     );
-    dynamic res = jsonDecode(resBody.body);
+    dynamic res = jsonDecode(utf8.decode(resBody.bodyBytes));
+    print(res);
 
     return res;
   } catch (e) {
@@ -45,7 +46,7 @@ Future<dynamic> getMonthSchedules(String from, String to) async {
       },
     );
 
-    Map<String, dynamic> json = jsonDecode(res.body);
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
 
     return json;
   } catch (e) {
@@ -65,11 +66,33 @@ Future<dynamic> getSchedule(int scheduleId) async {
       },
     );
 
-    Map<String, dynamic> json = jsonDecode(res.body);
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+
+    print("get schedule api: $json");
 
     return json;
   } catch (e) {
     print("get schedule error: $e");
+  }
+}
+
+Future<dynamic> deleteSchedule(int scheduleId) async {
+  try {
+    getToken();
+
+    final res = await http.delete(
+      Uri.parse("$baseUrl/api/schedules/$scheduleId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+
+    print("delete schedule api: $json");
+    return json;
+  } catch (e) {
+    print("delete schedule error: $e");
   }
 }
 
