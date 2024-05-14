@@ -73,7 +73,7 @@ public class GifticonService {
            throw new CustomException(ErrorCodes.GIFTICON_NOT_FOUND);
        }
        gifticonRepository.deleteById(id);
-       return new DeleteGifticonResponse();
+       return new DeleteGifticonResponse("Success");
    }
 
     private Gifticon addGifticon(AddGifticonRequest request, Member member) {
