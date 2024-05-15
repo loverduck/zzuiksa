@@ -28,12 +28,9 @@ class _TimePickerState extends State<TimePicker> {
     );
 
     if (timeOfDay != null) {
-      DateTime changedTime =
-          DateFormat("HH:mm").parse(timeOfDay.format(context));
-
       setState(() {
         widget.timeEditController.text =
-            DateFormat("HH:mm").format(changedTime);
+            '${timeOfDay.hour.toString().padLeft(2, '0')}:${timeOfDay.minute.toString().padLeft(2, '0')}';
       });
     }
   }
