@@ -286,11 +286,11 @@ public class Routine extends BaseEntity {
             return List.of();
         }
 
-        Period scheduleDuration = Period.between(startDate, endDate);
+        Period schedulePeriod = Period.between(startDate, endDate);
 
         List<LocalDate> scheduleDates = getScheduleStartDates(from, to);
         return scheduleDates.stream()
-                .map(scheduleDate -> createScheduleWith(scheduleDate, scheduleDuration))
+                .map(scheduleDate -> createScheduleWith(scheduleDate, schedulePeriod))
                 .toList();
     }
 
@@ -342,8 +342,8 @@ public class Routine extends BaseEntity {
                 .toList();
     }
 
-    private Schedule createScheduleWith(LocalDate startDate, Period duration) {
-        LocalDate endDate = startDate.plus(duration);
+    private Schedule createScheduleWith(LocalDate startDate, Period period) {
+        LocalDate endDate = startDate.plus(period);
         return createScheduleWith(startDate, endDate);
     }
 
