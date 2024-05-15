@@ -2,7 +2,7 @@ import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/schedule_detail_screen.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
 import 'package:client/screens/schedule/service/schedule_api.dart';
-import 'package:client/widgets/footer.dart';
+import 'package:client/screens/schedule/widgets/snackbar_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +10,6 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:client/constants.dart';
 import 'package:client/screens/schedule/widgets/calendar.dart';
-import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -47,6 +46,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
       ).then((value) => onChangeMonth(selectedDay));
     } else {
+      // + 버튼 클릭 시 키보드 내리기
       FocusManager.instance.primaryFocus?.unfocus();
 
       Map<String, dynamic> body = {
@@ -56,7 +56,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
       };
 
       try {
+        showLoadingDialog(context);
+
         Map<String, dynamic> res = await postRecognize(body);
+
+        if (!mounted) return;
+
         if (res["status"] == "success") {
           Navigator.pop(context);
           scheduleSentenceEditController.text = "";
@@ -65,15 +70,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("잠시 후 다시 시도해주세요"),
+            content: SnackBarText(message: "일정을 생성할 수 없습니다. 잠시 후 다시 시도해주세요."),
           ),
         );
+      } finally {
+        Navigator.pop(context);
       }
     }
-  }
-
-  void postSentence(categoryId) {
-    print("$categoryId post");
   }
 
   void onChangeMonth(DateTime day) {
@@ -88,6 +91,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   void getMonthSchdulesData(String from, String to) async {
     monthSchedules = {};
+
+    Future.delayed(Duration.zero, () {
+      showLoadingDialog(context);
+    });
+
+    if (!mounted) return;
 
     try {
       Map<String, dynamic> json = await getMonthSchedules(from, to);
@@ -120,24 +129,48 @@ class _CalendarScreenState extends State<CalendarScreen> {
           }
         }
       }
+      setState(() {});
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("잠시 후 다시 시도해주세요"),
+          content: SnackBarText(message: "일정을 불러올 수 없습니다. 종료 후 다시 접속해주세요."),
         ),
       );
+    } finally {
+      Navigator.pop(context);
     }
+  }
 
-    print("month schedules: $monthSchedules");
-
-    setState(() {});
+  void showLoadingDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      pageBuilder: (BuildContext buildContext, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return const SizedBox();
+      },
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ),
+          child: const Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 6.0,
+              valueColor: AlwaysStoppedAnimation(Constants.pink400),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     onChangeMonth(DateTime.now());
-
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
@@ -251,31 +284,38 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 10.0,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        child: TextField(
-                          controller: scheduleSentenceEditController,
-                          decoration: const InputDecoration(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 12.0),
-                            hintText: "일정을 입력해주세요",
-                            hintStyle: TextStyle(
-                              color: Colors.black54,
-                              fontSize: fontSizeSmall,
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.0),
                             ),
-                            border: InputBorder.none,
+                            child: TextField(
+                              controller: scheduleSentenceEditController,
+                              decoration: const InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 12.0),
+                                hintText: "일정을 입력해주세요",
+                                hintStyle: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: fontSizeSmall,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              style: const TextStyle(
+                                fontSize: fontSizeSmall,
+                              ),
+                            ),
                           ),
-                          style: const TextStyle(
-                            fontSize: fontSizeSmall,
-                          ),
-                        ),
+                        ],
                       ),
                     ),
                     Transform.translate(
@@ -297,7 +337,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
         );
       },
-    );
+    ).then((value) => scheduleSentenceEditController.text = "");
   }
 
   bool selectedDayPredicate(DateTime date) {

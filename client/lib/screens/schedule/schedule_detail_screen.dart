@@ -63,7 +63,6 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
   }
 
   Future<void> deleteConfirmDialog(BuildContext context, int scheduleId) {
-    print("delete confirm dialog $scheduleId");
     return showDialog<void>(
         context: context,
         builder: (context) {
@@ -72,7 +71,9 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
                 },
                 child: const Text(
                   "취소",
@@ -83,8 +84,10 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
                   _deleteSchedule(context);
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
                 },
                 child: const Text(
                   "삭제하기",
@@ -121,13 +124,15 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
   void _deleteSchedule(BuildContext context) async {
     Map<String, dynamic> res = await deleteSchedule(scheduleId);
 
+    if (!mounted) return;
+
     if (res['status'] == 'success') {
-      Navigator.pushNamed(context, '/calendar');
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: SnackBarText(
-            message: "일정 삭제에 실패했습니다. 다시 시도해주세요",
+            message: "일정 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.",
           ),
         ),
       );
@@ -150,6 +155,7 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("detail: $schedule");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.main200,
@@ -299,6 +305,9 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                             schedule.toPlace?.lng != null
                         ? Column(
                             children: [
+                              const SizedBox(
+                                height: 6.0,
+                              ),
                               PlaceContainer(place: schedule.toPlace!),
                               const SizedBox(
                                 height: 10.0,
@@ -329,21 +338,24 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                     const Divider(
                       thickness: 1.0,
                     ),
-                    schedule.memo == null || schedule.memo!.isEmpty
-                        ? const Text(
-                            "없음",
-                            style: TextStyle(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                      child: schedule.memo == null || schedule.memo!.isEmpty
+                          ? const Text(
+                              "없음",
+                              style: TextStyle(
+                                  fontSize: fontSizeMedium,
+                                  color: Colors.black54),
+                            )
+                          : Text(
+                              schedule.memo!,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
                                 fontSize: fontSizeMedium,
-                                color: Colors.black54),
-                          )
-                        : Text(
-                            schedule.memo!,
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              fontSize: fontSizeMedium,
-                              color: Colors.black,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
+                    ),
                   ],
                 ),
               ),
@@ -515,6 +527,7 @@ class _PlaceContainerState extends State<PlaceContainer> {
         onMapCreated: (controller) {
           mapController = controller;
           mapController.addMarker(markers: marker);
+          mapController.setDraggable(false);
         },
         center: latLng,
         markers: marker,
