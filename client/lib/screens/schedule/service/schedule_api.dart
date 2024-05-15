@@ -17,7 +17,6 @@ Future<void> getToken() async {
 }
 
 Future<dynamic> postSchedule(Schedule schedule) async {
-  print("post schedule api: $schedule");
   try {
     final res = await http.post(
       Uri.parse("$baseUrl/api/schedules"),
@@ -27,7 +26,7 @@ Future<dynamic> postSchedule(Schedule schedule) async {
       },
       body: jsonEncode(schedule.toJson()),
     );
-    dynamic json = jsonDecode(utf8.decode(res.bodyBytes));
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
 
     return json;
   } catch (e) {
@@ -36,10 +35,6 @@ Future<dynamic> postSchedule(Schedule schedule) async {
 }
 
 Future<dynamic> postRecognize(Map<String, dynamic> body) async {
-  getToken();
-
-  print(body);
-
   try {
     final res = await http.post(
       Uri.parse("$baseUrl/api/schedules/recognize"),
@@ -59,7 +54,7 @@ Future<dynamic> postRecognize(Map<String, dynamic> body) async {
 }
 
 Future<dynamic> getMonthSchedules(String from, String to) async {
-  getToken();
+  await getToken();
 
   try {
     final uri = Uri.https(
@@ -73,7 +68,6 @@ Future<dynamic> getMonthSchedules(String from, String to) async {
     );
 
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
-    print("get month schedule: $res");
 
     return json;
   } catch (e) {
@@ -82,8 +76,6 @@ Future<dynamic> getMonthSchedules(String from, String to) async {
 }
 
 Future<dynamic> getSchedule(int scheduleId) async {
-  getToken();
-
   try {
     final res = await http.get(
       Uri.parse("$baseUrl/api/schedules/$scheduleId"),
@@ -105,8 +97,6 @@ Future<dynamic> getSchedule(int scheduleId) async {
 
 Future<dynamic> deleteSchedule(int scheduleId) async {
   try {
-    getToken();
-
     final res = await http.delete(
       Uri.parse("$baseUrl/api/schedules/$scheduleId"),
       headers: <String, String>{
