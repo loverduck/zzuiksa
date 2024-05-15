@@ -2,6 +2,7 @@ import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/schedule_detail_screen.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
 import 'package:client/screens/schedule/service/schedule_api.dart';
+import 'package:client/screens/schedule/widgets/snackbar_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,8 +26,57 @@ class _CalendarScreenState extends State<CalendarScreen> {
       TextEditingController();
 
   void moveToDetail(int scheduleId) {
+    Navigator.pop(context);
     Navigator.pushNamed(context, '/schedule/detail',
-        arguments: {"scheduleId": scheduleId});
+            arguments: {"scheduleId": scheduleId})
+        .then((value) => onChangeMonth(DateTime.now()));
+  }
+
+  void onPressedAddButton(selectedDay) async {
+    if (scheduleSentenceEditController.text.isEmpty) {
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return ScheduleFormScreen(
+              selectedDay: selectedDay,
+            );
+          },
+        ),
+      ).then((value) => onChangeMonth(selectedDay));
+    } else {
+      // + 버튼 클릭 시 키보드 내리기
+      FocusManager.instance.primaryFocus?.unfocus();
+
+      Map<String, dynamic> body = {
+        "categoryId": 1,
+        "content": scheduleSentenceEditController.text,
+        "baseDate": DateFormat("yyyy-MM-dd").format(selectedDay),
+      };
+
+      try {
+        showLoadingDialog(context);
+
+        Map<String, dynamic> res = await postRecognize(body);
+
+        if (!mounted) return;
+
+        if (res["status"] == "success") {
+          Navigator.pop(context);
+          scheduleSentenceEditController.text = "";
+          onChangeMonth(DateTime.now());
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: SnackBarText(message: "일정을 생성할 수 없습니다. 잠시 후 다시 시도해주세요."),
+          ),
+        );
+      } finally {
+        Navigator.pop(context);
+      }
+    }
   }
 
   void onChangeMonth(DateTime day) {
@@ -42,48 +92,85 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void getMonthSchdulesData(String from, String to) async {
     monthSchedules = {};
 
-    Map<String, dynamic> json = await getMonthSchedules(from, to);
-    List<Schedule> scheduleList = [];
+    Future.delayed(Duration.zero, () {
+      showLoadingDialog(context);
+    });
 
-    if (json["status"] == "success") {
-      List<dynamic> jsonList = json["data"];
-      scheduleList = jsonList.map((e) {
-        return Schedule.fromJson(e);
-      }).toList();
-    }
+    if (!mounted) return;
 
-    for (Schedule schedule in scheduleList) {
-      DateTime startDate = DateTime.parse(schedule.startDate!);
-      DateTime endDate = DateTime.parse(schedule.endDate!);
+    try {
+      Map<String, dynamic> json = await getMonthSchedules(from, to);
+      List<Schedule> scheduleList = [];
 
-      DateTime currentDate = startDate;
-      while (currentDate.isBefore(endDate.add(const Duration(days: 1)))) {
-        // endDate를 포함하기 위해 1일 추가
-        DateTime key =
-            DateTime(currentDate.year, currentDate.month, currentDate.day)
-                .toUtc();
+      if (json["status"] == "success") {
+        List<dynamic> jsonList = json["data"];
+        scheduleList = jsonList.map((e) {
+          return Schedule.fromJson(e);
+        }).toList();
+        for (Schedule schedule in scheduleList) {
+          DateTime startDate = DateTime.parse(schedule.startDate!);
+          DateTime endDate = DateTime.parse(schedule.endDate!);
 
-        if (monthSchedules[key] == null) {
-          monthSchedules[key] = [];
+          DateTime currentDate = startDate;
+          while (currentDate.isBefore(endDate.add(const Duration(days: 1)))) {
+            // endDate를 포함하기 위해 1일 추가
+            DateTime key =
+                DateTime(currentDate.year, currentDate.month, currentDate.day)
+                    .toUtc();
+
+            if (monthSchedules[key] == null) {
+              monthSchedules[key] = [];
+            }
+
+            monthSchedules[key]!.add(schedule);
+
+            // 다음 날짜로 이동
+            currentDate = currentDate.add(const Duration(days: 1));
+          }
         }
-
-        monthSchedules[key]!.add(schedule);
-
-        // 다음 날짜로 이동
-        currentDate = currentDate.add(const Duration(days: 1));
       }
+      setState(() {});
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: SnackBarText(message: "일정을 불러올 수 없습니다. 종료 후 다시 접속해주세요."),
+        ),
+      );
+    } finally {
+      Navigator.pop(context);
     }
+  }
 
-    print("month schedules: $monthSchedules");
-
-    setState(() {});
+  void showLoadingDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      pageBuilder: (BuildContext buildContext, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return const SizedBox();
+      },
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ),
+          child: const Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 6.0,
+              valueColor: AlwaysStoppedAnimation(Constants.pink400),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     onChangeMonth(DateTime.now());
-
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
@@ -197,48 +284,44 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 10.0,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        child: TextField(
-                          controller: scheduleSentenceEditController,
-                          decoration: const InputDecoration(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 12.0),
-                            hintText: "일정을 입력해주세요",
-                            hintStyle: TextStyle(
-                              color: Colors.black54,
-                              fontSize: fontSizeSmall,
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.0),
                             ),
-                            border: InputBorder.none,
+                            child: TextField(
+                              controller: scheduleSentenceEditController,
+                              decoration: const InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 12.0),
+                                hintText: "일정을 입력해주세요",
+                                hintStyle: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: fontSizeSmall,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              style: const TextStyle(
+                                fontSize: fontSizeSmall,
+                              ),
+                            ),
                           ),
-                          style: const TextStyle(
-                            fontSize: fontSizeSmall,
-                          ),
-                        ),
+                        ],
                       ),
                     ),
                     Transform.translate(
                       offset: const Offset(8, 0),
                       child: IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return ScheduleFormScreen(
-                                  selectedDay: selectedDay,
-                                );
-                              },
-                            ),
-                          );
-                        },
+                        onPressed: () => onPressedAddButton(selectedDay),
                         icon: const Icon(
                           Icons.add_circle,
                           color: Constants.main600,
@@ -254,7 +337,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
         );
       },
-    );
+    ).then((value) => scheduleSentenceEditController.text = "");
   }
 
   bool selectedDayPredicate(DateTime date) {
