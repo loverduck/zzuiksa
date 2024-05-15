@@ -3,8 +3,8 @@ package com.zzuiksa.server.domain.schedule.entity;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -286,13 +286,11 @@ public class Routine extends BaseEntity {
             return List.of();
         }
 
-        LocalDateTime scheduleStart = LocalDateTime.of(startDate, startTime);
-        LocalDateTime scheduleEnd = LocalDateTime.of(endDate, endTime);
-        Duration scheduleDuration = Duration.between(scheduleStart, scheduleEnd);
+        Period scheduleDuration = Period.between(startDate, endDate);
 
         List<LocalDate> scheduleDates = getScheduleStartDates(from, to);
         return scheduleDates.stream()
-                .map(scheduleDate -> createScheduleWith(scheduleDate, startTime, scheduleDuration))
+                .map(scheduleDate -> createScheduleWith(scheduleDate, scheduleDuration))
                 .toList();
     }
 
@@ -344,16 +342,12 @@ public class Routine extends BaseEntity {
                 .toList();
     }
 
-    private Schedule createScheduleWith(LocalDate startDate, LocalTime startTime, Duration duration) {
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
-        LocalDateTime endDateTime = startDateTime.plus(duration);
-        LocalDate endDate = endDateTime.toLocalDate();
-        LocalTime endTime = endDateTime.toLocalTime();
-        return createScheduleWith(startDate, endDate, startTime, endTime);
+    private Schedule createScheduleWith(LocalDate startDate, Period duration) {
+        LocalDate endDate = startDate.plus(duration);
+        return createScheduleWith(startDate, endDate);
     }
 
-    private Schedule createScheduleWith(LocalDate startDate, LocalDate endDate, LocalTime startTime,
-            LocalTime endTime) {
+    private Schedule createScheduleWith(LocalDate startDate, LocalDate endDate) {
         return Schedule.builder()
                 .member(member)
                 .category(category)
