@@ -47,7 +47,9 @@ public class RouteService {
     }
 
     protected Integer calcTransitRouteTime(RouteTimeRequest request) {
-        LocalDateTime startDateTime = request.getArrivalTime().minus(Duration.ofHours(2));
+        LocalDateTime arrivalDateTime =
+                request.getArrivalTime() == null ? LocalDateTime.now() : request.getArrivalTime();
+        LocalDateTime startDateTime = arrivalDateTime.minus(Duration.ofHours(2));
         TMapTransitRoutesSubRequest tmapRequest = TMapTransitRoutesSubRequest.of(
                 request.getFrom().getLat(),
                 request.getFrom().getLng(),
