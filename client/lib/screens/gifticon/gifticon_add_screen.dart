@@ -1,7 +1,7 @@
 import 'package:client/screens/gifticon/service/gifticon_api.dart';
 import 'package:client/screens/gifticon/service/merged_field.dart';
 import 'package:client/screens/gifticon/util/ocr_parser/recognize_template.dart';
-import 'package:client/screens/gifticon/util/ocr_sample_parser.dart';
+import 'package:client/screens/gifticon/util/ocr_parser/parsers/ocr_default_parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
@@ -18,7 +18,8 @@ class GifticonAddScreen extends StatefulWidget {
   final List<MergedField> ocrFields;
   final String? selectedImagePath;
 
-  const GifticonAddScreen({super.key, required this.ocrFields, this.selectedImagePath});
+  // const GifticonAddScreen({super.key, required this.ocrFields, this.selectedImagePath});
+  const GifticonAddScreen({Key? key, required this.ocrFields, this.selectedImagePath}) : super(key: key);
 
   @override
   State<GifticonAddScreen> createState() => _GifticonAddScreenState();

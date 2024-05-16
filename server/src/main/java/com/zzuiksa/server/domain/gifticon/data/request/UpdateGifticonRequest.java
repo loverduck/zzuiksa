@@ -1,22 +1,20 @@
 package com.zzuiksa.server.domain.gifticon.data.request;
 
-import com.zzuiksa.server.domain.gifticon.constant.IsUsed;
+import java.time.LocalDate;
 
+import com.zzuiksa.server.domain.gifticon.constant.IsUsed;
 import com.zzuiksa.server.domain.gifticon.entity.Gifticon;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -28,8 +26,7 @@ public class UpdateGifticonRequest {
 
     @Schema(description = "상품명")
     @NotBlank
-    @Min(1)
-    @Max(100)
+    @Size(max = 100)
     private String name;
 
     @Schema(description = "이미지주소")

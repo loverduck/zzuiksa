@@ -47,5 +47,9 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSPhotoLibraryUsageDescription</key>
+        <string>Your custom message goes here</string>
+        <key>NSCameraUsageDescription</key>
+        <string>Your custom message goes here</string>
 	</dict>
 </plist>

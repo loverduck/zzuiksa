@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:17
+FROM azul/zulu-openjdk-alpine:21
 
 ENV TZ Asia/Seoul
 ADD ./build/libs/*.jar app.jar

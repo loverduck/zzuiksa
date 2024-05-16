@@ -30,7 +30,7 @@ public class ScheduleRepositoryQImpl implements ScheduleRepositoryQ {
         return queryFactory.select(getQScheduleSummaryDto())
                 .from(schedule)
                 .where(schedule.member.eq(member))
-                .where(schedule.startDate.before(to).and(schedule.endDate.after(from)))
+                .where(schedule.startDate.loe(to).and(schedule.endDate.goe(from)))
                 .fetch();
     }
 
@@ -43,6 +43,25 @@ public class ScheduleRepositoryQImpl implements ScheduleRepositoryQ {
                 .where(schedule.startDate.before(to).and(schedule.endDate.after(from)))
                 .where(schedule.category.id.eq(category.getId()))
                 .fetch();
+    }
+
+    @Override
+    public Long countByMemberAndDateEqual(Member member, LocalDate endDate) {
+        return queryFactory.select(schedule.count())
+                .from(schedule)
+                .where(schedule.member.eq(member))
+                .where(schedule.endDate.eq(endDate))
+                .fetchOne();
+    }
+
+    @Override
+    public Long countByMemberAndDateEqualAndIsDone(Member member, LocalDate endDate) {
+        return queryFactory.select(schedule.count())
+                .from(schedule)
+                .where(schedule.member.eq(member))
+                .where(schedule.endDate.eq(endDate))
+                .where(schedule.isDone.isTrue())
+                .fetchOne();
     }
 
     @Override
@@ -124,6 +143,16 @@ public class ScheduleRepositoryQImpl implements ScheduleRepositoryQ {
             totalCount.setDone(doneCount.getDone());
         }
         return total;
+    }
+
+    @Override
+    public List<ScheduleSummaryDto> findAllSummaryByMemberAndDateAndIsNotDone(Member member, LocalDate date) {
+        return queryFactory.select(getQScheduleSummaryDto())
+                .from(schedule)
+                .where(schedule.member.eq(member))
+                .where(schedule.startDate.loe(date).and(schedule.endDate.goe(date)))
+                .where(schedule.isDone.isFalse())
+                .fetch();
     }
 
     private QScheduleSummaryDto getQScheduleSummaryDto() {

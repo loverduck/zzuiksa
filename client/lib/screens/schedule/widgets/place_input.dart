@@ -1,6 +1,7 @@
 import 'package:client/constants.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/service/schedule_api.dart';
+import 'package:client/screens/schedule/utils/second_contvertor.dart';
 import 'package:client/screens/schedule/widgets/input_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +45,11 @@ class _PlaceInputState extends State<PlaceInput> {
   String transportTimeText = "";
   String errorMsg = "";
 
-  ButtonStyle placeInputtyle = ElevatedButton.styleFrom(
+  ButtonStyle placeInputStyle = ElevatedButton.styleFrom(
     padding: const EdgeInsets.symmetric(horizontal: 32.0),
     elevation: 0,
     backgroundColor: Constants.main200.withOpacity(0.5),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
   );
 
   void moveToSearch(String type) async {
@@ -76,6 +77,12 @@ class _PlaceInputState extends State<PlaceInput> {
   }
 
   void getTransport(String item) async {
+    setState(() {
+      transportTimeText = "계산 중입니다";
+    });
+
+    late String time;
+    late int seconds;
     _selectedType = item;
     widget.setType(item);
 
@@ -85,13 +92,15 @@ class _PlaceInputState extends State<PlaceInput> {
         _toPlace.name!.isNotEmpty) {
       routeRes = await getRoute(_selectedType, _fromPlace, _toPlace);
       if (routeRes?["status"] == "success") {
-        int time = routeRes?["data"]["time"];
-        transportTimeText = (time / 60).round().toString();
+        seconds = routeRes?["data"]["time"];
+        time = secondsConvertor(seconds);
       } else {
         errorMsg = "잠시 후 다시 시도해주세요.";
       }
 
-      setState(() {});
+      setState(() {
+        transportTimeText = "약 $time";
+      });
     } else {
       setState(() {
         errorMsg = "잠시 후 다시 시도해주세요.";
@@ -165,6 +174,9 @@ class _PlaceInputState extends State<PlaceInput> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(
+                height: 10.0,
+              ),
               const Divider(
                 thickness: 1.0,
               ),
@@ -174,25 +186,22 @@ class _PlaceInputState extends State<PlaceInput> {
                 children: transports.entries.map((item) {
                   return ElevatedButton(
                     style: item.key == widget.selectedType
-                        ? placeInputtyle.copyWith(
+                        ? placeInputStyle.copyWith(
                             backgroundColor: const MaterialStatePropertyAll(
                                 Constants.main100),
                             side: const MaterialStatePropertyAll(
                               BorderSide(
                                 color: Constants.main400,
-                                width: 3.0,
+                                width: 2.0,
                               ),
                             ),
                           )
-                        : placeInputtyle,
-                    onPressed: () => {getTransport(item.key)},
+                        : placeInputStyle,
+                    onPressed: () => getTransport(item.key),
                     child: Text(
                       item.value,
                       style: TextStyle(
                         fontSize: 24.0,
-                        fontWeight: item.key == widget.selectedType
-                            ? FontWeight.bold
-                            : FontWeight.normal,
                         color: item.key == widget.selectedType
                             ? Constants.main400
                             : Constants.main500,
@@ -206,7 +215,7 @@ class _PlaceInputState extends State<PlaceInput> {
               ),
               errorMsg.isNotEmpty
                   ? Text(
-                      "예상 이동 시간: 약 $transportTimeText분",
+                      "예상 이동 시간: $transportTimeText",
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         fontSize: 20.0,

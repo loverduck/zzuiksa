@@ -3,6 +3,7 @@ import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
 import 'package:client/screens/schedule/service/schedule_api.dart';
 import 'package:client/screens/schedule/widgets/detail/detail_container.dart';
+import 'package:client/screens/schedule/widgets/snackbar_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -61,8 +62,47 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
     );
   }
 
-  void _getSchedule(int scheduleId) async {
-    print("api 연결");
+  Future<void> deleteConfirmDialog(BuildContext context, int scheduleId) {
+    return showDialog<void>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("해당 일정을 삭제하시겠습니까?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text(
+                  "취소",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  _deleteSchedule(context);
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text(
+                  "삭제하기",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  void _getSchedule(int scheduleId, BuildContext context) async {
     Map<String, dynamic> res = await getSchedule(scheduleId);
 
     if (res['status'] == 'success') {
@@ -70,9 +110,32 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
         schedule = Schedule.fromJson(res['data']);
         schedule.scheduleId = scheduleId;
       });
-      print("schedule: $schedule");
     } else {
-      print("다시 시도해주세요");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: SnackBarText(
+            message: "로딩에 실패했습니다. 잠시 후 다시 시도해주세요",
+          ),
+        ),
+      );
+    }
+  }
+
+  void _deleteSchedule(BuildContext context) async {
+    Map<String, dynamic> res = await deleteSchedule(scheduleId);
+
+    if (!mounted) return;
+
+    if (res['status'] == 'success') {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: SnackBarText(
+            message: "일정 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.",
+          ),
+        ),
+      );
     }
   }
 
@@ -85,13 +148,14 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
       if (ModalRoute.of(context)?.settings.arguments != null) {
         final args = ModalRoute.of(context)?.settings.arguments as Map;
         scheduleId = args['scheduleId'];
-        _getSchedule(scheduleId);
+        _getSchedule(scheduleId, context);
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    print("detail: $schedule");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.main200,
@@ -122,9 +186,9 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                       width: 16.0,
                     ),
                     Text(
-                      "${schedule.title}",
+                      schedule.title == null ? "" : "${schedule.title}",
                       style: const TextStyle(
-                        fontSize: 24.0,
+                        fontSize: fontSizeMedium,
                       ),
                     ),
                   ],
@@ -137,10 +201,12 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                   children: [
                     const Icon(Icons.alarm),
                     textMargin,
-                    schedule.startDate != null && schedule.startTime != null
+                    schedule.startDate != null
                         ? DateTimeText(
                             date: "${schedule.startDate}",
-                            time: "${schedule.startTime}")
+                            time: schedule.startTime != null
+                                ? "${schedule.startTime}"
+                                : "00:00:00")
                         : Container(),
                     textMargin,
                     const Icon(
@@ -148,10 +214,12 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                       color: Colors.black54,
                     ),
                     textMargin,
-                    schedule.endDate != null && schedule.endTime != null
+                    schedule.endDate != null
                         ? DateTimeText(
                             date: "${schedule.endDate}",
-                            time: "${schedule.endTime}")
+                            time: schedule.endTime != null
+                                ? "${schedule.endTime}"
+                                : "23:59:00")
                         : Container(),
                   ],
                 ),
@@ -168,10 +236,14 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                       child: const Icon(Icons.replay),
                     ),
                     textMargin,
-                    Text(
-                      "반복 없음",
-                      style: noneTextStyle,
-                    ),
+                    schedule.repeat == null
+                        ? Text(
+                            "반복 없음",
+                            style: noneTextStyle,
+                          )
+                        : RepeatText(
+                            repeat: schedule.repeat!,
+                          ),
                   ],
                 ),
               ),
@@ -182,30 +254,74 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                   children: [
                     const Icon(Icons.notifications_none),
                     textMargin,
-                    Text(
-                      "알림 없음",
-                      style: noneTextStyle,
-                    ),
+                    schedule.alertBefore == null
+                        ? Text(
+                            "알림 없음",
+                            style: noneTextStyle,
+                          )
+                        : Text(
+                            "${schedule.alertBefore}분 전 알림",
+                            style: const TextStyle(fontSize: fontSizeMedium),
+                          ),
                   ],
                 ),
               ),
               containerMargin,
               // 위치
               DetailContainer(
-                child: Row(
+                child: Column(
                   children: [
-                    const Icon(Icons.place_outlined),
-                    textMargin,
-                    Text(
-                      "장소 없음",
-                      style: noneTextStyle,
+                    Row(
+                      children: [
+                        const Icon(Icons.place_outlined),
+                        textMargin,
+                        Row(
+                          children: [
+                            const Text(
+                              "장소: ",
+                              style: TextStyle(
+                                fontSize: fontSizeMedium,
+                              ),
+                            ),
+                            schedule.toPlace != null
+                                ? Text(
+                                    schedule.toPlace!.name!,
+                                    style: const TextStyle(
+                                      fontSize: 24.0,
+                                    ),
+                                  )
+                                : const Text(
+                                    "장소 없음",
+                                    style: TextStyle(
+                                      fontSize: 24.0,
+                                      color: Colors.black45,
+                                    ),
+                                  )
+                          ],
+                        ),
+                      ],
                     ),
+                    schedule.toPlace?.lat != null &&
+                            schedule.toPlace?.lng != null
+                        ? Column(
+                            children: [
+                              const SizedBox(
+                                height: 6.0,
+                              ),
+                              PlaceContainer(place: schedule.toPlace!),
+                              const SizedBox(
+                                height: 10.0,
+                              )
+                            ],
+                          )
+                        : Container(),
                   ],
                 ),
               ),
               containerMargin,
               DetailContainer(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
@@ -218,14 +334,113 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                           ),
                         ),
                       ],
-                    )
+                    ),
+                    const Divider(
+                      thickness: 1.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                      child: schedule.memo == null || schedule.memo!.isEmpty
+                          ? const Text(
+                              "없음",
+                              style: TextStyle(
+                                  fontSize: fontSizeMedium,
+                                  color: Colors.black54),
+                            )
+                          : Text(
+                              schedule.memo!,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                fontSize: fontSizeMedium,
+                                color: Colors.black,
+                              ),
+                            ),
+                    ),
                   ],
                 ),
               ),
+              containerMargin,
+              GestureDetector(
+                onTap: () => deleteConfirmDialog(context, scheduleId),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 12.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.red, width: 2.0),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: const Text(
+                    "삭제하기",
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+              containerMargin,
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class RepeatText extends StatefulWidget {
+  const RepeatText({super.key, required this.repeat});
+
+  final Repeat repeat;
+
+  @override
+  State<RepeatText> createState() => _RepeatTextState();
+}
+
+class _RepeatTextState extends State<RepeatText> {
+  @override
+  Widget build(BuildContext context) {
+    String text = "${cycleType[widget.repeat.cycle]} ";
+
+    switch (widget.repeat.cycle) {
+      case "MONTHLY":
+      case "DAILY":
+        text += "${widget.repeat.repeatAt}일";
+        break;
+      case "WEEKLY":
+        int weeklyRepeatAt = widget.repeat.repeatAt!;
+        for (int i = 1; i <= 7; i++) {
+          if ((weeklyRepeatAt & (1 << i)) != 0) {
+            text += "${week[i]}";
+          }
+        }
+        break;
+      case "YEARLY":
+        String date = widget.repeat.repeatAt.toString().padLeft(4, "0");
+        text += "${date.substring(0, 2)}월 ${date.substring(2, 4)}일";
+        break;
+    }
+
+    text += "마다 반복";
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: fontSizeMedium,
+          ),
+        ),
+        widget.repeat.endDate != null
+            ? Text(
+                "${widget.repeat.endDate}까지",
+                style: const TextStyle(
+                    fontSize: fontSizeSmall, color: Colors.black54),
+              )
+            : Container()
+      ],
     );
   }
 }
@@ -249,15 +464,14 @@ class DateTimeText extends StatefulWidget {
 class _DateTimeTextState extends State<DateTimeText> {
   @override
   Widget build(BuildContext context) {
-    print(widget.schedule);
     DateTime? parsedTime;
 
     try {
       parsedTime = DateFormat("H:mm:ss").parse(widget.time);
     } catch (e) {
-      print("schedule detail 시간 파싱 실패");
       parsedTime = DateTime.now();
     }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -277,6 +491,47 @@ class _DateTimeTextState extends State<DateTimeText> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class PlaceContainer extends StatefulWidget {
+  const PlaceContainer({super.key, required this.place});
+
+  final Place place;
+
+  @override
+  State<PlaceContainer> createState() => _PlaceContainerState();
+}
+
+class _PlaceContainerState extends State<PlaceContainer> {
+  late KakaoMapController mapController;
+  List<Marker> marker = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.place.lat != null && widget.place.lng != null) {
+      marker.add(Marker(
+          markerId: '0', latLng: LatLng(widget.place.lat!, widget.place.lng!)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final LatLng latLng = LatLng(widget.place.lat!, widget.place.lng!);
+
+    return SizedBox(
+      height: 200.0,
+      child: KakaoMap(
+        onMapCreated: (controller) {
+          mapController = controller;
+          mapController.addMarker(markers: marker);
+          mapController.setDraggable(false);
+        },
+        center: latLng,
+        markers: marker,
+      ),
     );
   }
 }

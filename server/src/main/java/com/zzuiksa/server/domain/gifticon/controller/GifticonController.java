@@ -1,5 +1,7 @@
 package com.zzuiksa.server.domain.gifticon.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +24,10 @@ import com.zzuiksa.server.domain.gifticon.service.GifticonService;
 import com.zzuiksa.server.domain.member.entity.Member;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import java.util.List;
 
 @Tag(name = "Gifticon", description = "기프티콘 API")
 @RestController
@@ -76,7 +77,8 @@ public class GifticonController {
             security = {@SecurityRequirement(name = "bearer-key")}
     )
     @PatchMapping("/{gifticonId}")
-    public UpdateGifticonResponse update(@PathVariable Long gifticonId, @Valid @RequestBody UpdateGifticonRequest request,
+    public UpdateGifticonResponse update(@PathVariable Long gifticonId,
+            @Valid @RequestBody UpdateGifticonRequest request,
             @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
         return gifticonService.update(gifticonId, request, member);
@@ -88,10 +90,11 @@ public class GifticonController {
             security = {@SecurityRequirement(name = "bearer-key")}
     )
     @DeleteMapping("/{gifticonId}")
-    public DeleteGifticonResponse delete(@PathVariable Long gifticonId, @AuthenticationPrincipal MemberDetail memberDetail) {
+    public DeleteGifticonResponse delete(@PathVariable Long gifticonId,
+            @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
         return gifticonService.delete(gifticonId, member);
     }
-    
+
     //@GetMapping("/nearby") 사용처 목록 불러오기
 }

@@ -1,6 +1,7 @@
 import 'package:client/service/member_api.dart';
 import 'package:client/screens/profile/service/place_api.dart';
 import 'package:client/constants.dart';
+import 'package:client/widgets/place_search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,7 +13,6 @@ import 'screens/login/login_check_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/schedule/schedule_calendar_screen.dart';
 import 'screens/schedule/schedule_detail_screen.dart';
-import 'screens/schedule/schedule_place_search_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'screens/gifticon/gifticon_list_screen.dart';
 import 'screens/gifticon/gifticon_add_screen.dart';
@@ -73,17 +73,20 @@ class MyApp extends StatelessWidget {
         '/gifticon': (context) => const GifticonListScreen(),
         '/gifticon_select_screen': (context) => const GifticonSelectScreen(),
         '/gifticon_add_screen': (context) => GifticonAddScreen(
-          ocrFields: ModalRoute.of(context)?.settings.arguments as List<MergedField>,
-        ),
+              ocrFields: ModalRoute.of(context)!.settings.arguments
+                  as List<MergedField>,
+              selectedImagePath:
+                  ModalRoute.of(context)!.settings.arguments as String,
+            ),
         '/gifticon_detail_screen': (context) => GifticonDetailScreen(
-          gifticonId: ModalRoute.of(context)!.settings.arguments as int,
-        ),
+              gifticonId: ModalRoute.of(context)!.settings.arguments as int,
+            ),
         '/gifticon_map_screen': (context) => GifticonMapScreen(
-          gifticonId: ModalRoute.of(context)!.settings.arguments as int,
-        ),
+              gifticonId: ModalRoute.of(context)!.settings.arguments as int,
+            ),
         '/gifticon_update_screen': (context) => GifticonUpdateScreen(
-          gifticon: ModalRoute.of(context)!.settings.arguments as Gifticon,
-        ),
+              gifticon: ModalRoute.of(context)!.settings.arguments as Gifticon,
+            ),
       },
       home: LoginScreen(),
     );
