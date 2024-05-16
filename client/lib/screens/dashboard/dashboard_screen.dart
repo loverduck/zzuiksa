@@ -1,3 +1,4 @@
+import 'package:client/screens/dashboard/widgets/timeline/timeline_api.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/today.dart';
@@ -44,6 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Zzuiksa(),
               ],
             )),
+        const TimelineApi(),
         const Timeline(),
         const SizedBox(height: 32)
       ],

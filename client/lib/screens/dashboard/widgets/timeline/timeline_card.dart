@@ -1,13 +1,11 @@
-import 'package:client/screens/dashboard/widgets/timeline/complete_button.dart';
+import 'package:client/screens/dashboard/service/dashboard_api.dart';
+import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
 
 class TimelineCard extends StatelessWidget {
   const TimelineCard({
-    required this.title,
-    required this.category,
-    required this.startTime,
-    this.endTime,
+    required this.schedule,
     this.alarm,
     this.comment,
     // required this.place,
@@ -16,10 +14,7 @@ class TimelineCard extends StatelessWidget {
     super.key,
   });
 
-  final String title;
-  final String category;
-  final String startTime;
-  final String? endTime;
+  final Schedule schedule;
   final bool? alarm;
   final String? comment;
   // final String place;
@@ -30,26 +25,12 @@ class TimelineCard extends StatelessWidget {
   Widget build(context) {
     final textTheme = Theme.of(context).textTheme;
 
-    Color bgColor = Constants.green300;
-    switch (category) {
-      case '공부':
-        bgColor = Constants.violet300;
-        break;
-      case '업무':
-        bgColor = Constants.blue300;
-        break;
-      case '기념일':
-        bgColor = Constants.pink200;
-      default:
-        break;
-    }
-
     return Container(
       width: 340,
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 8),
       decoration: BoxDecoration(
-          color: bgColor,
+          color: categoryType[schedule.categoryId]![1],
           border: Border.all(color: Constants.main600, width: 2.5),
           borderRadius: BorderRadius.circular(30)),
       child: Column(
@@ -59,15 +40,16 @@ class TimelineCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(title, style: textTheme.displayMedium),
-                Text(category, style: textTheme.displaySmall),
+                Text(schedule.title!, style: textTheme.displayMedium),
+                Text(categoryType[schedule.categoryId]![0],
+                    style: textTheme.displaySmall),
               ]),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children:[
+                Row(children: [
                   Icon(Icons.location_pin),
                   Text(' 올리브영'),
                 ]),
-                Row(children:[
+                Row(children: [
                   Icon(Icons.sunny),
                   Text(' 18℃'),
                 ]),
@@ -77,8 +59,9 @@ class TimelineCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(startTime, style: textTheme.bodyLarge),
-              if (endTime != null) Text(endTime!, style: textTheme.bodyLarge),
+              Text(schedule.startTime!, style: textTheme.bodyLarge),
+              if (schedule.endTime != null)
+                Text(schedule.endTime!, style: textTheme.bodyLarge),
             ],
           ),
           if (alarm != null && comment != null)
@@ -89,7 +72,22 @@ class TimelineCard extends StatelessWidget {
                   alarm == true ? Icon(Icons.alarm_on) : Icon(Icons.alarm_off),
                   Text(' $comment', style: textTheme.displaySmall),
                 ]),
-                CompleteButton()
+                ElevatedButton(
+                    onPressed: () {
+                      print('complete button clicked');
+                      endSchedule(schedule);
+                    },
+                    style: ButtonStyle(
+                      fixedSize: MaterialStatePropertyAll(Size(80, 14)),
+                      backgroundColor:
+                          MaterialStateProperty.all(Constants.main100),
+                      side: MaterialStateProperty.all(
+                          BorderSide(width: 2.0, color: Constants.main600)),
+                    ),
+                    child: Text(
+                      '완료!',
+                      style: textTheme.displaySmall,
+                    ))
               ],
             ),
         ],

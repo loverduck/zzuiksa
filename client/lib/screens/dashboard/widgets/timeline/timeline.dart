@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'timeline_card.dart';
+import 'package:client/screens/schedule/model/schedule_model.dart';
+import 'package:client/screens/schedule/schedule_form_screen.dart';
 
 class Timeline extends StatefulWidget {
   const Timeline({super.key});
@@ -8,13 +10,42 @@ class Timeline extends StatefulWidget {
 }
 
 class _TimelineState extends State<Timeline> {
+  final scheduleList = [
+    {
+      "scheduleId": 1,
+      "title": "내 생일",
+      "categoryId": 3,
+      "startTime": "하루 종일",
+      // "preferenceChoices": ['A','B',],
+    },
+    {
+      "scheduleId": 2,
+      "title": "알고리즘 스터디",
+      "categoryId": 4,
+      "startTime": "6:00 PM",
+      "endTime": "7:00 PM",
+    },
+    {
+      "scheduleId": 3,
+      "title": "비타민 C 젤리",
+      "categoryId": 1,
+      "startTime": "7:20 PM",
+    },
+    {
+      "title": "야근 ㅜㅜ",
+      "categoryId": 2,
+      "startTime": "10:00 PM",
+      "endTime": "12:00 PM",
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
         Padding(
-            padding: EdgeInsets.only(left: 48, right: 56, top: 20, bottom: 20),
+            padding: EdgeInsets.only(left: 48, right: 56, top: 20),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -23,36 +54,27 @@ class _TimelineState extends State<Timeline> {
                       icon: Icon(Icons.add_circle_outline),
                       iconSize: 32,
                       onPressed: () {
-                        showDialog<void>(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('준비 중', style: textTheme.displayMedium),
-                              content: Text('준비 중인 기능이에요!', style: textTheme.displaySmall),
-                            );
-                          },
-                        );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ScheduleFormScreen(
+                                    selectedDay: DateTime.now())));
                       }),
                 ])),
-        const TimelineCard(
-          title: '내 생일',
-          category: '기념일',
-          startTime: '하루 종일',
-          // preferenceChoices: ['A','B',],
-        ),
-        const TimelineCard(
-            title: '알고리즘 스터디',
-            category: '공부',
-            startTime: '6:00 PM',
-            endTime: '7:00 PM',
-            alarm: true,
-            comment: '슬슬 출발할 시간이에요!'),
-        const TimelineCard(
-            title: '비타민 C 젤리',
-            category: '일정',
-            startTime: '7:20 PM',
-            alarm: false,
-            comment: '아직 여유로워요!'),
+        Container(
+            width: 340,
+            height: scheduleList.length * 220,
+            child: ListView.builder(
+                itemCount: scheduleList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Schedule schedule = Schedule.fromJson(scheduleList[index]);
+                  print(schedule.toString());
+                  return TimelineCard(
+                    schedule: schedule,
+                      alarm: true,
+                      comment: "슬슬 출발할 시간이에요!" //아직 여유로워요!
+                      );
+                })),
       ],
     );
   }

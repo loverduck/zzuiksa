@@ -21,6 +21,7 @@ class _SearchPlaceState extends State<SearchPlace> {
   TextEditingController searchEditingController = TextEditingController();
   AutoScrollController scrollController = AutoScrollController();
   late Place? selectedPlace;
+  late String? selectedAddress;
 
   // 사용자의 입력이 없는 걸 판단하기 위한 타이머
   Timer? searchTimer;
@@ -54,6 +55,7 @@ class _SearchPlaceState extends State<SearchPlace> {
   void onSelectPlaceHandler(place) {
     selectedPlace = Place(
         name: place.placeName,
+        address: place.addressName,
         lat: double.parse(place.y!),
         lng: double.parse(place.x!));
   }
@@ -129,7 +131,7 @@ class _SearchPlaceState extends State<SearchPlace> {
                 iconSize: 32,
                 onPressed: () {
                   print('complete button clicked');
-                  provider.createPlaceInfo(selectedPlace!); //exception 발생 (status code 400)
+                  provider.createPlaceInfo(selectedPlace!);
                   Navigator.pop(context);
                 },
               )
