@@ -70,16 +70,6 @@ public class DashboardService {
 
         voidCompletableFuture.stream().forEach(CompletableFuture::join);
         return todayScheduleSummaries;
-        // return todayScheduleSummaries.stream()
-        //         .map(schedule -> CompletableFuture.supplyAsync(() -> {
-        //             WeatherInfoDto weatherInfo = getWeatherOfSchedule(schedule, date);
-        //             return TodaySummaryResponse.TodayScheduleSummaryDto.of(schedule, weatherInfo);
-        //         }, executor))
-        //         .toList()
-        //         .stream()
-        //         .map(CompletableFuture::join)
-        //         .sorted(getComparator())
-        //         .toList();
     }
 
     private Comparator<TodaySummaryResponse.TodayScheduleSummaryDto> getComparator() {
