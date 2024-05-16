@@ -15,7 +15,7 @@ import 'screens/gifticon/gifticon_list_screen.dart';
 import 'screens/gifticon/gifticon_add_form_screen.dart';
 import 'screens/gifticon/gifticon_detail_screen.dart';
 import 'screens/gifticon/gifticon_select_screen.dart';
-import 'screens/gifticon/gifticon_update_screen.dart';
+import 'screens/gifticon/gifticon_update_form_screen.dart';
 import 'screens/gifticon/gifticon_map_screen.dart';
 import 'screens/gifticon/service/merged_field.dart';
 import 'screens/gifticon/model/gifticon_model.dart';
