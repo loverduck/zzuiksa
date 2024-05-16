@@ -22,16 +22,16 @@ class GifticonUpdateScreen extends StatefulWidget {
 }
 
 class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
-  late Gifticon gifticon;
+  late Gifticon _gifticon;
 
   @override
   void initState() {
     super.initState();
-    gifticon = widget.gifticon;
+    _gifticon = widget.gifticon;
   }
 
   Future<void> updateGifticon() async {
-    if (gifticon.id == null) {
+    if (_gifticon.id == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("유효한 기프티콘 ID가 없습니다."),
         backgroundColor: Colors.red,
@@ -40,7 +40,7 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
     }
 
     try {
-      Gifticon updatedGifticon = await patchGifticon(gifticon.id!, gifticon);
+      Gifticon updatedGifticon = await patchGifticon(_gifticon.id!, _gifticon);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("기프티콘 정보가 성공적으로 수정되었습니다."),
       ));
@@ -55,6 +55,8 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -66,7 +68,12 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
         backgroundColor: Constants.main200,
         actions: [
           TextButton(
-            onPressed: updateGifticon,
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
+                updateGifticon();
+              }
+            },
             child: Text(
               '수정하기',
               style: TextStyle(
@@ -77,14 +84,25 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
           ),
         ],
       ),
+      // body: GifticonForm(
+      //   initialGifticon: gifticon,
+      //   onSubmit: (updatedGifticon) {
+      //     setState(() {
+      //       gifticon = updatedGifticon;
+      //     });
+      //     updateGifticon();
+      //   },
+      // ),
       body: GifticonForm(
-        initialGifticon: gifticon,
+        key: _formKey,
+        initialGifticon: _gifticon,
         onSubmit: (updatedGifticon) {
           setState(() {
-            gifticon = updatedGifticon;
+            _gifticon = updatedGifticon;
           });
           updateGifticon();
         },
+        isEdit: true,
       ),
     );
   }
