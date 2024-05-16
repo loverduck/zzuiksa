@@ -90,9 +90,10 @@ class _LoginScreenState extends State<LoginScreen> {
               text: '게스트로 시작',
               color: 100,
               func: () async {
-                if (await guestLogin() == true) {
-                  Navigator.pushNamed(
-                      context, '/home'); // 로그인 이후 서비스 화면으로 이동
+                if (userInfo != null) {
+                  Navigator.pushNamed(context, '/home');
+                } else if (await guestLogin() == true) {
+                  Navigator.pushNamed(context, '/home');
                 } else {
                   print('로그인 실패');
                 }

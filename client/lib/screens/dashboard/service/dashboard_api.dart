@@ -27,8 +27,8 @@ Future<dynamic> getTimeline() async {
 
     if (res.statusCode == 200) {
       print('get timeline success');
-      Map<String, dynamic> json = jsonDecode(res.body);
-      Timeline timeline = Timeline.fromJson(json['data']);
+      Map<String, dynamic> resbody = json.decode(utf8.decode(res.bodyBytes));
+      Timeline timeline = Timeline.fromJson(resbody['data']);
       return timeline;
     } else {
       throw Exception('get timeline failed statusCode: ${res.statusCode}');
