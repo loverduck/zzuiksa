@@ -1,6 +1,7 @@
 import 'package:client/constants.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/service/schedule_api.dart';
+import 'package:client/screens/schedule/utils/second_contvertor.dart';
 import 'package:client/screens/schedule/widgets/input_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +77,12 @@ class _PlaceInputState extends State<PlaceInput> {
   }
 
   void getTransport(String item) async {
+    setState(() {
+      transportTimeText = "계산 중입니다";
+    });
+
+    late String time;
+    late int seconds;
     _selectedType = item;
     widget.setType(item);
 
@@ -85,13 +92,15 @@ class _PlaceInputState extends State<PlaceInput> {
         _toPlace.name!.isNotEmpty) {
       routeRes = await getRoute(_selectedType, _fromPlace, _toPlace);
       if (routeRes?["status"] == "success") {
-        int time = routeRes?["data"]["time"];
-        transportTimeText = (time / 60).round().toString();
+        seconds = routeRes?["data"]["time"];
+        time = secondsConvertor(seconds);
       } else {
         errorMsg = "잠시 후 다시 시도해주세요.";
       }
 
-      setState(() {});
+      setState(() {
+        transportTimeText = "약 $time";
+      });
     } else {
       setState(() {
         errorMsg = "잠시 후 다시 시도해주세요.";
@@ -206,7 +215,7 @@ class _PlaceInputState extends State<PlaceInput> {
               ),
               errorMsg.isNotEmpty
                   ? Text(
-                      "예상 이동 시간: 약 $transportTimeText분",
+                      "예상 이동 시간: $transportTimeText",
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         fontSize: 20.0,

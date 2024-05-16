@@ -22,6 +22,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? selectedDay;
   DateTime focusedDay = DateTime.now();
   Map<DateTime, List<Schedule>> monthSchedules = {};
+  late List<Schedule> selectedDaySchedules;
   TextEditingController scheduleSentenceEditController =
       TextEditingController();
 
@@ -104,9 +105,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       if (json["status"] == "success") {
         List<dynamic> jsonList = json["data"];
+        print("json: $jsonList");
         scheduleList = jsonList.map((e) {
           return Schedule.fromJson(e);
         }).toList();
+
         for (Schedule schedule in scheduleList) {
           DateTime startDate = DateTime.parse(schedule.startDate!);
           DateTime endDate = DateTime.parse(schedule.endDate!);
@@ -197,7 +200,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       this.selectedDay = selectedDay;
     });
 
-    List<Schedule> selectedDaySchedules = monthSchedules[selectedDay] ?? [];
+    selectedDaySchedules = monthSchedules[selectedDay] ?? [];
 
     showDialog(
       context: context,
@@ -234,48 +237,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           ...selectedDaySchedules.map((Schedule schedule) {
                             return GestureDetector(
                               onTap: () => moveToDetail(schedule.scheduleId!),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 6.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        border: Border.all(
-                                          color: Colors.black,
-                                          width: 1.0,
-                                        ),
-                                        color: categoryType[
-                                                schedule.categoryId]![1]
-                                            .withOpacity(0.5)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          categoryType[schedule.categoryId]![0],
-                                          style: const TextStyle(
-                                            fontSize: 18.0,
-                                            height: 1.0,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                        Text(
-                                          schedule.title!,
-                                          style: const TextStyle(
-                                            fontSize: 24.0,
-                                            height: 1.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 8.0,
-                                  )
-                                ],
+                              child: ScheduleContainer(
+                                schedule: schedule,
+                                monthSchedules: monthSchedules,
+                                selectedDay: selectedDay,
                               ),
                             );
                           })
@@ -346,5 +311,136 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
 
     return date.isAtSameMomentAs(selectedDay!);
+  }
+}
+
+class ScheduleContainer extends StatefulWidget {
+  const ScheduleContainer(
+      {super.key,
+      required this.schedule,
+      required this.monthSchedules,
+      required this.selectedDay});
+  final Schedule schedule;
+  final Map<DateTime, List> monthSchedules;
+  final DateTime selectedDay;
+
+  @override
+  State<ScheduleContainer> createState() => _ScheduleContainerState();
+}
+
+class _ScheduleContainerState extends State<ScheduleContainer> {
+  @override
+  Widget build(BuildContext context) {
+    void toggleIsDone(int scheduleId) async {
+      late Schedule schedule;
+      Map<String, dynamic> res = await getSchedule(scheduleId);
+
+      if (res['status'] == 'success') {
+        setState(() {
+          schedule = Schedule.fromJson(res['data']);
+          schedule.scheduleId = scheduleId;
+          schedule.isDone = !schedule.isDone!;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: SnackBarText(
+              message: "로딩에 실패했습니다. 잠시 후 다시 시도해주세요",
+            ),
+          ),
+        );
+      }
+
+      try {
+        res = await patchSchedule(schedule);
+
+        if (res['status'] == 'success') {
+          setState(() {
+            widget.schedule.isDone = schedule.isDone;
+            widget.monthSchedules[widget.selectedDay]!
+                .indexWhere((s) => s.id == schedule.scheduleId);
+          });
+        } else {
+          throw Error();
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: SnackBarText(
+              message: "연결에 실패했습니다. 잠시 후 다시 시도해주세요",
+            ),
+          ),
+        );
+      }
+    }
+
+    return Column(
+      children: [
+        AnimatedOpacity(
+          duration: const Duration(milliseconds: 300),
+          opacity: widget.schedule.isDone! ? 0.7 : 1.0,
+          child: Container(
+            width: double.infinity,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              border: Border.all(
+                color: Colors.black,
+                width: 1.0,
+              ),
+              color:
+                  categoryType[widget.schedule.categoryId]![1].withOpacity(0.5),
+            ),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () => toggleIsDone(widget.schedule.scheduleId!),
+                  child: Container(
+                    width: 28.0,
+                    height: 28.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 1.0,
+                      ),
+                    ),
+                    child: widget.schedule.isDone!
+                        ? const Icon(Icons.check)
+                        : Container(),
+                  ),
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      categoryType[widget.schedule.categoryId]![0],
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        height: 1.0,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    Text(
+                      widget.schedule.title!,
+                      style: const TextStyle(
+                        fontSize: 24.0,
+                        height: 1.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 8.0,
+        )
+      ],
+    );
   }
 }
