@@ -10,7 +10,7 @@ String? token;
 Future<void> getToken() async {
   try {
     dynamic userInfo = await storage.read(key: "login");
-    token = json.decode(userInfo)['accessToken'];
+    token = userInfo;
   } catch (e) {
     print("token error: $e");
   }
