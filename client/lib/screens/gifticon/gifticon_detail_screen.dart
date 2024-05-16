@@ -12,7 +12,7 @@ class GifticonDetailScreen extends StatefulWidget {
     required this.gifticonId,
   });
 
-  final int? gifticonId; // 타입 변경: int -> int?
+  final int? gifticonId;
 
   @override
   State<GifticonDetailScreen> createState() => _GifticonDetailScreenState();
@@ -43,7 +43,7 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
   }
 
   void _showDeleteDialog() {
-    if (widget.gifticonId == null) return;  // ID가 null인 경우 삭제 대화 상자를 표시하지 않음
+    if (widget.gifticonId == null) return;
 
     showDialog(
       context: context,
@@ -65,7 +65,7 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
                   bool deleted = await deleteGifticon(widget.gifticonId!);
                   if (deleted) {
                     Navigator.of(context).pop();
-                    Navigator.of(context).pop();  // 삭제 후 이전 화면으로 이동
+                    Navigator.of(context).pop();
                   }
                 } catch (e) {
                   Navigator.of(context).pop();

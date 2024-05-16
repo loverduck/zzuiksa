@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 
+import '../../utils/file_utils.dart';
+import '../../utils/image_utils.dart';
 import 'gifticon_detail_screen.dart';
 import 'model/gifticon_model.dart';
 import 'widgets/gifticon_form.dart';
@@ -40,6 +42,10 @@ class _GifticonAddScreenState extends State<GifticonAddScreen> {
     try {
       Gifticon createdGifticon = await postGifticon(gifticon);
       if (createdGifticon.id != null) {
+        if (widget.selectedImagePath != null) {
+          final localPath = '${await FileUtils.getFilePath()}/${Uri.parse(widget.selectedImagePath!).pathSegments.last}';
+          await ImageUtils.saveImageToLocal(widget.selectedImagePath!, localPath);
+        }
         Navigator.push(
           context,
           MaterialPageRoute(
