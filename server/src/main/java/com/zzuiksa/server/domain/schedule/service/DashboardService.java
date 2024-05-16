@@ -69,7 +69,7 @@ public class DashboardService {
         });
 
         voidCompletableFuture.stream().forEach(CompletableFuture::join);
-        return todayScheduleSummaries;
+        return todayScheduleSummaries.stream().sorted(getComparator()).toList();
     }
 
     private Comparator<TodaySummaryResponse.TodayScheduleSummaryDto> getComparator() {
