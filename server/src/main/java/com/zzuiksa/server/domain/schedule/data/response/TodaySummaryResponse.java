@@ -69,14 +69,13 @@ public class TodaySummaryResponse {
             Duration diff = Duration.between(arrivedAt, startDateTime);
             if (diff.isNegative()) {
                 return null;
-            }
-
-            if (diff.compareTo(Duration.ofMinutes(20)) > 0) {
-                return "아직 여유로워요!";
             } else if (diff.compareTo(Duration.ofMinutes(20)) <= 0) {
                 return "슬슬 출발해야 할 시간이에요!";
+            } else if (diff.compareTo(Duration.ofMinutes(60)) <= 0) {
+                return "천천히 준비하는 게 좋겠어요!";
+            } else {
+                return "아직 여유로워요!";
             }
-            return null;
         }
     }
 
