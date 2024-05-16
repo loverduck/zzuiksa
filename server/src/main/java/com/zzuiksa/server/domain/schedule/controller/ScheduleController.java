@@ -133,6 +133,11 @@ public class ScheduleController {
         return scheduleService.getCategoryList();
     }
 
+    @Operation(
+            summary = "소요 시간 계산",
+            description = "출발지부터 도착지까지의 소요 시간을 계산합니다.",
+            security = @SecurityRequirement(name = "bearer-key")
+    )
     @PostMapping("/route")
     public RouteTimeResponse getRouteTime(@Valid @RequestBody RouteTimeRequest request) {
         Integer time = routeService.calcRouteTime(request);
