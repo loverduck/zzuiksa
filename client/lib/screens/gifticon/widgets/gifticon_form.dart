@@ -83,12 +83,13 @@ class _GifticonFormState extends State<GifticonForm> {
             value: _gifticon.couponNum,
             onChanged: (value) => _gifticon.couponNum = value,
             isBarcode: true,
+            textStyle: Theme.of(context).textTheme.bodyLarge, // Special text style for barcode
           ),
-
           _buildTextFormField(
             label: '유효기간',
             value: _gifticon.endDate,
             onChanged: (value) => _gifticon.endDate = value,
+            textStyle: Theme.of(context).textTheme.bodyLarge, // Special text style for endDate
           ),
           if (_isAmountVoucher)
             _buildTextFormField(
@@ -118,26 +119,33 @@ class _GifticonFormState extends State<GifticonForm> {
     required Function(String) onChanged,
     TextInputType keyboardType = TextInputType.text,
     bool isBarcode = false,
+    TextStyle? textStyle,
   }) {
-    return TextFormField(
-      initialValue: value,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
-        filled: true,
-        fillColor: Constants.main100,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 30),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),  // Increased vertical spacing
+      child: TextFormField(
+        initialValue: value,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: BorderSide(color: Constants.textColor),
+          ),
+          filled: true,
+          fillColor: Constants.main100,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 30),
+        ),
+        style: textStyle ?? Theme.of(context).textTheme.displayMedium,
+        onChanged: onChanged,
+        keyboardType: keyboardType,
+        validator: (value) {
+          if (isBarcode) {
+            return value != null && value.isNotEmpty ? null : '바코드를 입력해주세요.';
+          } else {
+            return null;
+          }
+        },
       ),
-      style: Theme.of(context).textTheme.bodyLarge,
-      onChanged: onChanged,
-      keyboardType: keyboardType,
-      validator: (value) {
-        if (isBarcode) {
-          return value != null && value.isNotEmpty ? null : '바코드를 입력해주세요.';
-        } else {
-          return null;
-        }
-      },
     );
   }
 }

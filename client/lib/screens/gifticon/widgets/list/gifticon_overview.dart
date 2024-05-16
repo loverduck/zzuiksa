@@ -38,7 +38,7 @@ class _GifticonOverviewState extends State<GifticonOverview> {
                 ),
               ),
             ),
-            SizedBox(width: 20), // 텍스트와 이미지 사이의 간격 조절
+            SizedBox(width: 20),
             Container(
               width: 100,
               height: 120,
