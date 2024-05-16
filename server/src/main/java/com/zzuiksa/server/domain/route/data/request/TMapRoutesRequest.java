@@ -13,20 +13,20 @@ import lombok.NoArgsConstructor;
 public class TMapRoutesRequest {
 
     @NotNull
-    private Float startX;
+    private Double startX;
 
     @NotNull
-    private Float startY;
+    private Double startY;
 
     @NotNull
-    private Float endX;
+    private Double endX;
 
     @NotNull
-    private Float endY;
+    private Double endY;
 
     private Integer totalValue;
 
-    public static TMapRoutesRequest of(float startLat, float startLng, float endLat, float endLng) {
+    public static TMapRoutesRequest of(double startLat, double startLng, double endLat, double endLng) {
         return TMapRoutesRequest.builder()
                 .startX(startLng)
                 .startY(startLat)

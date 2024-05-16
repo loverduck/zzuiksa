@@ -1,14 +1,18 @@
 import 'dart:convert';
+import 'package:client/screens/schedule/widgets/snackbar_text.dart';
+import 'package:client/service/kakao_api.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:client/constants.dart';
 import 'package:client/widgets/custom_button.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'model/login_model.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -55,8 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       );
       if (res.statusCode == 200) {
-        final Login token =
-        Login.fromJson(json.decode(res.body)['data']);
+        final Login token = Login.fromJson(json.decode(res.body)['data']);
 
         await storage.write(
           key: 'login',
@@ -72,6 +75,23 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _kakaoLogin() async {
+    Map<String, dynamic>? res = await kakaoLogin();
+
+    if (!mounted) return;
+
+    if (res?["status"] == "success") {
+      Navigator.pushNamed(context, "/home");
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: SnackBarText(message: "로그인에 실패했습니다. 다시 시도해주세요."),
+        ),
+      );
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,12 +100,11 @@ class _LoginScreenState extends State<LoginScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CustomButton(
-              text: '카카오로 시작',
-              color: 300,
-              func: () {
-                print('kakao login button clicked');
-              }),
-          SizedBox(height: 8),
+            text: '카카오로 시작',
+            color: 300,
+            func: _kakaoLogin,
+          ),
+          const SizedBox(height: 8),
           CustomButton(
               text: '게스트로 시작',
               color: 100,

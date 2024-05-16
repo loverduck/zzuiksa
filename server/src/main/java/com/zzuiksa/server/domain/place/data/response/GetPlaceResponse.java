@@ -26,10 +26,10 @@ public class GetPlaceResponse {
     private String name;
 
     @NotNull
-    private Float lat;
+    private Double lat;
 
     @NotNull
-    private Float lng;
+    private Double lng;
 
     public static GetPlaceResponse from(Place place) {
         return GetPlaceResponse.builder()

@@ -13,16 +13,16 @@ import lombok.NoArgsConstructor;
 public class TMapRoutesPedestrianRequest {
 
     @NotNull
-    private Float startX;
+    private Double startX;
 
     @NotNull
-    private Float startY;
+    private Double startY;
 
     @NotNull
-    private Float endX;
+    private Double endX;
 
     @NotNull
-    private Float endY;
+    private Double endY;
 
     @NotNull
     private String startName;
@@ -30,7 +30,7 @@ public class TMapRoutesPedestrianRequest {
     @NotNull
     private String endName;
 
-    public static TMapRoutesPedestrianRequest of(float startLat, float startLng, float endLat, float endLng) {
+    public static TMapRoutesPedestrianRequest of(double startLat, double startLng, double endLat, double endLng) {
         return TMapRoutesPedestrianRequest.builder()
                 .startX(startLng)
                 .startY(startLat)

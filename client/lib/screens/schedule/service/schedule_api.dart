@@ -10,13 +10,20 @@ String? token;
 Future<void> getToken() async {
   try {
     dynamic userInfo = await storage.read(key: "login");
-    token = json.decode(userInfo)['accessToken'];
+    token = userInfo;
   } catch (e) {
     print("token error: $e");
   }
 }
 
 Future<dynamic> postSchedule(Schedule schedule) async {
+  getToken();
+
+  if (token == null) {
+    print("토큰이 유효하지 않습니다.");
+    return;
+  }
+
   try {
     final res = await http.post(
       Uri.parse("$baseUrl/api/schedules"),
