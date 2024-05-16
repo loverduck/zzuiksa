@@ -87,8 +87,6 @@ Future<dynamic> getSchedule(int scheduleId) async {
 
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
 
-    print("get schedule api: $json");
-
     return json;
   } catch (e) {
     print("get schedule error: $e");
@@ -106,10 +104,27 @@ Future<dynamic> deleteSchedule(int scheduleId) async {
     );
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
 
-    print("delete schedule api: $json");
     return json;
   } catch (e) {
     print("delete schedule error: $e");
+  }
+}
+
+Future<dynamic> patchSchedule(Schedule schedule) async {
+  try {
+    final res = await http.patch(
+      Uri.parse(("$baseUrl/api/schedules/${schedule.scheduleId}")),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(schedule.toJson()),
+    );
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+
+    return json;
+  } catch (e) {
+    print("patch schedule error: $e");
   }
 }
 

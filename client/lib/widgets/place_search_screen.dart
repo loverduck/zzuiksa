@@ -68,7 +68,6 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
           keyword: text,
           y: center.latitude,
           x: center.longitude,
-          radius: 3000,
           sort: SortBy.distance,
         ),
       );
