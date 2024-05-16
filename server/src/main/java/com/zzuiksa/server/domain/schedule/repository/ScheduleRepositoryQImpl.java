@@ -30,7 +30,7 @@ public class ScheduleRepositoryQImpl implements ScheduleRepositoryQ {
         return queryFactory.select(getQScheduleSummaryDto())
                 .from(schedule)
                 .where(schedule.member.eq(member))
-                .where(schedule.startDate.before(to).and(schedule.endDate.after(from)))
+                .where(schedule.startDate.loe(to).and(schedule.endDate.goe(from)))
                 .fetch();
     }
 
