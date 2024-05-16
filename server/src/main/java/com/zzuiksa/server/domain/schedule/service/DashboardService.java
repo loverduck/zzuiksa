@@ -45,9 +45,7 @@ public class DashboardService {
 
         LatLngDto from = LatLngDto.of(lat, lng);
         List<TodaySummaryResponse.TodayScheduleSummaryDto> schedules = getScheduleSummaries(today, from, member);
-        // TODO: 쮝사 한마디 추가
-        String comment = "쮝";
-        return TodaySummaryResponse.of(today, doneScheduleCount, totalScheduleCount, comment, schedules);
+        return TodaySummaryResponse.of(today, doneScheduleCount, totalScheduleCount, schedules);
     }
 
     public List<TodaySummaryResponse.TodayScheduleSummaryDto> getScheduleSummaries(LocalDate date, LatLngDto from,
