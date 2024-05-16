@@ -15,7 +15,7 @@ import 'screens/schedule/schedule_calendar_screen.dart';
 import 'screens/schedule/schedule_detail_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'screens/gifticon/gifticon_list_screen.dart';
-import 'screens/gifticon/gifticon_add_screen.dart';
+import 'screens/gifticon/gifticon_add_form_screen.dart';
 import 'screens/gifticon/gifticon_detail_screen.dart';
 import 'screens/gifticon/gifticon_select_screen.dart';
 import 'screens/gifticon/gifticon_update_screen.dart';

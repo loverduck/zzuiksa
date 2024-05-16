@@ -69,16 +69,49 @@ Future<List<GifticonPreview>> getGifticonList() async {
         'Authorization': 'Bearer $token',
       },
     );
+
     if (res.statusCode == 200) {
-      List<dynamic> jsonData = json.decode(utf8.decode(res.bodyBytes));
-      return jsonData.map((item) => GifticonPreview.fromJson(item)).toList();
+      var responseData = json.decode(utf8.decode(res.bodyBytes));
+      if (responseData is Map<String, dynamic> && responseData.containsKey('data')) {
+        List<dynamic> jsonData = List.from(responseData['data']);
+        return jsonData.map((item) =>
+            GifticonPreview.fromJson(item as Map<String, dynamic>)).toList();
+      } else {
+        throw Exception('Unexpected JSON format');
+      }
     } else {
-      throw Exception('Failed to load gifticon list.');
+      throw Exception('Failed to load gifticon list due to status code ${res.statusCode}');
     }
   } catch (e) {
+    // Print the error to console or handle it as needed
+    print('Error loading gifticon list: $e');
     throw Exception('load gifticon list error: $e');
   }
 }
+
+// Future<List<GifticonPreview>> getGifticonList() async {
+//   const storage = FlutterSecureStorage();
+//   dynamic userInfo = await storage.read(key: 'login');
+//   String token = json.decode(userInfo)['accessToken'];
+//
+//   try {
+//     final res = await http.get(
+//       Uri.parse("$baseUrl/api/gifticons"),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json; charset=UTF-8',
+//         'Authorization': 'Bearer $token',
+//       },
+//     );
+//     if (res.statusCode == 200) {
+//       List<dynamic> jsonData = json.decode(utf8.decode(res.bodyBytes));
+//       return jsonData.map((item) => GifticonPreview.fromJson(item)).toList();
+//     } else {
+//       throw Exception('Failed to load gifticon list.');
+//     }
+//   } catch (e) {
+//     throw Exception('load gifticon list error: $e');
+//   }
+// }
 
 Future<Gifticon> patchGifticon(int gifticonId, Gifticon gifticon) async {
   const storage = FlutterSecureStorage();
