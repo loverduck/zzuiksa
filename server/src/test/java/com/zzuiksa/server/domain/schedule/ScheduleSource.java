@@ -28,11 +28,11 @@ public class ScheduleSource {
     public static final Long alertBefore = 10L;
     public static final String memo = "memo";
     public static final String toPlaceName = "To place";
-    public static final Float toPlaceLat = 123.4f;
-    public static final Float toPlaceLng = 34.5f;
+    public static final Double toPlaceLat = 123.4;
+    public static final Double toPlaceLng = 34.5;
     public static final String fromPlaceName = "From place";
-    public static final Float fromPlaceLat = 132.4f;
-    public static final Float fromPlaceLng = 43.5f;
+    public static final Double fromPlaceLat = 132.4;
+    public static final Double fromPlaceLng = 43.5;
     public static final Boolean isDone = false;
     public static final RoutineCycle repeatCycle = RoutineCycle.WEEKLY;
     public static final LocalDate repeatStartDate = startDate;
