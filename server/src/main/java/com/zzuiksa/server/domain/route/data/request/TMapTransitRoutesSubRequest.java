@@ -37,7 +37,7 @@ public class TMapTransitRoutesSubRequest {
 
     private String searchDttm;
 
-    public static TMapTransitRoutesSubRequest of(float startLat, float startLng, float endLat, float endLng,
+    public static TMapTransitRoutesSubRequest of(double startLat, double startLng, double endLat, double endLng,
             LocalDateTime startDateTime, int count) {
         DateTimeFormatter searchDttmFormatter = DateTimeFormatter.ofPattern("yyyyMMddhhmm");
         return TMapTransitRoutesSubRequest.builder()

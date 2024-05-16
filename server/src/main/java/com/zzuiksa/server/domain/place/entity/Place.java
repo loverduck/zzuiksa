@@ -46,11 +46,11 @@ public class Place extends BaseEntity {
 
     @NotNull
     @Column(nullable = false)
-    private Float lat;
+    private Double lat;
 
     @NotNull
     @Column(nullable = false)
-    private Float lng;
+    private Double lng;
 
     public void setName(String name) {
         if (!Utils.hasTextAndLengthBetween(name, 1, 100)) {
@@ -59,7 +59,7 @@ public class Place extends BaseEntity {
         this.name = name;
     }
 
-    public void setLatLng(@NotNull Float lat, @NotNull Float lng) {
+    public void setLatLng(@NotNull Double lat, @NotNull Double lng) {
         this.lat = lat;
         this.lng = lng;
     }

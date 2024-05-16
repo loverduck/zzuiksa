@@ -292,8 +292,8 @@ public class RoutineTests {
     public void setToPlace_nameAndLatLng_success() {
         // given
         String toPlaceName = "Seoul";
-        float lat = 123.4567f;
-        float lng = 35.79f;
+        double lat = 123.4567;
+        double lng = 35.79;
         Routine routine = new Routine();
 
         // when
@@ -361,8 +361,8 @@ public class RoutineTests {
     public void setFromPlace_nameAndLatLng_success() {
         // given
         String fromPlaceName = "Seoul";
-        float lat = 123.4567f;
-        float lng = 35.79f;
+        double lat = 123.4567;
+        double lng = 35.79;
         Routine routine = new Routine();
 
         // when
