@@ -59,7 +59,7 @@ public class ScheduleSummaryDto {
 
     @QueryProjection
     public ScheduleSummaryDto(Long scheduleId, Long categoryId, String title, LocalDate startDate, LocalDate endDate,
-            LocalTime startTime, LocalTime endTime, String toPlaceName, Float toPlaceLat, Float toPlaceLng,
+            LocalTime startTime, LocalTime endTime, String toPlaceName, Double toPlaceLat, Double toPlaceLng,
             Boolean isDone) {
         this.scheduleId = scheduleId;
         this.categoryId = categoryId;

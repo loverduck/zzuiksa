@@ -28,11 +28,11 @@ public class UpdatePlaceRequest {
 
     @Schema(description = "위도")
     @NotNull
-    private Float lat;
+    private Double lat;
 
     @Schema(description = "경도")
     @NotNull
-    private Float lng;
+    private Double lng;
 
     public Place update(Place place) {
         place.setName(name);

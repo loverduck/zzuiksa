@@ -22,12 +22,12 @@ public class PlaceDto {
     private String name;
 
     @Schema(description = "위도")
-    private Float lat;
+    private Double lat;
 
     @Schema(description = "경도")
-    private Float lng;
+    private Double lng;
 
-    public static PlaceDto of(String name, Float lat, Float lng) {
+    public static PlaceDto of(String name, Double lat, Double lng) {
         return new PlaceDto(name, lat, lng);
     }
 }

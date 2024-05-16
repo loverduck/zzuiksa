@@ -81,20 +81,20 @@ public class Routine extends BaseEntity {
     private String toPlaceName;
 
     @Column(name = "to_lat")
-    private Float toPlaceLat;
+    private Double toPlaceLat;
 
     @Column(name = "to_lng")
-    private Float toPlaceLng;
+    private Double toPlaceLng;
 
     @Size(max = 100)
     @Column(name = "from_place", length = 100)
     private String fromPlaceName;
 
     @Column(name = "from_lat")
-    private Float fromPlaceLat;
+    private Double fromPlaceLat;
 
     @Column(name = "from_lng")
-    private Float fromPlaceLng;
+    private Double fromPlaceLng;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -115,7 +115,7 @@ public class Routine extends BaseEntity {
     @Builder
     Routine(Long id, Member member, Category category, String title, LocalDate startDate, LocalDate endDate,
             LocalTime startTime, LocalTime endTime, Duration alertBefore, String memo, String toPlaceName,
-            Float toPlaceLat, Float toPlaceLng, String fromPlaceName, Float fromPlaceLat, Float fromPlaceLng,
+            Double toPlaceLat, Double toPlaceLng, String fromPlaceName, Double fromPlaceLat, Double fromPlaceLng,
             RoutineCycle repeatCycle, LocalDate repeatStartDate, LocalDate repeatEndDate, Integer repeatAt) {
         this.id = id;
         if (member == null) {
@@ -236,7 +236,7 @@ public class Routine extends BaseEntity {
         this.toPlaceLng = null;
     }
 
-    public void setToPlace(String toPlaceName, float toPlaceLat, float toPlaceLng) {
+    public void setToPlace(String toPlaceName, double toPlaceLat, double toPlaceLng) {
         if (!Utils.hasTextAndLengthBetween(toPlaceName, 1, 100)) {
             throw new IllegalArgumentException("toPlaceName should have text and length between 1 and 100");
         }
@@ -260,7 +260,7 @@ public class Routine extends BaseEntity {
         this.fromPlaceLng = null;
     }
 
-    public void setFromPlace(String fromPlaceName, float fromPlaceLat, float fromPlaceLng) {
+    public void setFromPlace(String fromPlaceName, double fromPlaceLat, double fromPlaceLng) {
         if (!Utils.hasTextAndLengthBetween(fromPlaceName, 1, 100)) {
             throw new IllegalArgumentException("fromPlaceName should have text and length between 1 and 100");
         }

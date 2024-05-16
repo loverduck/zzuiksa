@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 public class LatLngDto {
 
     @NotNull
-    private Float lat;
+    private Double lat;
 
     @NotNull
-    private Float lng;
+    private Double lng;
 
-    public static LatLngDto of(float lat, float lng) {
+    public static LatLngDto of(double lat, double lng) {
         return new LatLngDto(lat, lng);
     }
 }
