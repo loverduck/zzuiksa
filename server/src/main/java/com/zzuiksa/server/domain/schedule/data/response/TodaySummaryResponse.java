@@ -8,6 +8,7 @@ import com.zzuiksa.server.domain.weather.data.WeatherInfoDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Builder
@@ -36,12 +37,16 @@ public class TodaySummaryResponse {
         private ScheduleSummaryDto scheduleSummary;
 
         @Schema(description = "날씨 정보")
+        @Setter
         private WeatherInfoDto weatherInfo;
 
-        public static TodayScheduleSummaryDto of(ScheduleSummaryDto scheduleSummary, WeatherInfoDto weatherInfo) {
+        @Schema(description = "예상 소요 시간")
+        @Setter
+        private Integer estimatedTime;
+
+        public static TodayScheduleSummaryDto of(ScheduleSummaryDto scheduleSummary) {
             return TodayScheduleSummaryDto.builder()
                     .scheduleSummary(scheduleSummary)
-                    .weatherInfo(weatherInfo)
                     .build();
         }
     }
