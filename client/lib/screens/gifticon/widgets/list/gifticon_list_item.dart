@@ -1,6 +1,6 @@
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:io';
 import '../../util/status_stamp.dart';
 
 class GifticonListItem extends StatelessWidget {
@@ -22,8 +22,8 @@ class GifticonListItem extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Image(
-              image: AssetImage(gifticon['url']),
+            Image.file(
+              File(gifticon['url']), // dart:io의 File을 사용
               height: 100,
               width: 100,
               fit: BoxFit.fitWidth,

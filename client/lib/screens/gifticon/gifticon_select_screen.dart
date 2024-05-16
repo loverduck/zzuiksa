@@ -294,7 +294,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../constants.dart';
-import 'gifticon_add_screen.dart';
+import 'gifticon_add_form_screen.dart';
 import 'model/gifticon_ocr_request_model.dart';
 import 'model/gifticon_ocr_response_model.dart';
 import 'service/gifticon_ocr_api.dart';

@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:client/screens/gifticon/service/gifticon_api.dart';
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
 import 'package:client/screens/gifticon/widgets/detail/gifticon_detail_info.dart';
+import 'package:client/utils/image_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
 import 'package:flutter/widgets.dart';
+
+import '../../utils/file_utils.dart';
 
 class GifticonDetailScreen extends StatefulWidget {
   const GifticonDetailScreen({
@@ -39,6 +44,25 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load gifticon: $e')),
       );
+    }
+  }
+
+  Future<Widget> _loadImage() async {
+    if (gifticon?.url != null) {
+      try {
+        File imageFile = await ImageUtils.loadImage(gifticon!.url!);
+        return Image.file(
+          imageFile,
+          height: 150,
+          width: 150,
+          fit: BoxFit.cover,
+        );
+      } catch (e) {
+        print("Failed to load image: $e");
+        return SizedBox.shrink(); // 이미지 로딩 실패 시 빈 위젯 반환
+      }
+    } else {
+      return SizedBox.shrink(); // url이 없는 경우 빈 위젯 반환
     }
   }
 
@@ -138,11 +162,17 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
           padding: EdgeInsets.symmetric(horizontal: 18.0),
           child: Column(
             children: [
-              Image(
-                image: AssetImage(gifticon!.url!),
-                height: 150,
-                width: 150,
-                fit: BoxFit.cover,
+              FutureBuilder<Widget>(
+                future: _loadImage(),
+                builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('이미지 로딩 실패: ${snapshot.error}');
+                  } else {
+                    return snapshot.data ?? SizedBox.shrink();
+                  }
+                },
               ),
               SizedBox(height: 24),
               Container(
