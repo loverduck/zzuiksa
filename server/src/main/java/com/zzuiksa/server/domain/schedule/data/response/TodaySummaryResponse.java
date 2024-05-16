@@ -98,7 +98,7 @@ public class TodaySummaryResponse {
         for (TodayScheduleSummaryDto schedule : schedules) {
             WeatherInfoDto weatherInfo = schedule.getWeatherInfo();
             if (weatherInfo != null) {
-                isTodayRain = isRain(weatherInfo);
+                isTodayRain = isTodayRain || isRain(weatherInfo);
                 minTodayTemp = getMinTodayTemp(weatherInfo, minTodayTemp);
                 maxTodayTemp = getMaxTodayTemp(weatherInfo, maxTodayTemp);
             }
