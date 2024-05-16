@@ -150,9 +150,12 @@ public class ScheduleController {
             security = {@SecurityRequirement(name = "bearer-key")}
     )
     @GetMapping("/summary")
-    public TodaySummaryResponse getTodaySummary(@AuthenticationPrincipal MemberDetail memberDetail) {
+    public TodaySummaryResponse getTodaySummary(
+            @RequestParam(required = false) Double lat,
+            @RequestParam(required = false) Double lng,
+            @AuthenticationPrincipal MemberDetail memberDetail) {
         Member member = memberDetail.getMember();
-        return dashboardService.getTodaySummary(member);
+        return dashboardService.getTodaySummary(lat, lng, member);
     }
 
     @Operation(
