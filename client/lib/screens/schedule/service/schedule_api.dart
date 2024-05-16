@@ -17,6 +17,13 @@ Future<void> getToken() async {
 }
 
 Future<dynamic> postSchedule(Schedule schedule) async {
+  getToken();
+
+  if (token == null) {
+    print("토큰이 유효하지 않습니다.");
+    return;
+  }
+
   try {
     final res = await http.post(
       Uri.parse("$baseUrl/api/schedules"),

@@ -105,7 +105,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       if (json["status"] == "success") {
         List<dynamic> jsonList = json["data"];
-        print("json: $jsonList");
         scheduleList = jsonList.map((e) {
           return Schedule.fromJson(e);
         }).toList();
@@ -358,12 +357,13 @@ class _ScheduleContainerState extends State<ScheduleContainer> {
           setState(() {
             widget.schedule.isDone = schedule.isDone;
             widget.monthSchedules[widget.selectedDay]!
-                .indexWhere((s) => s.id == schedule.scheduleId);
+                .indexWhere((s) => s.scheduleId == schedule.scheduleId);
           });
         } else {
           throw Error();
         }
       } catch (e) {
+        print("patch error: $e");
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: SnackBarText(
