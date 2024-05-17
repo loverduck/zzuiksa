@@ -1,4 +1,5 @@
 import 'package:client/screens/schedule/model/schedule_model.dart';
+import 'package:client/screens/schedule/utils/local_time_convertor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -58,6 +59,7 @@ class _CalendarState extends State<Calendar> {
       lastDay: DateTime(2400),
       daysOfWeekHeight: 30,
       eventLoader: (day) {
+        day = localTimeConvertor(day);
         return widget.monthSchedules[day] ?? [];
       },
       onPageChanged: (day) => widget.onChangeMonth(day),
@@ -218,6 +220,7 @@ class _CalendarState extends State<Calendar> {
 
 // 이벤트 마커 커스텀
 Widget buildEventMarker(DateTime date, List events) {
+  date = localTimeConvertor(date);
   return Padding(
     padding: const EdgeInsets.fromLTRB(0, 28.0, 0, 8.0),
     child: Column(
