@@ -1,16 +1,17 @@
 package com.zzuiksa.server.domain.gifticon.repository;
 
+import java.util.List;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.zzuiksa.server.domain.gifticon.data.response.GifticonPreviewDto;
 import com.zzuiksa.server.domain.gifticon.data.response.QGifticonPreviewDto;
 import com.zzuiksa.server.domain.gifticon.entity.QGifticon;
 import com.zzuiksa.server.domain.member.entity.Member;
+
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 @RequiredArgsConstructor
-public class GifticonRepositoryQImpl implements GifticonRepositoryQ{
+public class GifticonRepositoryQImpl implements GifticonRepositoryQ {
 
     private final JPAQueryFactory queryFactory;
 
@@ -23,7 +24,6 @@ public class GifticonRepositoryQImpl implements GifticonRepositoryQ{
                 .where(gifticon.member.eq(member))
                 .fetch();
     }
-
 
     private QGifticonPreviewDto getQGifticonPreviewDto() {
         return new QGifticonPreviewDto(

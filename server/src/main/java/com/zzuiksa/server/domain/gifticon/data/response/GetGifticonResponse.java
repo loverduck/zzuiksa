@@ -1,17 +1,19 @@
 package com.zzuiksa.server.domain.gifticon.data.response;
 
-import com.zzuiksa.server.domain.gifticon.constant.IsUsed;
+import java.time.LocalDate;
 
+import com.zzuiksa.server.domain.gifticon.constant.IsUsed;
 import com.zzuiksa.server.domain.gifticon.entity.Gifticon;
-import com.zzuiksa.server.domain.place.data.response.GetPlaceResponse;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-
-import java.time.LocalDate;
-import java.util.OptionalInt;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor

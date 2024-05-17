@@ -26,10 +26,10 @@ public class MemberPlaceDto {
     private String name;
 
     @NotNull
-    private Float lat;
+    private Double lat;
 
     @NotNull
-    private Float lng;
+    private Double lng;
 
     public static MemberPlaceDto from(Place place) {
         return MemberPlaceDto.builder()

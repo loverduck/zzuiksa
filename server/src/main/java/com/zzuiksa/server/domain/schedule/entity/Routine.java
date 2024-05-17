@@ -3,8 +3,8 @@ package com.zzuiksa.server.domain.schedule.entity;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,20 +81,20 @@ public class Routine extends BaseEntity {
     private String toPlaceName;
 
     @Column(name = "to_lat")
-    private Float toPlaceLat;
+    private Double toPlaceLat;
 
     @Column(name = "to_lng")
-    private Float toPlaceLng;
+    private Double toPlaceLng;
 
     @Size(max = 100)
     @Column(name = "from_place", length = 100)
     private String fromPlaceName;
 
     @Column(name = "from_lat")
-    private Float fromPlaceLat;
+    private Double fromPlaceLat;
 
     @Column(name = "from_lng")
-    private Float fromPlaceLng;
+    private Double fromPlaceLng;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -115,7 +115,7 @@ public class Routine extends BaseEntity {
     @Builder
     Routine(Long id, Member member, Category category, String title, LocalDate startDate, LocalDate endDate,
             LocalTime startTime, LocalTime endTime, Duration alertBefore, String memo, String toPlaceName,
-            Float toPlaceLat, Float toPlaceLng, String fromPlaceName, Float fromPlaceLat, Float fromPlaceLng,
+            Double toPlaceLat, Double toPlaceLng, String fromPlaceName, Double fromPlaceLat, Double fromPlaceLng,
             RoutineCycle repeatCycle, LocalDate repeatStartDate, LocalDate repeatEndDate, Integer repeatAt) {
         this.id = id;
         if (member == null) {
@@ -236,7 +236,7 @@ public class Routine extends BaseEntity {
         this.toPlaceLng = null;
     }
 
-    public void setToPlace(String toPlaceName, float toPlaceLat, float toPlaceLng) {
+    public void setToPlace(String toPlaceName, double toPlaceLat, double toPlaceLng) {
         if (!Utils.hasTextAndLengthBetween(toPlaceName, 1, 100)) {
             throw new IllegalArgumentException("toPlaceName should have text and length between 1 and 100");
         }
@@ -260,7 +260,7 @@ public class Routine extends BaseEntity {
         this.fromPlaceLng = null;
     }
 
-    public void setFromPlace(String fromPlaceName, float fromPlaceLat, float fromPlaceLng) {
+    public void setFromPlace(String fromPlaceName, double fromPlaceLat, double fromPlaceLng) {
         if (!Utils.hasTextAndLengthBetween(fromPlaceName, 1, 100)) {
             throw new IllegalArgumentException("fromPlaceName should have text and length between 1 and 100");
         }
@@ -286,13 +286,11 @@ public class Routine extends BaseEntity {
             return List.of();
         }
 
-        LocalDateTime scheduleStart = LocalDateTime.of(startDate, startTime);
-        LocalDateTime scheduleEnd = LocalDateTime.of(endDate, endTime);
-        Duration scheduleDuration = Duration.between(scheduleStart, scheduleEnd);
+        Period schedulePeriod = Period.between(startDate, endDate);
 
         List<LocalDate> scheduleDates = getScheduleStartDates(from, to);
         return scheduleDates.stream()
-                .map(scheduleDate -> createScheduleWith(scheduleDate, startTime, scheduleDuration))
+                .map(scheduleDate -> createScheduleWith(scheduleDate, schedulePeriod))
                 .toList();
     }
 
@@ -344,16 +342,12 @@ public class Routine extends BaseEntity {
                 .toList();
     }
 
-    private Schedule createScheduleWith(LocalDate startDate, LocalTime startTime, Duration duration) {
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
-        LocalDateTime endDateTime = startDateTime.plus(duration);
-        LocalDate endDate = endDateTime.toLocalDate();
-        LocalTime endTime = endDateTime.toLocalTime();
-        return createScheduleWith(startDate, endDate, startTime, endTime);
+    private Schedule createScheduleWith(LocalDate startDate, Period period) {
+        LocalDate endDate = startDate.plus(period);
+        return createScheduleWith(startDate, endDate);
     }
 
-    private Schedule createScheduleWith(LocalDate startDate, LocalDate endDate, LocalTime startTime,
-            LocalTime endTime) {
+    private Schedule createScheduleWith(LocalDate startDate, LocalDate endDate) {
         return Schedule.builder()
                 .member(member)
                 .category(category)

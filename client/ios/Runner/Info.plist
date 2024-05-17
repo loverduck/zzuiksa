@@ -47,5 +47,11 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSPhotoLibraryUsageDescription</key>
+        <string>Your custom message goes here</string>
+        <key>NSCameraUsageDescription</key>
+        <string>Your custom message goes here</string>
+        <key>NSDocumentsFolderUsageDescription</key>
+        <string>앱에서 문서 폴더에 접근해 파일을 저장하고 불러오기 위해 필요합니다.</string>
 	</dict>
 </plist>

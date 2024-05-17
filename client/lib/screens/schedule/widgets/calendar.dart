@@ -190,7 +190,7 @@ class _CalendarState extends State<Calendar> {
               color: Colors.white.withOpacity(0.7),
             ),
             child: Transform.translate(
-              offset: const Offset(0, -2),
+              offset: const Offset(0, -4),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
@@ -219,7 +219,7 @@ class _CalendarState extends State<Calendar> {
 // 이벤트 마커 커스텀
 Widget buildEventMarker(DateTime date, List events) {
   return Padding(
-    padding: const EdgeInsets.fromLTRB(0, 30.0, 0, 8.0),
+    padding: const EdgeInsets.fromLTRB(0, 28.0, 0, 8.0),
     child: Column(
       children: [
         ...events.take(3).map((schedule) {
@@ -247,7 +247,7 @@ Widget buildEventMarker(DateTime date, List events) {
                 categoryType[schedule.categoryId]![1],
                 Text(
                   "${schedule.title}",
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.start,
                   style: TextStyle(
                     fontSize: 14.0,
                     decoration: schedule.isDone!
@@ -275,8 +275,8 @@ Widget buildEventMarker(DateTime date, List events) {
                 child: Text(
                   "+${events.length - 3}",
                   style: const TextStyle(
-                    color: Colors.black45,
-                    fontSize: 10.0,
+                    color: Colors.black54,
+                    fontSize: 12.0,
                   ),
                 ),
               ),
@@ -299,7 +299,7 @@ Widget oneDayContainer(Color color, Widget child) {
           scheduleMargin,
           Expanded(
             child: Container(
-              height: 22.0,
+              height: 20.0,
               padding: const EdgeInsets.fromLTRB(4.0, 0, 4.0, 0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4.0),
@@ -324,8 +324,9 @@ Widget startDayContainer(Color color, Widget child) {
         child: Column(
           children: [
             Container(
-              height: 22.0,
-              padding: const EdgeInsets.only(left: 4.0),
+              width: double.infinity,
+              height: 20.0,
+              padding: const EdgeInsets.only(left: 8.0),
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(4.0),
@@ -347,7 +348,7 @@ Widget middleDayContainer(Color color) {
     children: [
       Container(
         width: double.infinity,
-        height: 22.0,
+        height: 20.0,
         decoration: BoxDecoration(
           color: color.withOpacity(0.7),
         ),
@@ -361,13 +362,12 @@ Widget middleDayContainer(Color color) {
 Widget endDayContainer(Color color) {
   return Row(
     children: [
-      scheduleMargin,
       Expanded(
         child: Column(
           children: [
             Container(
-              height: 22.0,
-              padding: const EdgeInsets.fromLTRB(4.0, 0, 4.0, 0),
+              width: double.infinity,
+              height: 20.0,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(4.0),
@@ -380,6 +380,7 @@ Widget endDayContainer(Color color) {
           ],
         ),
       ),
+      scheduleMargin,
     ],
   );
 }

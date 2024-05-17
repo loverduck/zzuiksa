@@ -53,13 +53,13 @@ public class ScheduleSummaryDto {
     @Schema(description = "목적지")
     private PlaceDto toPlace;
 
-    @Schema(description = "출발지")
+    @Schema(description = "완료 여부")
     @NotNull
     private Boolean isDone;
 
     @QueryProjection
     public ScheduleSummaryDto(Long scheduleId, Long categoryId, String title, LocalDate startDate, LocalDate endDate,
-            LocalTime startTime, LocalTime endTime, String toPlaceName, Float toPlaceLat, Float toPlaceLng,
+            LocalTime startTime, LocalTime endTime, String toPlaceName, Double toPlaceLat, Double toPlaceLng,
             Boolean isDone) {
         this.scheduleId = scheduleId;
         this.categoryId = categoryId;

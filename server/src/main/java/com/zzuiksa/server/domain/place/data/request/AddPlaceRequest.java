@@ -1,10 +1,9 @@
 package com.zzuiksa.server.domain.place.data.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,15 +21,14 @@ public class AddPlaceRequest {
 
     @Schema(description = "이름")
     @NotBlank
-    @Min(1)
-    @Max(100)
+    @Size(max = 100)
     private String name;
 
     @Schema(description = "위도")
     @NotNull
-    private Float lat;
+    private Double lat;
 
     @Schema(description = "경도")
     @NotNull
-    private Float lng;
+    private Double lng;
 }

@@ -2,10 +2,6 @@ package com.zzuiksa.server.domain.place.controller;
 
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +23,9 @@ import com.zzuiksa.server.domain.place.data.response.GetPlaceResponse;
 import com.zzuiksa.server.domain.place.data.response.UpdatePlaceResponse;
 import com.zzuiksa.server.domain.place.service.PlaceService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 

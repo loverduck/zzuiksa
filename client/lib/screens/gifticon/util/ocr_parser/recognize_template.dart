@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:client/screens/gifticon/util/ocr_parser/parsers/ocr_default_parser.dart';
 import 'package:client/screens/gifticon/util/ocr_parser/templates/sendB_template.dart';
 import 'package:client/screens/gifticon/util/ocr_parser/parsers/sendB_ocr_parser.dart';
 import 'package:client/screens/gifticon/util/ocr_parser/templates/gsn_template.dart';
@@ -25,12 +26,11 @@ class RecognizeTemplate {
       return SendBOCRParser.parse(ocrText);
     } else if (gsnTemplate.isGsnGifticon(ocrText)) {
       return gsnOCRParser.parse(ocrText);
-    // } else if (syrupTemplate.isSyrupGifticon(ocrText)) {
-    //   return SyrupOCRParser.parse(fields);  // 필드 데이터를 파서에 전달
+      // } else if (syrupTemplate.isSyrupGifticon(ocrText)) {
+      //   return SyrupOCRParser.parse(fields);  // 필드 데이터를 파서에 전달
     } else {
-      // 텍스트가 어떤 템플릿에도 속하지 않는 경우
       print("No template matched for the given OCR text.");
-      return Gifticon();
+      return DefaultOCRParser.parse(ocrText);
     }
   }
 }

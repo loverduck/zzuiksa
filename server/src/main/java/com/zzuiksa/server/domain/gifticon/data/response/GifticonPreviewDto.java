@@ -1,14 +1,18 @@
 package com.zzuiksa.server.domain.gifticon.data.response;
 
+import java.time.LocalDate;
+
 import com.querydsl.core.annotations.QueryProjection;
 import com.zzuiksa.server.domain.gifticon.constant.IsUsed;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-
-import java.time.LocalDate;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor

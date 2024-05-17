@@ -1,4 +1,5 @@
-import 'package:client/screens/gifticon/util/%20imminent_info.dart';
+import 'package:client/screens/gifticon/model/gifticon_preview_model.dart';
+import 'package:client/screens/gifticon/util/imminent_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class GifticonListScreen extends StatefulWidget {
 }
 
 class _GifticonListScreenState extends State<GifticonListScreen> {
-  List<Gifticon> gifticons = [];
+  List<GifticonPreview> gifticons = [];
 
   @override
   void initState() {
@@ -31,10 +32,12 @@ class _GifticonListScreenState extends State<GifticonListScreen> {
 
   Future<void> fetchGifticons() async {
     try {
-      final List<Gifticon> fetchedGifticons = (await getGifticonList()).cast<Gifticon>();
+      final List<GifticonPreview> fetchedGifticons = (await getGifticonList()).cast<GifticonPreview>();
       setState(() {
         gifticons = fetchedGifticons;
       });
+      print("fetchGifticons");
+      print(gifticons);
     } catch (e) {
       throw Exception('Failed to load gifticons: $e');
     }

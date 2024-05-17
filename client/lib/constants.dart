@@ -26,3 +26,20 @@ Map<int, List> categoryType = <int, List>{
   3: ["기념일", Constants.pink300],
   4: ["공부", Constants.violet300],
 };
+
+const Map<String, String> cycleType = {
+  "DAILY": "매일",
+  "WEEKLY": "매주",
+  "MONTHLY": "매월",
+  "YEARLY": "매년",
+};
+
+const Map<int, String> week = {
+  1: "월요일",
+  2: "화요일",
+  3: "수요일",
+  4: "목요일",
+  5: "금요일",
+  6: "토요일",
+  7: "일요일",
+};

@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -39,16 +40,17 @@ public class Place extends BaseEntity {
     private Member member;
 
     @NotBlank
+    @Size(max = 100)
     @Column(length = 100, nullable = false)
     private String name;
 
     @NotNull
     @Column(nullable = false)
-    private Float lat;
+    private Double lat;
 
     @NotNull
     @Column(nullable = false)
-    private Float lng;
+    private Double lng;
 
     public void setName(String name) {
         if (!Utils.hasTextAndLengthBetween(name, 1, 100)) {
@@ -57,7 +59,7 @@ public class Place extends BaseEntity {
         this.name = name;
     }
 
-    public void setLatLng(@NotNull Float lat, @NotNull Float lng) {
+    public void setLatLng(@NotNull Double lat, @NotNull Double lng) {
         this.lat = lat;
         this.lng = lng;
     }

@@ -69,7 +69,7 @@ public class PlaceService {
             throw new CustomException(ErrorCodes.PLACE_FORBIDDEN);
         }
         placeRepository.delete(place);
-        return new DeletePlaceResponse();
+        return new DeletePlaceResponse("Success");
     }
 
     protected Place convertAddPlaceRequestToPlace(AddPlaceRequest request, Member member) {

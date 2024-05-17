@@ -1,5 +1,5 @@
 class Gifticon {
-  int? id;
+  int? gifticonId;
   String? url;
   String? name;
   String? store;
@@ -10,7 +10,7 @@ class Gifticon {
   String? memo;
 
   Gifticon({
-    this.id,
+    this.gifticonId,
     this.url,
     this.name,
     this.store,
@@ -23,7 +23,7 @@ class Gifticon {
 
   factory Gifticon.fromJson(Map<String, dynamic> json) {
     return Gifticon(
-      id: json['gifticonId'],
+      gifticonId: json['gifticonId'],
       url: json['url'],
       name: json['name'],
       store: json['store'],

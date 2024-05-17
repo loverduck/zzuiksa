@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:client/constants.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/widgets/date_time_input.dart';
 import 'package:client/screens/schedule/widgets/input_container.dart';
@@ -26,30 +27,14 @@ class RoutineInput extends StatefulWidget {
   State<RoutineInput> createState() => _RoutineInputState();
 }
 
-const Map<String, String> cycleType = {
-  "DAILY": "매일",
-  "WEEKLY": "매주",
-  "MONTHLY": "매월",
-  "YEARLY": "매년",
-};
-
-const Map<int, String> week = {
-  1: "월요일",
-  2: "화요일",
-  3: "수요일",
-  4: "목요일",
-  5: "금요일",
-  6: "토요일",
-  7: "일요일",
-};
-
 class _RoutineInputState extends State<RoutineInput> {
   String cycle = cycleType.keys.first;
   TextEditingController routineEndController = TextEditingController();
-  TextEditingController dailyRepeatEditingController = TextEditingController();
+  TextEditingController dailyRepeatEditingController =
+      TextEditingController(text: "1");
   Repeat repeat = Repeat(cycle: "DAILY");
   Timer? inputTimer;
-  int weeklyRepeat = 1;
+  int weeklyRepeat = 2;
   int repeatDay = 1;
   int monthlyRepeat = 1;
   List<String> yearlyRepeat =
@@ -105,8 +90,10 @@ class _RoutineInputState extends State<RoutineInput> {
                         setState(() {
                           switch (cycle) {
                             case "DAILY":
-                              repeat.repeatAt =
-                                  int.parse(dailyRepeatEditingController.text);
+                              repeat.repeatAt = int.parse(
+                                  dailyRepeatEditingController.text.isEmpty
+                                      ? "1"
+                                      : dailyRepeatEditingController.text);
                               break;
                             case "WEEKLY":
                               repeat.repeatAt = weeklyRepeat;
@@ -148,12 +135,16 @@ class _RoutineInputState extends State<RoutineInput> {
                                 if (val.isNotEmpty) {setTerm(int.parse(val))}
                               },
                               decoration: const InputDecoration(
+                                isDense: true,
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(0, 2.0, 0, 10.0),
                                 border: InputBorder.none,
                                 fillColor: Colors.white,
                               ),
                               style: const TextStyle(
-                                fontSize: 16.0,
+                                fontSize: 24.0,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                           _boxMargin,

@@ -88,13 +88,6 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map<int, List> categoryType = <int, List>{
-      1: ["일정", Constants.green300],
-      2: ["업무", Constants.blue600],
-      3: ["기념일", Constants.pink300],
-      4: ["공부", Constants.violet300],
-    };
-
     TextField titleInputField = TextField(
       onChanged: (title) => {
         if (titleEditConteroller.text.isEmpty)
@@ -119,7 +112,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
         isDense: true,
       ),
       style: const TextStyle(
-        fontSize: 20.0,
+        fontSize: 24.0,
       ),
     );
 
@@ -187,18 +180,20 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
     void toggleAllDay(val) {
       setState(() {
         isAllDay = val;
-      });
 
-      if (!val) {
-        startTimeEditController.text =
-            "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 10)))}:00";
-        endTimeEditController.text =
-            "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 11)))}:00";
-      }
+        if (!val) {
+          startTimeEditController.text =
+              "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 10)))}:00";
+          endTimeEditController.text =
+              "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 11)))}:00";
+        } else {
+          startTimeEditController.text = "";
+          endTimeEditController.text = "";
+        }
+      });
     }
 
     void setPlace(String type, Place place) {
-      print("set ${type}place: $place");
       if (type == "from") {
         setState(() {
           fromPlace = place;
@@ -223,20 +218,23 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
     }
 
     void createSchedule() async {
-      DateTime startDateTime = DateTime.parse(
-          "${startDateEditController.text} ${startTimeEditController.text}");
-      DateTime endDateTime = DateTime.parse(
-          "${endDateEditController.text} ${endTimeEditController.text}");
+      if (startDateEditController.text.isNotEmpty &&
+          endTimeEditController.text.isNotEmpty) {
+        DateTime startDateTime = DateTime.parse(
+            "${startDateEditController.text} ${startTimeEditController.text}");
+        DateTime endDateTime = DateTime.parse(
+            "${endDateEditController.text} ${endTimeEditController.text}");
 
-      if (startDateTime.isAfter(endDateTime)) {
-        setState(() {
-          errorMsg = "종료 시간이 시작 시간보다 빠를 수 없습니다.";
-        });
-        return;
-      } else {
-        setState(() {
-          errorMsg = null;
-        });
+        if (startDateTime.isAfter(endDateTime)) {
+          setState(() {
+            errorMsg = "종료 시간이 시작 시간보다 빠를 수 없습니다.";
+          });
+          return;
+        } else {
+          setState(() {
+            errorMsg = null;
+          });
+        }
       }
 
       Schedule schedule = Schedule(
@@ -244,8 +242,12 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
         title: titleEditConteroller.text,
         startDate: startDateEditController.text,
         endDate: endDateEditController.text,
-        startTime: "${startTimeEditController.text}:00",
-        endTime: "${endTimeEditController.text}:00",
+        startTime: startTimeEditController.text.isEmpty
+            ? null
+            : "${startTimeEditController.text}:00",
+        endTime: endTimeEditController.text.isEmpty
+            ? null
+            : "${endTimeEditController.text}:00",
         alertBefore: alertEditController.text.isEmpty
             ? null
             : int.parse(alertEditController.text),
@@ -262,7 +264,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
       Map<String, dynamic> res = await postSchedule(schedule);
 
       if (res["status"] == "success") {
-        Navigator.pushNamed(context, "/calendar");
+        Navigator.pop(context);
       } else {
         setState(() {
           errorMsg = "잠시 후 다시 시도해주세요.";
@@ -426,9 +428,6 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),
                                 child: TextField(
-                                  onChanged: (val) {
-                                    print(alertEditController.text);
-                                  },
                                   keyboardType: TextInputType.number,
                                   controller: alertEditController,
                                   inputFormatters: [
@@ -439,7 +438,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                                     isDense: true,
                                   ),
                                   style: const TextStyle(
-                                      fontSize: 20.0, height: 1.0),
+                                      fontSize: 24.0, height: 1.0),
                                 ),
                               ),
                             ),
@@ -502,7 +501,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                         child: TextField(
                           controller: memoEditController,
                           style: const TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 24.0,
                           ),
                           expands: true,
                           maxLines: null,
