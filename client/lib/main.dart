@@ -1,10 +1,12 @@
 import 'package:client/constants.dart';
+import 'package:client/widgets/location_model.dart';
 import 'package:client/widgets/place_search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
+import 'package:provider/provider.dart';
 
 import 'screens/login/login_check_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
@@ -33,11 +35,41 @@ void main() async {
   AuthRepository.initialize(
       appKey: dotenv.get("KAKAO_JAVASCRIPT_KEY"), baseUrl: baseUrl);
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => LocationModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  Future<void> checkLocationService(BuildContext context) async {
+    Map<String, dynamic> res = await checkLocationPermission();
+
+    if (res["status"] == "deniedForever") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Location Service Disabled"),
+            content: const Text(
+                "Location services are disabled. Please enable them in settings."),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(context) {
@@ -54,7 +86,7 @@ class MyApp extends StatelessWidget {
         '/gifticon/select': (context) => const GifticonSelectScreen(),
         '/gifticon/detail': (context) => const GifticonDetailScreen(),
       },
-      home: LoginScreen(),
+      home: const LoginScreen(),
     );
   }
 }

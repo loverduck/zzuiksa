@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:client/constants.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/widgets/input_delete_icon.dart';
+import 'package:client/widgets/location_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
+import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 class SchedulePlaceSearchScreen extends StatefulWidget {
@@ -21,6 +24,8 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
   TextEditingController searchEditingController = TextEditingController();
   AutoScrollController scrollController = AutoScrollController();
   late Place? selectedPlace;
+  bool _isLocationInitialized = false;
+  late LocationModel locationModel;
 
   // 사용자의 입력이 없는 걸 판단하기 위한 타이머
   Timer? searchTimer;
@@ -100,10 +105,23 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    center = LatLng(37.501271678934685, 127.03959900167186);
+  void didChangeDependencies() {
+    if (!_isLocationInitialized) {
+      // 기본 값으로 멀캠 위치
+      center = LatLng(37.501271678934685, 127.03959900167186);
+      locationModel = Provider.of<LocationModel>(context);
+
+      Future.delayed(Duration.zero, () async {
+        await locationModel.getCurrentLocation();
+        Position currentPosition = locationModel.currentPostion;
+
+        center = LatLng(currentPosition.latitude, currentPosition.longitude);
+        _isLocationInitialized = true;
+      });
+    }
     selectedPlace = Place();
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -116,6 +134,7 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(center);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
