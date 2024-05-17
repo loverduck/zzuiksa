@@ -10,7 +10,7 @@ String? token;
 Future<void> getToken() async {
   try {
     dynamic userInfo = await storage.read(key: "login");
-    token = userInfo;
+    token = json.decode(userInfo)['accessToken'];
   } catch (e) {
     print("token error: $e");
   }
@@ -34,6 +34,8 @@ Future<dynamic> postSchedule(Schedule schedule) async {
       body: jsonEncode(schedule.toJson()),
     );
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+
+    print(json);
 
     return json;
   } catch (e) {
