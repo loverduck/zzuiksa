@@ -60,7 +60,10 @@ class _ModifyInfoState extends State<ModifyInfo> {
               padding: EdgeInsets.all(32),
               iconSize: 32,
               onPressed: () async {
-                if (nickname.text!=null && birthday.text!=null) {
+                if (nickname.text.trim()!=null && birthday.text.trim()=='') {
+                  provider.updateMemberInfo(Member(name: nickname.text.trim(), birthday: null));
+                  Navigator.pop(context);
+                } else if (nickname.text.trim()!=null && birthday.text.trim()!='') {
                   provider.updateMemberInfo(Member(name: nickname.text.trim(), birthday: birthday.text.trim()));
                   Navigator.pop(context);
                 }
