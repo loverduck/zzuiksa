@@ -8,16 +8,6 @@ import 'package:http/http.dart' as http;
 import '../model/gifticon_preview_model.dart';
 
 const storage = FlutterSecureStorage();
-// String? token;
-
-// Future<void> getToken() async {
-//   try {
-//     dynamic userInfo = await storage.read(key: "login");
-//     token = json.decode(userInfo)['accessToken'];
-//   } catch (e) {
-//     print("token error: $e");
-//   }
-// }
 
 Future<String?> getToken() async {
   try {
@@ -69,47 +59,34 @@ Future<dynamic> getGifticonDetail(int gifticonId) async {
       },
     );
 
-    if (res.statusCode == 200) {
-      return Gifticon.fromJson(json.decode(utf8.decode(res.bodyBytes)));
-    } else {
-      throw Exception('Failed to load gifticon detail.');
-    }
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+    return json;
   } catch (e) {
     throw Exception('gifticon detail error: $e');
   }
 }
 
-Future<dynamic> getGifticonList() async {
+Future<List<GifticonPreview>> getGifticonList() async {
   String? token = await getToken();
   if (token == null) {
     print("토큰이 유효하지 않습니다.");
-    return;
+    return [];
   }
   try {
-    final res = await http.get(
+    var res = await http.get(
       Uri.parse("$baseUrl/api/gifticons"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
       },
     );
-
-    if (res.statusCode == 200) {
-      var responseData = json.decode(utf8.decode(res.bodyBytes));
-      if (responseData is Map<String, dynamic> && responseData.containsKey('data')) {
-        List<dynamic> jsonData = List.from(responseData['data']);
-        return jsonData.map((item) =>
-            GifticonPreview.fromJson(item as Map<String, dynamic>)).toList();
-      } else {
-        throw Exception('Unexpected JSON format');
-      }
-    } else {
-      throw Exception('Failed to load gifticon list due to status code ${res.statusCode}');
-    }
+    Iterable json = jsonDecode(res.body) as List;
+    return List<GifticonPreview>.from(
+        json.map((model) => GifticonPreview.fromJson(model as Map<String, dynamic>))
+    );
   } catch (e) {
-    // Print the error to console or handle it as needed
     print('Error loading gifticon list: $e');
-    throw Exception('load gifticon list error: $e');
+    throw Exception('Failed to load gifticons');
   }
 }
 
@@ -129,13 +106,10 @@ Future<dynamic> patchGifticon(int gifticonId, Gifticon gifticon) async {
       body: jsonEncode(gifticon.toJson()),
     );
 
-    if (res.statusCode == 200) {
-      return Gifticon.fromJson(json.decode(utf8.decode(res.bodyBytes))['data']);
-    } else {
-      throw Exception('Failed to update gifticon.');
-    }
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+    return json;
   } catch (e) {
-    throw Exception('update gifticon error: $e');
+    print('update gifticon error: $e');
   }
 }
 
@@ -154,12 +128,9 @@ Future<dynamic> deleteGifticon(int gifticonId) async {
       },
     );
 
-    if (res.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('Failed to delete gifticon.');
-    }
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+    return json;
   } catch (e) {
-    throw Exception('delelte gifticon error: $e');
+    print('delelte gifticon error: $e');
   }
 }
