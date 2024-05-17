@@ -2,6 +2,7 @@ import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/schedule_detail_screen.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
 import 'package:client/screens/schedule/service/schedule_api.dart';
+import 'package:client/screens/schedule/utils/local_time_convertor.dart';
 import 'package:client/screens/schedule/widgets/snackbar_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -116,9 +117,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           DateTime currentDate = startDate;
           while (currentDate.isBefore(endDate.add(const Duration(days: 1)))) {
             // endDate를 포함하기 위해 1일 추가
-            DateTime key =
-                DateTime(currentDate.year, currentDate.month, currentDate.day)
-                    .toUtc();
+            DateTime key = localTimeConvertor(currentDate);
 
             if (monthSchedules[key] == null) {
               monthSchedules[key] = [];

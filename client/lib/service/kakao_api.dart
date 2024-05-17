@@ -64,7 +64,7 @@ Future<dynamic> kakaoLogin() async {
 
     try {
       if (json["status"] == "success") {
-        storage.write(key: "login", value: json['data']['accessToken']);
+        storage.write(key: "login", value: jsonEncode(json['data']));
       }
     } catch (e) {
       print("storage write error: $e");
