@@ -85,17 +85,10 @@ class GifticonList extends StatelessWidget {
       ),
       itemCount: filteredGifticons.length,
       itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-            border: Border(
-              right: BorderSide(width: (index + 1) % crossAxisCount == 0 ? 0 : 1, color: Colors.grey[300]!),
-              bottom: BorderSide(width: index >= (filteredGifticons.length / crossAxisCount).floor() * crossAxisCount ? 0 : 1, color: Colors.grey[300]!),
-            ),
-          ),
-          child: GifticonListItem(
-            gifticonPreview: filteredGifticons[index],
-          ),
-        );
+        //
+        final gifticon = filteredGifticons[index];
+        print("Rendering Gifticon: ${gifticon.name}");
+        return GifticonListItem(gifticonPreview: gifticon);
       },
     );
   }
