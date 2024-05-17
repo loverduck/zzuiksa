@@ -1,4 +1,3 @@
-import 'package:client/screens/gifticon/model/gifticon_model.dart';
 import 'package:client/screens/gifticon/model/gifticon_preview_model.dart';
 import 'package:intl/intl.dart';
 

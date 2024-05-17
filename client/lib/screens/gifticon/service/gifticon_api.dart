@@ -80,7 +80,7 @@ Future<List<GifticonPreview>> getGifticonList() async {
         'Authorization': 'Bearer $token',
       },
     );
-    Iterable json = jsonDecode(res.body) as List;
+    Iterable json = jsonDecode(utf8.decode(res.bodyBytes))['data'] as List;
     return List<GifticonPreview>.from(
         json.map((model) => GifticonPreview.fromJson(model as Map<String, dynamic>))
     );
