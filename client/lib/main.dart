@@ -20,6 +20,8 @@ import 'screens/schedule/schedule_detail_screen.dart';
 import 'screens/gifticon/gifticon_list_screen.dart';
 import 'screens/gifticon/gifticon_detail_screen.dart';
 import 'screens/gifticon/gifticon_select_screen.dart';
+import 'screens/profile/widgets/place/detail_place.dart';
+
 
 // void main() => runApp(const MyApp());
 
@@ -98,6 +100,7 @@ class MyApp extends StatelessWidget {
         '/gifticon': (context) => const GifticonListScreen(),
         '/gifticon/select': (context) => const GifticonSelectScreen(),
         '/gifticon/detail': (context) => const GifticonDetailScreen(),
+        '/place/detail' : (context) => const PlaceDetailScreen(),
       },
       home: const LoginScreen(),
     );

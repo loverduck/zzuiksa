@@ -55,7 +55,6 @@ class _SearchPlaceState extends State<SearchPlace> {
   void onSelectPlaceHandler(place) {
     selectedPlace = Place(
         name: place.placeName,
-        address: place.addressName,
         lat: double.parse(place.y!),
         lng: double.parse(place.x!));
   }
@@ -117,7 +116,7 @@ class _SearchPlaceState extends State<SearchPlace> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<PlaceApi>(context);
+    // final provider = Provider.of<PlaceApi>(context);
 
     return Scaffold(
         appBar: PreferredSize(
@@ -131,7 +130,8 @@ class _SearchPlaceState extends State<SearchPlace> {
                 iconSize: 32,
                 onPressed: () {
                   print('complete button clicked');
-                  provider.createPlaceInfo(selectedPlace!);
+                  createPlaceInfo(selectedPlace!);
+                  // provider.createPlaceInfo(selectedPlace!);
                   Navigator.pop(context);
                 },
               )
