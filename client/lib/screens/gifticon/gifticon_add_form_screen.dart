@@ -179,14 +179,37 @@ class GifticonRegistrationCompleteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.yellow[100], // 배경색 변경
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset('assets/images/temp.png'), // 완료 이미지, 경로는 실제 경로로 변경해주세요.
-            Text("기프티콘 등록이 완료되었습니다."),
+            Image.asset(
+              'assets/images/temp.png', // 실제 이미지 경로로 변경 필요
+              width: 200, // 이미지 크기 조절
+              height: 200,
+            ),
+            SizedBox(height: 30), // 이미지와 텍스트 사이 간격 추가
+            Text(
+              "기프티콘 등록이 완료되었습니다.",
+              style: TextStyle(
+                fontSize: 20, // 텍스트 크기 조절
+                fontWeight: FontWeight.bold, // 폰트 굵기
+                color: Colors.brown[700], // 텍스트 색상 변경
+              ),
+            ),
+            SizedBox(height: 40), // 텍스트와 버튼 사이 간격 추가
             ElevatedButton(
-              child: Text('확인'),
+              child: Text(
+                '확인',
+                style: TextStyle(
+                  fontSize: 18, // 버튼 내 텍스트 크기 조절
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.orange[300], // 버튼 내 텍스트 색상
+                minimumSize: Size(150, 50), // 버튼 크기 조절
+              ),
               onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/gifticon', (Route<dynamic> route) => false),
             ),
           ],
