@@ -78,10 +78,11 @@ class _MyPlaceState extends State<MyPlace> {
                                 IconButton(icon: Icon(Icons.zoom_in),
                                     iconSize: 40, color: Constants.main600,
                                 onPressed: () {
-                                  // Navigator.pushNamed(context, '/gifticon_detail_screen', arguments: gifticon['id'])
+                                  // Navigator.pushNamed(context, '/gifticon/detail',
+                                  //     arguments: {"gifticonId":myPlaceList[index].placeId!});
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) => DetailPlace(
-                                        placeId: ModalRoute.of(context)!.settings.arguments as int,
+                                        placeId: myPlaceList[index].placeId!
                                       )));
                                 },
                                 ),

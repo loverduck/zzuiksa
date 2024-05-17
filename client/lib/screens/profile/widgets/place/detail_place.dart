@@ -15,8 +15,6 @@ class DetailPlace extends StatefulWidget {
 
 class _DetailPlaceState extends State<DetailPlace> {
 
-  //GifticonDetailScreen 참고해야지... 
-
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
