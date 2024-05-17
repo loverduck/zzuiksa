@@ -66,9 +66,7 @@ class _TimelineState extends State<Timeline> {
                   Summary summary = scheduleList[index];
                   // Summary summary = Summary.fromJson(scheduleList[index]);
                   print(summary.toString());
-                  return TimelineCard(
-                    summary: summary,
-                  );
+                  return TimelineCard(summary: summary);
                 })),
       ],
     );
