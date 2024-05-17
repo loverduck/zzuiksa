@@ -16,7 +16,10 @@ public class LatLngDto {
     @NotNull
     private Double lng;
 
-    public static LatLngDto of(double lat, double lng) {
+    public static LatLngDto of(Double lat, Double lng) {
+        if (lat == null || lng == null) {
+            return null;
+        }
         return new LatLngDto(lat, lng);
     }
 }

@@ -1,7 +1,8 @@
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
+import 'package:client/screens/gifticon/model/gifticon_preview_model.dart';
 import 'package:intl/intl.dart';
 
-int countExpiringGifticons(List<Gifticon> gifticons) {
+int countExpiringGifticons(List<GifticonPreview> gifticons) {
   DateTime now = DateTime.now();
   final weekLater = now.add(Duration(days: 7));
 

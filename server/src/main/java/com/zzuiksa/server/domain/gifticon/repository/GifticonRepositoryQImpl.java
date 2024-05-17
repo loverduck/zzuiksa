@@ -32,7 +32,8 @@ public class GifticonRepositoryQImpl implements GifticonRepositoryQ {
                 gifticon.name,
                 gifticon.store,
                 gifticon.endDate,
-                gifticon.isUsed
+                gifticon.isUsed,
+                gifticon.remainMoney
         );
     }
 }

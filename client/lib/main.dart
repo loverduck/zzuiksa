@@ -1,29 +1,25 @@
-import 'package:client/service/member_api.dart';
-import 'package:client/screens/profile/service/place_api.dart';
-import 'package:client/constants.dart';
-import 'package:client/widgets/place_search_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
+import 'styles.dart' as style;
+import 'package:client/constants.dart';
+import 'screens/home/home_screen.dart';
 import 'screens/login/login_check_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
+
+import 'package:client/service/member_api.dart';
+import 'package:client/widgets/location_model.dart';
+import 'package:client/widgets/place_search_screen.dart';
+import 'screens/profile/service/place_api.dart';
 import 'screens/schedule/schedule_calendar_screen.dart';
 import 'screens/schedule/schedule_detail_screen.dart';
-import 'screens/profile/profile_screen.dart';
 import 'screens/gifticon/gifticon_list_screen.dart';
-import 'screens/gifticon/gifticon_add_form_screen.dart';
 import 'screens/gifticon/gifticon_detail_screen.dart';
 import 'screens/gifticon/gifticon_select_screen.dart';
-import 'screens/gifticon/gifticon_update_screen.dart';
-import 'screens/gifticon/gifticon_map_screen.dart';
-import 'screens/gifticon/service/merged_field.dart';
-import 'screens/gifticon/model/gifticon_model.dart';
-import 'screens/home/home_screen.dart';
-import 'styles.dart' as style;
 
 // void main() => runApp(const MyApp());
 
@@ -51,13 +47,42 @@ void main() async {
           ChangeNotifierProvider(
             create: (context) => PlaceApi(),
           ),
+          ChangeNotifierProvider(
+            create: (context) => LocationModel(),
+          ),
         ],
-        child: MyApp(),)
-      );
+        child: MyApp(),
+      ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  Future<void> checkLocationService(BuildContext context) async {
+    Map<String, dynamic> res = await checkLocationPermission();
+
+    if (res["status"] == "deniedForever") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Location Service Disabled"),
+            content: const Text(
+                "Location services are disabled. Please enable them in settings."),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(context) {
@@ -71,24 +96,10 @@ class MyApp extends StatelessWidget {
         '/schedule/search': (context) => const SchedulePlaceSearchScreen(),
         '/schedule/detail': (context) => const ScheduleDetailScreen(),
         '/gifticon': (context) => const GifticonListScreen(),
-        '/gifticon_select_screen': (context) => const GifticonSelectScreen(),
-        '/gifticon_add_screen': (context) => GifticonAddScreen(
-              ocrFields: ModalRoute.of(context)!.settings.arguments
-                  as List<MergedField>,
-              selectedImagePath:
-                  ModalRoute.of(context)!.settings.arguments as String,
-            ),
-        '/gifticon_detail_screen': (context) => GifticonDetailScreen(
-              gifticonId: ModalRoute.of(context)!.settings.arguments as int,
-            ),
-        '/gifticon_map_screen': (context) => GifticonMapScreen(
-              gifticonId: ModalRoute.of(context)!.settings.arguments as int,
-            ),
-        '/gifticon_update_screen': (context) => GifticonUpdateScreen(
-              gifticon: ModalRoute.of(context)!.settings.arguments as Gifticon,
-            ),
+        '/gifticon/select': (context) => const GifticonSelectScreen(),
+        '/gifticon/detail': (context) => const GifticonDetailScreen(),
       },
-      home: LoginScreen(),
+      home: const LoginScreen(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:client/screens/gifticon/gifticon_update_form_screen.dart';
 import 'package:client/screens/gifticon/service/gifticon_api.dart';
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
 import 'package:client/screens/gifticon/widgets/detail/gifticon_detail_info.dart';
@@ -10,64 +11,69 @@ import 'package:client/constants.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../utils/file_utils.dart';
+import '../schedule/widgets/snackbar_text.dart';
 
 class GifticonDetailScreen extends StatefulWidget {
-  const GifticonDetailScreen({
-    super.key,
-    required this.gifticonId,
-  });
-
-  final int? gifticonId;
+  const GifticonDetailScreen({super.key,});
 
   @override
   State<GifticonDetailScreen> createState() => _GifticonDetailScreenState();
 }
 
 class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
-  Gifticon? gifticon;
+  late int gifticonId;
+  late Gifticon gifticon;
+  //
+  void _getGifticon(int gifticonId, BuildContext context) async {
+    Map<String, dynamic> res = await getGifticonDetail(gifticonId);
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.gifticonId != null) {
-      fetchGifticonDetail();
-    }
-  }
-
-  Future<void> fetchGifticonDetail() async {
-    try {
-      Gifticon fetchedGifticon = await getGifticonDetail(widget.gifticonId!);
+    if (res['status'] == 'success') {
       setState(() {
-        gifticon = fetchedGifticon;
+        gifticon = Gifticon.fromJson(res['data']);
+        gifticon.gifticonId = gifticonId;
       });
-    } catch (e) {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load gifticon: $e')),
+        const SnackBar(
+          content: SnackBarText(
+            message: "로딩에 실패했습니다. 잠시 후 다시 시도해주세요",
+          ),
+        ),
       );
     }
   }
 
-  Future<Widget> _loadImage() async {
-    if (gifticon?.url != null) {
-      try {
-        File imageFile = await ImageUtils.loadImage(gifticon!.url!);
-        return Image.file(
-          imageFile,
-          height: 150,
-          width: 150,
-          fit: BoxFit.cover,
-        );
-      } catch (e) {
-        print("Failed to load image: $e");
-        return SizedBox.shrink(); // 이미지 로딩 실패 시 빈 위젯 반환
+  @override
+  void initState() {
+    super.initState();
+    gifticon = Gifticon();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ModalRoute.of(context)?.settings.arguments != null) {
+        final args = ModalRoute.of(context)?.settings.arguments as Map;
+        gifticonId = args['gifticonId'];
+        _getGifticon(gifticonId, context);
       }
-    } else {
-      return SizedBox.shrink(); // url이 없는 경우 빈 위젯 반환
+    });
+  }
+
+  Future<Widget> _loadImage() async {
+    try {
+      File imageFile = await ImageUtils.loadImage(gifticon.url!);
+      return Image.file(
+        imageFile,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } catch (e) {
+      print("이미지 로딩에 실패했습니다: $e");
+      return SizedBox.shrink(); // 이미지 로딩 실패 시 빈 위젯 반환
     }
   }
 
   void _showDeleteDialog() {
-    if (widget.gifticonId == null) return;
+    if (gifticon.gifticonId == null) return;
 
     showDialog(
       context: context,
@@ -86,7 +92,7 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
               child: Text('삭제하기'),
               onPressed: () async {
                 try {
-                  bool deleted = await deleteGifticon(widget.gifticonId!);
+                  bool deleted = await deleteGifticon(gifticon.gifticonId!);
                   if (deleted) {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
@@ -107,7 +113,7 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.gifticonId == null) {
+    if (gifticon.gifticonId == null) {
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -130,16 +136,18 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Constants.main200,
-        actions: <Widget>[
+        actions: [
           PopupMenuButton<String>(
-            onSelected: (value) {
-              switch (value) {
-                case 'edit':
-                  Navigator.pushNamed(context, '/gifticon_update_screen', arguments: gifticon);
-                  break;
-                case 'delete':
-                  _showDeleteDialog();
-                  break;
+            onSelected: (String value) {
+              if (value == 'edit') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GifticonUpdateScreen(gifticon: gifticon),
+                  ),
+                );
+              } else if (value == 'delete') {
+                _showDeleteDialog();
               }
             },
             itemBuilder: (BuildContext context) => [
