@@ -86,8 +86,8 @@ public class GifticonService {
     private Gifticon convertAddGifticonRequestToGifticon(AddGifticonRequest request, Member member) {
         return Gifticon.builder()
                 .member(member)
-                .name(request.getName())
                 .url(request.getUrl())
+                .name(request.getName())
                 .store(request.getStore())
                 .couponNum(request.getCouponNum())
                 .endDate(request.getEndDate())

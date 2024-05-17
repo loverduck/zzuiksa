@@ -46,11 +46,11 @@ public class GifticonPreviewDto {
     private Integer remainMoney;
 
     @QueryProjection
-    public GifticonPreviewDto(Long gifticonId, String name, String store, String url, LocalDate endDate, IsUsed isUsed, Integer remainMoney) {
+    public GifticonPreviewDto(Long gifticonId, String url, String name, String store, LocalDate endDate, IsUsed isUsed, Integer remainMoney) {
         this.gifticonId = gifticonId;
+        this.url = url;
         this.name = name;
         this.store = store;
-        this.url = url;
         this.endDate = endDate;
         this.isUsed = isUsed;
         this.remainMoney = remainMoney;
