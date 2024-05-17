@@ -24,7 +24,7 @@ class _GifticonMapScreenState extends State<GifticonMapScreen> {
     super.initState();
     // Mock data for testing
     gifticon = Gifticon(
-        id: 1,
+        gifticonId: 1,
         name: '아이스아메리카노T',
         url: 'assets/images/tempGifticon.jpeg',
         store: '스타벅스',

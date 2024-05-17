@@ -5,8 +5,6 @@ import '../../constants.dart';
 import 'dart:io';
 import '../../utils/image_utils.dart';
 import 'model/gifticon_model.dart';
-import 'gifticon_detail_screen.dart';
-import 'widgets/gifticon_form.dart';
 
 class GifticonUpdateScreen extends StatefulWidget {
   final Gifticon gifticon;
@@ -31,7 +29,7 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
   }
 
   Future<void> updateGifticon() async {
-    if (_gifticon.id == null) {
+    if (_gifticon.gifticonId == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("유효한 기프티콘 ID가 없습니다."),
         backgroundColor: Colors.red,
@@ -40,7 +38,7 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
     }
 
     try {
-      Gifticon updatedGifticon = await patchGifticon(_gifticon.id!, _gifticon);
+      Gifticon updatedGifticon = await patchGifticon(_gifticon.gifticonId!, _gifticon);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("기프티콘 정보가 성공적으로 수정되었습니다."),
       ));

@@ -356,7 +356,10 @@ class _GifticonSelectScreenState extends State<GifticonSelectScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => GifticonAddScreen(ocrFields: _ocrResults, selectedImagePath: _selectedImagePath),
+          builder: (context) => GifticonAddScreen(
+              ocrFields: _ocrResults,
+              selectedImagePath: _selectedImagePath
+          ),
         ),
       );
     } catch (e) {
