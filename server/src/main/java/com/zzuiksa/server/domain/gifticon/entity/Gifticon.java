@@ -88,7 +88,7 @@ public class Gifticon extends BaseEntity {
     }
 
     public void setCouponNum(String couponNum) {
-        if (!Utils.hasTextAndLengthBetween(couponNum, 1, 20)) {
+        if (!Utils.hasTextAndLengthBetween(couponNum, 1, 48)) {
             throw new IllegalArgumentException("바코드 번호를 다시 확인하세요.");
         }
         this.couponNum = couponNum;
