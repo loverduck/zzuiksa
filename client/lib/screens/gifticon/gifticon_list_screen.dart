@@ -48,24 +48,27 @@ class _GifticonListScreenState extends State<GifticonListScreen> {
     int expiringCount = countExpiringGifticons(gifticons);
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                GifticonListHeader(),
-                GifticonOverview(expiringGifticonsCount: expiringCount),
-                SizedBox(height: 10),
-              ],
+      body: RefreshIndicator(
+        onRefresh: fetchGifticons,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  GifticonListHeader(),
+                  GifticonOverview(expiringGifticonsCount: expiringCount),
+                  SizedBox(height: 10),
+                ],
+              ),
             ),
-          ),
-          SliverFillRemaining(
-            child: Padding(
-              padding: EdgeInsets.all(18.0),
-              child: GifticonList(gifticons: gifticons),
+            SliverFillRemaining(
+              child: Padding(
+                padding: EdgeInsets.all(18.0),
+                child: GifticonList(gifticons: gifticons),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
