@@ -2,24 +2,17 @@ import 'package:client/screens/dashboard/service/dashboard_api.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
+import 'package:intl/intl.dart';
+
+import '../../model/dashboard_model.dart';
 
 class TimelineCard extends StatelessWidget {
+  final Summary summary;
+
   const TimelineCard({
-    required this.schedule,
-    this.alarm,
-    this.comment,
-    // required this.place,
-    // required this.weather,
-    // required this.preferenceChoices,
+    required this.summary,
     super.key,
   });
-
-  final Schedule schedule;
-  final bool? alarm;
-  final String? comment;
-  // final String place;
-  // final String weather;
-  // final List<String> preferenceChoices;
 
   @override
   Widget build(context) {
@@ -30,7 +23,7 @@ class TimelineCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 8),
       decoration: BoxDecoration(
-          color: categoryType[schedule.categoryId]![1],
+          color: categoryType[summary.scheduleSummary?.categoryId]![1],
           border: Border.all(color: Constants.main600, width: 2.5),
           borderRadius: BorderRadius.circular(30)),
       child: Column(
@@ -40,8 +33,8 @@ class TimelineCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(schedule.title!, style: textTheme.displayMedium),
-                Text(categoryType[schedule.categoryId]![0],
+                Text(summary.scheduleSummary!.title!, style: textTheme.displayMedium),
+                Text(categoryType[summary.scheduleSummary?.categoryId]![0],
                     style: textTheme.displaySmall),
               ]),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -59,23 +52,23 @@ class TimelineCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(schedule.startTime!, style: textTheme.bodyLarge),
-              if (schedule.endTime != null)
-                Text(schedule.endTime!, style: textTheme.bodyLarge),
+              Text(summary.scheduleSummary!.startTime!, style: textTheme.bodyLarge),
+              if (summary.scheduleSummary!.endTime != null)
+                Text(summary.scheduleSummary!.endTime!, style: textTheme.bodyLarge),
             ],
           ),
-          if (alarm != null && comment != null)
+          if (summary.scheduleSummary!.alertBefore != null)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(children: [
-                  alarm == true ? Icon(Icons.alarm_on) : Icon(Icons.alarm_off),
-                  Text(' $comment', style: textTheme.displaySmall),
+                  Icon(Icons.alarm_on),
+                  Text(' 출발할 시간이에요!', style: textTheme.displaySmall),
                 ]),
                 ElevatedButton(
                     onPressed: () {
                       print('complete button clicked');
-                      endSchedule(schedule);
+                      // endSchedule(schedule);
                     },
                     style: ButtonStyle(
                       fixedSize: MaterialStatePropertyAll(Size(80, 14)),

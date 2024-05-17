@@ -36,3 +36,18 @@ class Place {
     return "Place: {placeId: $placeId, name: $name, address: $address, lat: $lat, lng: $lng}";
   }
 }
+
+class Places {
+  List<Place> places;
+  Places({required this.places});
+
+  factory Places.fromJson(List<dynamic> json) {
+    List<Place> jsonList = <Place>[];
+    jsonList = json.map((i) => Place.fromJson(i)).toList();
+    return Places(places: jsonList);
+  }
+
+  String toString() {
+    return "Places: $places";
+  }
+}

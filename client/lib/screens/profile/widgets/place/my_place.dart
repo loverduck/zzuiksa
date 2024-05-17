@@ -4,38 +4,37 @@ import 'package:provider/provider.dart';
 import 'package:client/constants.dart';
 import 'package:client/screens/profile/widgets/place/search_place.dart';
 import 'package:client/screens/profile/service/place_api.dart';
+import 'package:client/screens/profile/model/place_model.dart';
 
-class MyPlace extends StatelessWidget {
+import 'detail_place.dart';
+
+class MyPlace extends StatefulWidget {
   const MyPlace({super.key});
 
-  // final postList = [
-  //   {
-  //     "title": "멀캠",
-  //     "category": "직장",
-  //     "address1": "서울 강남구 테헤란로 212",
-  //     "address2": "멀티캠퍼스 역삼",
-  //   },
-  //   {
-  //     "title": "성심당",
-  //     "category": "음식점",
-  //     "address1": "대전 중구 대종로 480번길 15",
-  //     "address2": "asdf",
-  //   },
-  // ];
+  @override
+  State<MyPlace> createState() => _MyPlaceState();
+}
+
+class _MyPlaceState extends State<MyPlace> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final placeProvider = Provider.of<PlaceApi>(context);
-    final myPlaceList = placeProvider.placeList;
+    final myPlaceList = placeProvider.placeList.places;
     print(myPlaceList);
 
-    return Column(
+    return SingleChildScrollView(child: Column(
       children: [
         myPlaceList == null
             ? Container()
             : Container(
-                height: 124 * 2,
+                height: 124.0 * myPlaceList.length!,
                 child: ListView.builder(
                   itemCount: myPlaceList.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -70,16 +69,22 @@ class MyPlace extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                          myPlaceList[index]["title"]
-                                              .toString(),
+                                          myPlaceList[index].name!,
                                           style: textTheme.displaySmall),
-                                      Text(
-                                          myPlaceList[index]["address1"]
-                                              .toString(),
-                                          style: textTheme.displaySmall),
+                                      // Text(
+                                      //     myPlaceList[index].address!,
+                                      //     style: textTheme.displaySmall),
                                     ]),
-                                Icon(Icons.zoom_in,
-                                    size: 40, color: Constants.main600),
+                                IconButton(icon: Icon(Icons.zoom_in),
+                                    iconSize: 40, color: Constants.main600,
+                                onPressed: () {
+                                  // Navigator.pushNamed(context, '/gifticon_detail_screen', arguments: gifticon['id'])
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => DetailPlace(
+                                        placeId: ModalRoute.of(context)!.settings.arguments as int,
+                                      )));
+                                },
+                                ),
                               ])),
                     );
                   },
@@ -102,6 +107,6 @@ class MyPlace extends StatelessWidget {
               )),
         ),
       ],
-    );
+    ));
   }
 }

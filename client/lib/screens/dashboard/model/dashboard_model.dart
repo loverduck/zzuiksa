@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 
-class Timeline {
+class Dashboard {
   String? date; //"2024-05-16",
   int? doneScheduleCount;
   int? totalScheduleCount;
   String? comment;
-  List<Summary>? schedules;
+  Summaries? schedules;
 
-  Timeline({
+  Dashboard({
     this.date,
     this.doneScheduleCount,
     this.totalScheduleCount,
@@ -16,16 +16,17 @@ class Timeline {
     this.schedules,
   });
 
-  factory Timeline.fromJson(Map<String, dynamic> json) {
-    return Timeline(
+  factory Dashboard.fromJson(Map<String, dynamic> json) {
+    // List<Summary> list = <Summary>[];
+    // list = json['schedules'].map((i) => Summary.fromJson(i)).toList();
+
+    return Dashboard(
       date: json["date"],
       doneScheduleCount: json['doneScheduleCount'],
       totalScheduleCount: json['totalScheduleCount'],
       comment: json["comment"],
       schedules: json['schedules'] != null
-          ? (json['schedules'] as List).cast<Map<String, dynamic>>()
-          .map((json) => Summary.fromJson(json))
-          .toList()
+          ? Summaries.fromJson(json['schedules'])
           : null,
     );
   }
@@ -42,7 +43,22 @@ class Timeline {
 
   @override
   String toString() {
-    return "Timeline: { date: $date, doneScheduleCount: $doneScheduleCount, totalScheduleCount: $totalScheduleCount, comment: $comment, schedules: $schedules}";
+    return "Dashboard: { date: $date, doneScheduleCount: $doneScheduleCount, totalScheduleCount: $totalScheduleCount, comment: $comment, schedules: $schedules}";
+  }
+}
+
+class Summaries {
+  List<Summary> summaries;
+  Summaries({required this.summaries});
+
+  factory Summaries.fromJson(List<dynamic> json) {
+    List<Summary> jsonList = <Summary>[];
+    jsonList = json.map((i) => Summary.fromJson(i)).toList();
+    return Summaries(summaries: jsonList);
+  }
+
+  String toString() {
+    return "Summaries: $summaries";
   }
 }
 

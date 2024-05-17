@@ -11,7 +11,7 @@ class PlaceApi with ChangeNotifier {
   Place? _place;
   get place => _place;
 
-  List<Place>? _placeList;
+  Places? _placeList;
   get placeList => _placeList;
 
   static const storage = FlutterSecureStorage();
@@ -22,7 +22,6 @@ class PlaceApi with ChangeNotifier {
   }
 
   Future<void> getPlaceList() async {
-
     try {
       print('getPlaceList()');
 
@@ -30,7 +29,7 @@ class PlaceApi with ChangeNotifier {
       token = json.decode(userInfo)['accessToken'];
 
       final res = await http.get(
-        Uri.parse("$baseUrl/api/members"),
+        Uri.parse("$baseUrl/api/places"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -39,11 +38,10 @@ class PlaceApi with ChangeNotifier {
 
       if (res.statusCode == 200) {
         // print(res.body);
-        // print(utf8.decode(res.bodyBytes));
-    List<dynamic> jsonData = json.decode(utf8.decode(res.bodyBytes))['data'];
-    jsonData.map((item) => Place.fromJson(item)).toList();
-    notifyListeners();
-
+        print(utf8.decode(res.bodyBytes));
+        _placeList =
+            Places.fromJson(json.decode(utf8.decode(res.bodyBytes))['data']);
+        notifyListeners();
       } else {
         throw Exception('get place list failed statusCode: ${res.statusCode}');
       }
@@ -53,7 +51,6 @@ class PlaceApi with ChangeNotifier {
   }
 
   Future<void> getPlaceInfo(int placeId) async {
-
     try {
       dynamic userInfo = await storage.read(key: 'login');
       token = json.decode(userInfo)['accessToken'];
@@ -81,7 +78,6 @@ class PlaceApi with ChangeNotifier {
   }
 
   Future<void> createPlaceInfo(Place place) async {
-
     try {
       dynamic userInfo = await storage.read(key: 'login');
       token = json.decode(userInfo)['accessToken'];
@@ -119,6 +115,4 @@ class PlaceApi with ChangeNotifier {
       throw Exception("create place info error: $e");
     }
   }
-
-
 }

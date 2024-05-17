@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:client/constants.dart';
-import 'package:client/screens/dashboard/model/timeline_model.dart';
+import 'package:client/screens/dashboard/model/dashboard_model.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -28,8 +28,8 @@ Future<dynamic> getTimeline() async {
     if (res.statusCode == 200) {
       print('get timeline success');
       Map<String, dynamic> resbody = json.decode(utf8.decode(res.bodyBytes));
-      Timeline timeline = Timeline.fromJson(resbody['data']);
-      return timeline;
+      Dashboard dashboard = Dashboard.fromJson(resbody['data']);
+      return dashboard;
     } else {
       throw Exception('get timeline failed statusCode: ${res.statusCode}');
     }
