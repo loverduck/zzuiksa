@@ -1,7 +1,10 @@
+import 'package:client/screens/profile/service/place_api.dart';
 import 'package:flutter/material.dart';
 import 'package:client/styles.dart';
 import 'package:client/constants.dart';
 import 'package:client/widgets/header.dart';
+import 'package:provider/provider.dart';
+import '../../service/member_api.dart';
 import 'model/member_model.dart';
 
 import 'widgets/butler/my_butler.dart';
