@@ -14,7 +14,6 @@ import 'screens/dashboard/dashboard_screen.dart';
 import 'package:client/service/member_api.dart';
 import 'package:client/widgets/location_model.dart';
 import 'package:client/widgets/place_search_screen.dart';
-import 'screens/profile/service/place_api.dart';
 import 'screens/schedule/schedule_calendar_screen.dart';
 import 'screens/schedule/schedule_detail_screen.dart';
 import 'screens/gifticon/gifticon_list_screen.dart';
@@ -45,9 +44,6 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (context) => MemberApi(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => PlaceApi(),
         ),
         ChangeNotifierProvider(
           create: (context) => LocationModel(),

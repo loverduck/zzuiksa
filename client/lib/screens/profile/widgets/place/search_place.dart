@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:client/constants.dart';
+import 'package:client/screens/profile/widgets/place/my_place.dart';
 import 'package:client/widgets/header.dart';
 import 'package:client/screens/profile/model/place_model.dart';
 import 'package:client/screens/profile/service/place_api.dart';
@@ -131,8 +132,8 @@ class _SearchPlaceState extends State<SearchPlace> {
                 onPressed: () {
                   print('complete button clicked');
                   createPlaceInfo(selectedPlace!);
-                  // provider.createPlaceInfo(selectedPlace!);
-                  Navigator.pop(context);
+                  Navigator.pop(context, MaterialPageRoute(builder: (context) => MyPlace()));
+                  // Navigator.pop(context);
                 },
               )
             ],

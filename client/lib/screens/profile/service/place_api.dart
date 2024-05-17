@@ -58,18 +58,31 @@ Future<void> createPlaceInfo(Place place) async {
   }
 }
 
-class PlaceApi with ChangeNotifier {
-  Place? _place;
-  get place => _place;
 
-  Places? _placeList;
-  get placeList => _placeList;
+Future<void> deletePlaceInfo(int placeId) async {
+  try {
+    dynamic userInfo = await storage.read(key: 'login');
+    token = json.decode(userInfo)['accessToken'];
 
-  PlaceApi() {
-    getPlaceList();
+    final res = await http.delete(
+      Uri.parse("$baseUrl/api/places/$placeId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      print(utf8.decode(res.bodyBytes));
+    } else {
+      throw Exception('create place info failed statusCode: ${res.statusCode}');
+    }
+  } catch (e) {
+    throw Exception("create place info error: $e");
   }
+}
 
-  Future<void> getPlaceList() async {
+  Future<dynamic> getPlaceList() async {
     try {
       print('getPlaceList()');
 
@@ -87,9 +100,8 @@ class PlaceApi with ChangeNotifier {
       if (res.statusCode == 200) {
         // print(res.body);
         print(utf8.decode(res.bodyBytes));
-        _placeList =
-            Places.fromJson(json.decode(utf8.decode(res.bodyBytes))['data']);
-        notifyListeners();
+        Places places = Places.fromJson(json.decode(utf8.decode(res.bodyBytes))['data']);
+        return places.places;
       } else {
         throw Exception('get place list failed statusCode: ${res.statusCode}');
       }
@@ -97,4 +109,3 @@ class PlaceApi with ChangeNotifier {
       throw Exception("get place list error: $e");
     }
   }
-}
