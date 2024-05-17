@@ -26,7 +26,6 @@ Future<dynamic> getTimeline() async {
     );
 
     if (res.statusCode == 200) {
-      print('get timeline success');
       Map<String, dynamic> resbody = json.decode(utf8.decode(res.bodyBytes));
       Dashboard dashboard = Dashboard.fromJson(resbody['data']);
       return dashboard;
@@ -38,14 +37,16 @@ Future<dynamic> getTimeline() async {
   }
 }
 
-Future<void> endSchedule(Schedule schedule) async {
+Future<void> endSchedule(int scheduleId) async {
   await getToken();
 
+  Schedule schedule = await getSchedule(scheduleId);
+
   try {
+    schedule.scheduleId = scheduleId;
     schedule.isDone = true;
-    print("postSchedule: ${schedule.toJson()}");
-    var res = await http.post(
-      Uri.parse("$baseUrl/api/schedules/${schedule.scheduleId}"),
+    var res = await http.patch(
+      Uri.parse("$baseUrl/api/schedules/$scheduleId"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -60,5 +61,27 @@ Future<void> endSchedule(Schedule schedule) async {
     }
   } catch (e) {
     throw Exception("end schedule error: $e");
+  }
+}
+
+Future<dynamic> getSchedule(int scheduleId) async {
+  await getToken();
+
+  try {
+    final res = await http.get(
+      Uri.parse("$baseUrl/api/schedules/$scheduleId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (res.statusCode == 200) {
+      return Schedule.fromJson(json.decode(utf8.decode(res.bodyBytes))['data']);
+    } else {
+      throw Exception('get place info failed statusCode: ${res.statusCode}');
+    }
+  } catch (e) {
+    throw Exception("get place info error: $e");
   }
 }

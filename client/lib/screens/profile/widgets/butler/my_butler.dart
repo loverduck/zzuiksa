@@ -92,8 +92,17 @@ class MyButler extends StatelessWidget {
               CustomButton(
                 text: '수정하기',
                 func: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => ModifyButler()));
+                  // Navigator.push(
+                  //     context, MaterialPageRoute(builder: (context) => ModifyButler()));
+                  showDialog<void>(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('준비 중', style: textTheme.displayMedium),
+                        content: Text('준비 중인 기능이에요!', style: textTheme.displaySmall),
+                      );
+                    },
+                  );
                 },
               ),
               SizedBox(height: 8),

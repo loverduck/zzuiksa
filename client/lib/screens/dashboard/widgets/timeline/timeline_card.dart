@@ -33,7 +33,8 @@ class TimelineCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(summary.scheduleSummary!.title!, style: textTheme.displayMedium),
+                Text(summary.scheduleSummary!.title!,
+                    style: textTheme.displayMedium),
                 Text(categoryType[summary.scheduleSummary?.categoryId]![0],
                     style: textTheme.displaySmall),
               ]),
@@ -52,37 +53,38 @@ class TimelineCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(summary.scheduleSummary!.startTime!, style: textTheme.bodyLarge),
+              Text(summary.scheduleSummary!.startTime!,
+                  style: textTheme.bodyLarge),
               if (summary.scheduleSummary!.endTime != null)
-                Text(summary.scheduleSummary!.endTime!, style: textTheme.bodyLarge),
+                Text(summary.scheduleSummary!.endTime!,
+                    style: textTheme.bodyLarge),
             ],
           ),
-          if (summary.scheduleSummary!.alertBefore != null)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(children: [
-                  Icon(Icons.alarm_on),
-                  Text(' 출발할 시간이에요!', style: textTheme.displaySmall),
-                ]),
-                ElevatedButton(
-                    onPressed: () {
-                      print('complete button clicked');
-                      // endSchedule(schedule);
-                    },
-                    style: ButtonStyle(
-                      fixedSize: MaterialStatePropertyAll(Size(80, 14)),
-                      backgroundColor:
-                          MaterialStateProperty.all(Constants.main100),
-                      side: MaterialStateProperty.all(
-                          BorderSide(width: 2.0, color: Constants.main600)),
-                    ),
-                    child: Text(
-                      '완료!',
-                      style: textTheme.displaySmall,
-                    ))
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(children: [
+                Icon(Icons.alarm_on),
+                Text(' 출발할 시간이에요!', style: textTheme.displaySmall),
+              ]),
+              ElevatedButton(
+                  onPressed: () {
+                    print('complete button clicked');
+                    endSchedule(summary.scheduleSummary!.scheduleId!);
+                  },
+                  style: ButtonStyle(
+                    fixedSize: MaterialStatePropertyAll(Size(80, 14)),
+                    backgroundColor:
+                        MaterialStateProperty.all(Constants.main100),
+                    side: MaterialStateProperty.all(
+                        BorderSide(width: 2.0, color: Constants.main600)),
+                  ),
+                  child: Text(
+                    '완료!',
+                    style: textTheme.displaySmall,
+                  ))
+            ],
+          ),
         ],
       ),
     );
