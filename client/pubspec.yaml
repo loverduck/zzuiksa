@@ -42,6 +42,7 @@ flutter:
   assets:
     - local.env
     - assets/images/
+    - assets/stamps/
   fonts:
     - family: OwnglyphChongchong
       fonts:

@@ -12,6 +12,16 @@ class GifticonOverview extends StatefulWidget {
 
 class _GifticonOverviewState extends State<GifticonOverview> {
   @override
+  void initState() {
+    super.initState();
+    fetchOverview();
+  }
+
+  Future<void> fetchOverview() async {
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Center(

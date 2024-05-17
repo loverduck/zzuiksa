@@ -8,7 +8,6 @@ import 'widgets/list/gifticon_overview.dart';
 import 'widgets/list/gifticon_list.dart';
 
 import 'package:client/screens/gifticon/service/gifticon_api.dart';
-import 'package:client/screens/gifticon/model/gifticon_model.dart';
 
 class GifticonListScreen extends StatefulWidget {
   static const title = 'Gifticon';
@@ -32,7 +31,7 @@ class _GifticonListScreenState extends State<GifticonListScreen> {
 
   Future<void> fetchGifticons() async {
     try {
-      final List<GifticonPreview> fetchedGifticons = (await getGifticonList()).cast<GifticonPreview>();
+      final List<GifticonPreview> fetchedGifticons = await getGifticonList();
       setState(() {
         gifticons = fetchedGifticons;
       });
@@ -64,7 +63,7 @@ class _GifticonListScreenState extends State<GifticonListScreen> {
             SliverFillRemaining(
               child: Padding(
                 padding: EdgeInsets.all(18.0),
-                child: GifticonList(gifticons: gifticons),
+                child: GifticonList(gifticons: gifticons, onRefresh: fetchGifticons,),
               ),
             ),
           ],

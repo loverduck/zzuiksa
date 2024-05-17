@@ -1,15 +1,20 @@
 import 'package:client/screens/gifticon/model/gifticon_preview_model.dart';
 import 'package:flutter/material.dart';
 import '../../../../constants.dart';
-import '../../model/gifticon_model.dart';
 import 'gifticon_list_item.dart';
 import 'package:client/styles.dart';
 
-class GifticonList extends StatelessWidget {
+class GifticonList extends StatefulWidget {
   final List<GifticonPreview> gifticons;
+  final Function() onRefresh;
 
-  GifticonList({Key? key, required this.gifticons}) : super(key: key);
+  GifticonList({Key? key, required this.gifticons, required this.onRefresh}) : super(key: key);
 
+  @override
+  _GifticonListState createState() => _GifticonListState();
+}
+
+class _GifticonListState extends State<GifticonList> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -38,8 +43,8 @@ class GifticonList extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: [
-                  buildGridView(gifticons.where((i) => i.isUsed == '미사용' || i.isUsed == '사용중').toList(), 2),
-                  buildGridView(gifticons.where((i) => i.isUsed == '사용완료').toList(), 2),
+                  buildGridView(widget.gifticons.where((i) => i.isUsed == 'UNUSED' || i.isUsed == 'INUSED').toList(), 2),
+                  buildGridView(widget.gifticons.where((i) => i.isUsed == 'USED').toList(), 2),
                 ],
               ),
             ),
@@ -50,33 +55,6 @@ class GifticonList extends StatelessWidget {
   }
 
   Widget buildGridView(List<GifticonPreview> filteredGifticons, int crossAxisCount) {
-    // final int itemCount = gifticons.length;
-    // final int rowCount = (itemCount + crossAxisCount - 1) ~/ crossAxisCount; // Calculate the total number of rows
-    //
-    // return GridView.builder(
-    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    //     crossAxisCount: crossAxisCount,
-    //     crossAxisSpacing: 0,
-    //     mainAxisSpacing: 0,
-    //   ),
-    //   itemCount: itemCount,
-    //   itemBuilder: (context, index) {
-    //     final bool isRightEdge = (index + 1) % crossAxisCount == 0;
-    //     final bool isLastRow = index >= (rowCount - 1) * crossAxisCount; // Check if it's in the last row
-    //
-    //     return Container(
-    //       decoration: BoxDecoration(
-    //         border: Border(
-    //           right: BorderSide(width: isRightEdge ? 0 : 1, color: isRightEdge ? Colors.transparent : Colors.grey[300]!),
-    //           bottom: BorderSide(width: isLastRow ? 0 : 1, color: isLastRow ? Colors.transparent : Colors.grey[300]!),
-    //         ),
-    //       ),
-    //       child: GifticonListItem(
-    //         gifticon: gifticons[index],
-    //       ),
-    //     );
-    //   },
-    // );
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
@@ -87,7 +65,7 @@ class GifticonList extends StatelessWidget {
       itemBuilder: (context, index) {
         //
         final gifticon = filteredGifticons[index];
-        print("Rendering Gifticon: ${gifticon.name}");
+        print("-----------Rendering Gifticon: ${gifticon.name}");
         return GifticonListItem(gifticonPreview: gifticon);
       },
     );
