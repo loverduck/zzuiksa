@@ -1,3 +1,4 @@
+import 'package:client/screens/gifticon/gifticon_select_screen.dart';
 import 'package:flutter/material.dart';
 
 class GifticonListHeader extends StatefulWidget {
@@ -25,8 +26,10 @@ class _GifticonListHeaderState extends State<GifticonListHeader> {
               SizedBox(width: 10),
               IconButton(
                 icon: Icon(Icons.add),
-                onPressed: () =>
-                  Navigator.pushNamed(context, '/gifticon_select_screen'),
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GifticonSelectScreen())
+                ),
               ),
             ],
           ),

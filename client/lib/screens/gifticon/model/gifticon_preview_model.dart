@@ -1,28 +1,31 @@
 class GifticonPreview {
-  int? id;
+  int? gifticonId;
   String? url;
   String? name;
   String? store;
   String? endDate;
   String? isUsed;
+  int? remainMoney;
 
   GifticonPreview({
-    this.id,
+    this.gifticonId,
     this.url,
     this.name,
     this.store,
     this.endDate,
     this.isUsed,
+    this.remainMoney,
   });
 
   factory GifticonPreview.fromJson(Map<String, dynamic> json) {
     return GifticonPreview(
-      id: json['gifticonId'],
+      gifticonId: json['gifticonId'],
       url: json['url'],
       name: json['name'],
       store: json['store'],
       endDate: json['endDate'],
       isUsed: json['isUsed'],
+      remainMoney: json['remainMoney'],
     );
   }
   Map<String, dynamic> toJson() {
@@ -32,11 +35,12 @@ class GifticonPreview {
     data['store'] = store;
     data['endDate'] = endDate;
     data['isUsed'] = isUsed;
+    data['remainMoney'] = remainMoney;
     return data;
   }
 
   @override
   String toString() {
-    return "GifticonPreview: url: $url, name: $name, store: $store, endDate: $endDate, isUsed: $isUsed";
+    return "GifticonPreview: url: $url, name: $name, store: $store, endDate: $endDate, isUsed: $isUsed, remainMoney: $remainMoney";
   }
 }

@@ -1,5 +1,7 @@
 import 'package:client/screens/gifticon/service/merged_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 import '../../../constants.dart';
@@ -13,23 +15,32 @@ import 'gifticon_detail_screen.dart';
 class GifticonAddScreen extends StatefulWidget {
   final List<MergedField> ocrFields;
   final String? selectedImagePath;
+  final Gifticon? gifticon;
 
-  const GifticonAddScreen({Key? key, required this.ocrFields, this.selectedImagePath}) : super(key: key);
+  const GifticonAddScreen({super.key, required this.ocrFields, this.selectedImagePath, this.gifticon});
 
   @override
   State<GifticonAddScreen> createState() => _GifticonAddScreenState();
 }
 
 class _GifticonAddScreenState extends State<GifticonAddScreen> {
+  // TextEditingController nameEditController = TextEditingController();
+  // TextEditingController storeController = TextEditingController();
+  // TextEditingController couponNumController = TextEditingController();
+  // TextEditingController endDateController = TextEditingController();
+  // TextEditingController isUsedController = TextEditingController();
+  // TextEditingController remainMoneyController = TextEditingController();//int형이 되도록
+  // TextEditingController memoController = TextEditingController();
+
   late Gifticon _initialGifticon;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     String ocrText = widget.ocrFields.map((field) => field.text).join('\n');
     _initialGifticon = RecognizeTemplate.recognizeAndParse(ocrText);
-    _initialGifticon.isUsed = "미사용";
+    _initialGifticon.isUsed = "UNUSED";
   }
 
   void _handleSubmit() {
@@ -51,14 +62,21 @@ class _GifticonAddScreenState extends State<GifticonAddScreen> {
 
         gifticon.url = localPath;
       }
-
-      Gifticon createdGifticon = await postGifticon(gifticon);
-      if (createdGifticon.id != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => GifticonDetailScreen(gifticonId: createdGifticon.id)));
+      print("요청 전: gifticon= ");
+      print(gifticon);
+      Map<String, dynamic> res = await postGifticon(gifticon);
+      print("요청 후: res[status]= ");
+      print(res["status"]);
+      print(res["errorCode"]);
+      print(res["message"]);
+      if (res["status"] == "success") {
+        Navigator.pushNamed(context, '/gifticon/detail', arguments: {"gifticonId":res["data"].gifticonId});
       } else {
         throw Exception('Failed to get gifticon ID.');
       }
     } catch (e) {
+      print(_navigateToDetailScreen);
+      print(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("기프티콘 등록에 실패했습니다. 다시 시도해 주세요. 오류: $e"), backgroundColor: Colors.red));
     }
   }

@@ -5,13 +5,37 @@ import 'package:client/constants.dart';
 import 'package:client/screens/gifticon/model/gifticon_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-
 import '../model/gifticon_preview_model.dart';
 
-Future<Gifticon> postGifticon(Gifticon gifticon) async {
-  const storage = FlutterSecureStorage();
-  dynamic userInfo = await storage.read(key: 'login');
-  String token = json.decode(userInfo)['accessToken'];
+const storage = FlutterSecureStorage();
+// String? token;
+
+// Future<void> getToken() async {
+//   try {
+//     dynamic userInfo = await storage.read(key: "login");
+//     token = json.decode(userInfo)['accessToken'];
+//   } catch (e) {
+//     print("token error: $e");
+//   }
+// }
+
+Future<String?> getToken() async {
+  try {
+    dynamic userInfo = await storage.read(key: "login");
+    return json.decode(userInfo)['accessToken'];
+  } catch (e) {
+    print("token error: $e");
+    return null;
+  }
+}
+
+
+Future<dynamic> postGifticon(Gifticon gifticon) async {
+  String? token = await getToken();
+  if (token == null) {
+    print("토큰이 유효하지 않습니다.");
+    return;
+  }
 
   try {
     final res = await http.post(
@@ -22,21 +46,19 @@ Future<Gifticon> postGifticon(Gifticon gifticon) async {
       },
       body: jsonEncode(gifticon.toJson()),
     );
-    if (res.statusCode == 200) {
-      return Gifticon.fromJson(json.decode(utf8.decode(res.bodyBytes))['data']);
-    } else {
-      throw Exception('Failed to create gifticon.');
-    }
+    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+    return json;
   } catch (e) {
-    throw Exception("create gifticon error: $e");
+    print("create gifticon error: $e");
   }
 }
 
-Future<Gifticon> getGifticonDetail(int gifticonId) async {
-  const storage = FlutterSecureStorage();
-  dynamic userInfo = await storage.read(key: 'login');
-  String token = json.decode(userInfo)['accessToken'];
-
+Future<dynamic> getGifticonDetail(int gifticonId) async {
+  String? token = await getToken();
+  if (token == null) {
+    print("토큰이 유효하지 않습니다.");
+    return;
+  }
   try {
     final res = await http.get(
       Uri.parse("$baseUrl/api/gifticons/$gifticonId"),
@@ -47,7 +69,7 @@ Future<Gifticon> getGifticonDetail(int gifticonId) async {
     );
 
     if (res.statusCode == 200) {
-      return Gifticon.fromJson(json.decode(utf8.decode(res.bodyBytes))['data']);
+      return Gifticon.fromJson(json.decode(utf8.decode(res.bodyBytes)));
     } else {
       throw Exception('Failed to load gifticon detail.');
     }
@@ -56,11 +78,12 @@ Future<Gifticon> getGifticonDetail(int gifticonId) async {
   }
 }
 
-Future<List<GifticonPreview>> getGifticonList() async {
-  const storage = FlutterSecureStorage();
-  dynamic userInfo = await storage.read(key: 'login');
-  String token = json.decode(userInfo)['accessToken'];
-
+Future<dynamic> getGifticonList() async {
+  String? token = await getToken();
+  if (token == null) {
+    print("토큰이 유효하지 않습니다.");
+    return;
+  }
   try {
     final res = await http.get(
       Uri.parse("$baseUrl/api/gifticons"),
@@ -89,35 +112,12 @@ Future<List<GifticonPreview>> getGifticonList() async {
   }
 }
 
-// Future<List<GifticonPreview>> getGifticonList() async {
-//   const storage = FlutterSecureStorage();
-//   dynamic userInfo = await storage.read(key: 'login');
-//   String token = json.decode(userInfo)['accessToken'];
-//
-//   try {
-//     final res = await http.get(
-//       Uri.parse("$baseUrl/api/gifticons"),
-//       headers: <String, String>{
-//         'Content-Type': 'application/json; charset=UTF-8',
-//         'Authorization': 'Bearer $token',
-//       },
-//     );
-//     if (res.statusCode == 200) {
-//       List<dynamic> jsonData = json.decode(utf8.decode(res.bodyBytes));
-//       return jsonData.map((item) => GifticonPreview.fromJson(item)).toList();
-//     } else {
-//       throw Exception('Failed to load gifticon list.');
-//     }
-//   } catch (e) {
-//     throw Exception('load gifticon list error: $e');
-//   }
-// }
-
-Future<Gifticon> patchGifticon(int gifticonId, Gifticon gifticon) async {
-  const storage = FlutterSecureStorage();
-  dynamic userInfo = await storage.read(key: 'login');
-  String token = json.decode(userInfo)['accessToken'];
-
+Future<dynamic> patchGifticon(int gifticonId, Gifticon gifticon) async {
+  String? token = await getToken();
+  if (token == null) {
+    print("토큰이 유효하지 않습니다.");
+    return;
+  }
   try {
     final res = await http.patch(
       Uri.parse("$baseUrl/api/gifticons/$gifticonId"),
@@ -138,11 +138,12 @@ Future<Gifticon> patchGifticon(int gifticonId, Gifticon gifticon) async {
   }
 }
 
-Future<bool> deleteGifticon(int gifticonId) async {
-  const storage = FlutterSecureStorage();
-  dynamic userInfo = await storage.read(key: 'login');
-  String token = json.decode(userInfo)['accessToken'];
-
+Future<dynamic> deleteGifticon(int gifticonId) async {
+  String? token = await getToken();
+  if (token == null) {
+    print("토큰이 유효하지 않습니다.");
+    return;
+  }
   try {
     final res = await http.delete(
       Uri.parse("$baseUrl/api/gifticons/$gifticonId"),

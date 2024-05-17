@@ -42,15 +42,19 @@ public class GifticonPreviewDto {
     @NotNull
     private IsUsed isUsed;
 
+    @Schema(description = "금액")
+    private Integer remainMoney;
+
     @QueryProjection
     public GifticonPreviewDto(Long gifticonId, String name, String store, String url, LocalDate endDate,
-            IsUsed isUsed) {
+            IsUsed isUsed, Integer remainMoney) {
         this.gifticonId = gifticonId;
         this.name = name;
         this.store = store;
         this.url = url;
         this.endDate = endDate;
         this.isUsed = isUsed;
+        this.remainMoney = remainMoney;
     }
 
 }
