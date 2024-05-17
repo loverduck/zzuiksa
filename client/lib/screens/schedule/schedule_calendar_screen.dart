@@ -194,6 +194,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   // 캘린더에서 날짜 클릭 시 다이얼로그 오픈
   void onDaySelected(DateTime selectedDay, DateTime foucsedDay) {
+    selectedDay = localTimeConvertor(selectedDay);
     setState(() {
       this.selectedDay = selectedDay;
     });
