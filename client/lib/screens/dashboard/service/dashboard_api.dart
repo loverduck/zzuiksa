@@ -14,7 +14,7 @@ Future<void> getToken() async {
 }
 
 Future<dynamic> getTimeline() async {
-  getToken();
+  await getToken();
 
   try {
     var res = await http.get(
@@ -39,7 +39,7 @@ Future<dynamic> getTimeline() async {
 }
 
 Future<void> endSchedule(Schedule schedule) async {
-  getToken();
+  await getToken();
 
   try {
     schedule.isDone = true;

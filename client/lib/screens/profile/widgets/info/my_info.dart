@@ -41,13 +41,6 @@ class MyInfo extends StatelessWidget {
                 Text(member.birthday==null? '생일을 설정해주세요' : member.birthday!,
                     style: textTheme.displaySmall, textAlign: TextAlign.center)
               ]),
-              TableRow(children: [
-                Text('카카오 ID',
-                    style: TextStyle(color: Constants.main400, fontSize: 22),
-                    textAlign: TextAlign.center),
-                Text('게스트 로그인 상태입니다',
-                    style: textTheme.displaySmall, textAlign: TextAlign.center)
-              ]),
             ],
           ),
           SizedBox(height: 32),
