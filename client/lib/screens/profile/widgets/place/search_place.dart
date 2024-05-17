@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:client/constants.dart';
+import 'package:client/screens/profile/widgets/place/my_place.dart';
 import 'package:client/widgets/header.dart';
 import 'package:client/screens/profile/model/place_model.dart';
 import 'package:client/screens/profile/service/place_api.dart';
@@ -55,7 +56,6 @@ class _SearchPlaceState extends State<SearchPlace> {
   void onSelectPlaceHandler(place) {
     selectedPlace = Place(
         name: place.placeName,
-        address: place.addressName,
         lat: double.parse(place.y!),
         lng: double.parse(place.x!));
   }
@@ -117,7 +117,7 @@ class _SearchPlaceState extends State<SearchPlace> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<PlaceApi>(context);
+    // final provider = Provider.of<PlaceApi>(context);
 
     return Scaffold(
         appBar: PreferredSize(
@@ -131,8 +131,9 @@ class _SearchPlaceState extends State<SearchPlace> {
                 iconSize: 32,
                 onPressed: () {
                   print('complete button clicked');
-                  provider.createPlaceInfo(selectedPlace!);
-                  Navigator.pop(context);
+                  createPlaceInfo(selectedPlace!);
+                  Navigator.pop(context, MaterialPageRoute(builder: (context) => MyPlace()));
+                  // Navigator.pop(context);
                 },
               )
             ],

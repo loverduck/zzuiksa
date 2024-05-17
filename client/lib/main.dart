@@ -14,12 +14,13 @@ import 'screens/dashboard/dashboard_screen.dart';
 import 'package:client/service/member_api.dart';
 import 'package:client/widgets/location_model.dart';
 import 'package:client/widgets/place_search_screen.dart';
-import 'screens/profile/service/place_api.dart';
 import 'screens/schedule/schedule_calendar_screen.dart';
 import 'screens/schedule/schedule_detail_screen.dart';
 import 'screens/gifticon/gifticon_list_screen.dart';
 import 'screens/gifticon/gifticon_detail_screen.dart';
 import 'screens/gifticon/gifticon_select_screen.dart';
+import 'screens/profile/widgets/place/detail_place.dart';
+
 
 // void main() => runApp(const MyApp());
 
@@ -43,9 +44,6 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (context) => MemberApi(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => PlaceApi(),
         ),
         ChangeNotifierProvider(
           create: (context) => LocationModel(),
@@ -73,6 +71,7 @@ class MyApp extends StatelessWidget {
         '/gifticon': (context) => const GifticonListScreen(),
         '/gifticon/select': (context) => const GifticonSelectScreen(),
         '/gifticon/detail': (context) => const GifticonDetailScreen(),
+        '/place/detail' : (context) => const PlaceDetailScreen(),
       },
       home: const LoginScreen(),
     );
