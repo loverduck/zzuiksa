@@ -10,7 +10,7 @@ class FileUtils {
       return directory.path;
     } catch (e) {
       print("Error getting file path: $e");
-      throw e; // 오류를 다시 throw하여 호출자가 이를 처리할 수 있도록 함
+      throw e;
     }
   }
 

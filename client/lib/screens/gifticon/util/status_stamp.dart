@@ -1,9 +1,10 @@
+import 'package:client/screens/gifticon/model/gifticon_preview_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../model/gifticon_model.dart';
 
-String getStatusStamp(Gifticon gifticon) {
+String getStatusStamp(GifticonPreview gifticon) {
   DateTime now = DateTime.now();
   DateTime endDate = DateFormat('yyyy-MM-dd').parse(gifticon.endDate!);
 

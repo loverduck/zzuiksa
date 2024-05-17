@@ -15,15 +15,16 @@ class UseButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: Constants.main400,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(35),
           side: const BorderSide(
             color: Color(0xFF5E3136),
             width: 2.5,
           ),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        minimumSize: Size(250, 25),
       ),
-      child: Text('사용하기', style: myTheme.textTheme.displaySmall,),
+      child: Text('사용하기', style: myTheme.textTheme.displayMedium,),
     );
   }
 }
