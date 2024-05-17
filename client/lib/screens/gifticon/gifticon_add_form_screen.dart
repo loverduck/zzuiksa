@@ -24,14 +24,6 @@ class GifticonAddScreen extends StatefulWidget {
 }
 
 class _GifticonAddScreenState extends State<GifticonAddScreen> {
-  // TextEditingController nameEditController = TextEditingController();
-  // TextEditingController storeController = TextEditingController();
-  // TextEditingController couponNumController = TextEditingController();
-  // TextEditingController endDateController = TextEditingController();
-  // TextEditingController isUsedController = TextEditingController();
-  // TextEditingController remainMoneyController = TextEditingController();//int형이 되도록
-  // TextEditingController memoController = TextEditingController();
-
   late Gifticon _initialGifticon;
   final _formKey = GlobalKey<FormState>();
 
@@ -70,7 +62,13 @@ class _GifticonAddScreenState extends State<GifticonAddScreen> {
       print(res["errorCode"]);
       print(res["message"]);
       if (res["status"] == "success") {
-        Navigator.pushNamed(context, '/gifticon/detail', arguments: {"gifticonId":res["data"].gifticonId});
+        Map<String, dynamic> data = res["data"] as Map<String, dynamic>;
+        int? gifticonId = data["gifticonId"] as int?;
+        if (gifticonId != null) {
+          Navigator.pushNamed(context, '/gifticon/detail', arguments: {"gifticonId": gifticonId});
+        } else {
+          print("gifticonId is null");
+        }
       } else {
         throw Exception('Failed to get gifticon ID.');
       }

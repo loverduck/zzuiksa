@@ -47,6 +47,7 @@ Future<dynamic> postGifticon(Gifticon gifticon) async {
       body: jsonEncode(gifticon.toJson()),
     );
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+    print(json);
     return json;
   } catch (e) {
     print("create gifticon error: $e");
