@@ -38,46 +38,67 @@ class _GifticonAddScreenState extends State<GifticonAddScreen> {
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      _navigateToDetailScreen(_initialGifticon);
+      _navigateToRegistrationCompleteScreen(_initialGifticon);
     }
   }
 
-  void _navigateToDetailScreen(Gifticon gifticon) async {
+  // void _navigateToDetailScreen(Gifticon gifticon) async {
+  //   try {
+  //     if (widget.selectedImagePath != null) {
+  //       final String localPath = '${await FileUtils.getFilePath()}/${p.basename(widget.selectedImagePath!)}';
+  //       print("_navigateToDetailScreen");
+  //       print(localPath);
+  //
+  //       // 로컬 이미지 파일 복사
+  //       await FileUtils.copyLocalFile(widget.selectedImagePath!, localPath);
+  //
+  //       gifticon.url = localPath;
+  //     }
+  //     print("요청 전: gifticon= ");
+  //     print(gifticon);
+  //     Map<String, dynamic> res = await postGifticon(gifticon);
+  //     print("요청 후: res[status]= ");
+  //     print(res["status"]);
+  //     print(res["errorCode"]);
+  //     print(res["message"]);
+  //     if (res["status"] == "success") {
+  //       Map<String, dynamic> data = res["data"] as Map<String, dynamic>;
+  //       int? gifticonId = data["gifticonId"] as int?;
+  //       if (gifticonId != null) {
+  //         print("gifticonId null이 아니다");
+  //         Navigator.pushNamed(context, '/gifticon/detail', arguments: {"gifticonId": gifticonId});
+  //       } else {
+  //         print("gifticonId is null");
+  //       }
+  //     } else {
+  //       throw Exception('Failed to get gifticon ID.');
+  //     }
+  //   } catch (e) {
+  //     print(_navigateToDetailScreen);
+  //     print(context);
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("기프티콘 등록에 실패했습니다. 다시 시도해 주세요. 오류: $e"), backgroundColor: Colors.red));
+  //   }
+  // }
+
+  void _navigateToRegistrationCompleteScreen(Gifticon gifticon) async {
     try {
       if (widget.selectedImagePath != null) {
         final String localPath = '${await FileUtils.getFilePath()}/${p.basename(widget.selectedImagePath!)}';
-        print("_navigateToDetailScreen");
-        print(localPath);
-
-        // 로컬 이미지 파일 복사
         await FileUtils.copyLocalFile(widget.selectedImagePath!, localPath);
-
         gifticon.url = localPath;
       }
-      print("요청 전: gifticon= ");
       print(gifticon);
       Map<String, dynamic> res = await postGifticon(gifticon);
-      print("요청 후: res[status]= ");
-      print(res["status"]);
-      print(res["errorCode"]);
-      print(res["message"]);
       if (res["status"] == "success") {
-        Map<String, dynamic> data = res["data"] as Map<String, dynamic>;
-        int? gifticonId = data["gifticonId"] as int?;
-        if (gifticonId != null) {
-          Navigator.pushNamed(context, '/gifticon/detail', arguments: {"gifticonId": gifticonId});
-        } else {
-          print("gifticonId is null");
-        }
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => GifticonRegistrationCompleteScreen()));
       } else {
-        throw Exception('Failed to get gifticon ID.');
+        throw Exception('Failed to register gifticon.');
       }
     } catch (e) {
-      print(_navigateToDetailScreen);
-      print(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("기프티콘 등록에 실패했습니다. 다시 시도해 주세요. 오류: $e"), backgroundColor: Colors.red));
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +170,27 @@ class _GifticonAddScreenState extends State<GifticonAddScreen> {
           }
           return null;
         },
+      ),
+    );
+  }
+}
+
+class GifticonRegistrationCompleteScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset('assets/images/temp.png'), // 완료 이미지, 경로는 실제 경로로 변경해주세요.
+            Text("기프티콘 등록이 완료되었습니다."),
+            ElevatedButton(
+              child: Text('확인'),
+              onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/gifticon', (Route<dynamic> route) => false),
+            ),
+          ],
+        ),
       ),
     );
   }

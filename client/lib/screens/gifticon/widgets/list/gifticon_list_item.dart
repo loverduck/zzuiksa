@@ -14,9 +14,9 @@ class GifticonListItem extends StatelessWidget {
   }) : super(key: key);
 
   Future<Widget> _loadImage() async {
-    if (gifticonPreview?.url != null) {
+    if (gifticonPreview.url != null) {
       try {
-        File imageFile = await ImageUtils.loadImage(gifticonPreview!.url!);
+        File imageFile = await ImageUtils.loadImage(gifticonPreview.url!);
         return Image.file(
           imageFile,
           height: 150,
@@ -28,7 +28,7 @@ class GifticonListItem extends StatelessWidget {
         return SizedBox.shrink(); // 이미지 로딩 실패 시 빈 위젯 반환
       }
     } else {
-      return SizedBox.shrink(); // url이 없는 경우 빈 위젯 반환
+      return Text('이미지 URL이 없습니다.');
     }
   }
 

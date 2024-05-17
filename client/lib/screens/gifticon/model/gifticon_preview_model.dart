@@ -31,6 +31,6 @@ class GifticonPreview {
 
   @override
   String toString() {
-    return "GifticonPreview: url: $url, name: $name, store: $store, endDate: $endDate, isUsed: $isUsed, remainMoney: $remainMoney";
+    return "GifticonPreview: gifticonId: $gifticonId,url: $url,  name: $name, store: $store, endDate: $endDate, isUsed: $isUsed, remainMoney: $remainMoney";
   }
 }
