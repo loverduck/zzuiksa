@@ -67,7 +67,7 @@ class Gifticon {
     }
 
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['gifticonId'] = gifticonId;
+    // data['gifticonId'] = gifticonId;
     data['url'] = url;
     data['name'] = name;
     data['store'] = store;
