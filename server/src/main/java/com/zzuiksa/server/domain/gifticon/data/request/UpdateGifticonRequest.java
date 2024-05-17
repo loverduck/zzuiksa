@@ -24,14 +24,13 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class UpdateGifticonRequest {
 
-    @Schema(description = "상품명")
-    @NotBlank
-    @Size(max = 100)
-    private String name;
-
     @Schema(description = "이미지주소")
     @NotBlank
     private String url;
+
+    @Schema(description = "상품명")
+    @Size(max = 100)
+    private String name;
 
     @Schema(description = "브랜드명")
     private String store;
