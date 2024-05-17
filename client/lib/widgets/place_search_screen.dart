@@ -33,7 +33,7 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
   List<dynamic> places = [];
   int? selectedPlaceIndex;
 
-  late LatLng center;
+  LatLng center = LatLng(37.50129420028603, 127.03961032272223);
   Set<Marker> markers = {};
   List<KeywordAddress> list = [];
   String info = "";
@@ -108,15 +108,24 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
   void didChangeDependencies() {
     if (!_isLocationInitialized) {
       // 기본 값으로 멀캠 위치
-      center = LatLng(37.501271678934685, 127.03959900167186);
       locationModel = Provider.of<LocationModel>(context);
 
       Future.delayed(Duration.zero, () async {
         await locationModel.getCurrentLocation();
         Position currentPosition = locationModel.currentPostion;
 
-        center = LatLng(currentPosition.latitude, currentPosition.longitude);
         _isLocationInitialized = true;
+
+        setState(() {
+          center = LatLng(currentPosition.latitude, currentPosition.longitude);
+          markers.add(Marker(
+            markerId: "current",
+            latLng: center,
+          ));
+
+          mapController.setCenter(center);
+        });
+        // }
       });
     }
     selectedPlace = Place();
@@ -134,7 +143,6 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(center);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(

@@ -41,50 +41,25 @@ void main() async {
 
   // runApp(const MyApp());
   runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-              create: (context) => MemberApi(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => PlaceApi(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => LocationModel(),
-          ),
-        ],
-        child: MyApp(),
-      ),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => MemberApi(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PlaceApi(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => LocationModel(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  Future<void> checkLocationService(BuildContext context) async {
-    Map<String, dynamic> res = await checkLocationPermission();
-
-    if (res["status"] == "deniedForever") {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Location Service Disabled"),
-            content: const Text(
-                "Location services are disabled. Please enable them in settings."),
-            actions: <Widget>[
-              TextButton(
-                child: const Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
 
   @override
   Widget build(context) {

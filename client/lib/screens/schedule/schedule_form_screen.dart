@@ -62,9 +62,9 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
     endDateEditController.text =
         widget.schedule?.endDate ?? widget.selectedDay.toString().split(" ")[0];
     startTimeEditController.text = widget.schedule?.startTime ??
-        "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 10)))}:00";
+        "${DateFormat("H").format(DateTime.now())}:00";
     endTimeEditController.text = widget.schedule?.endTime ??
-        "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 11)))}:00";
+        "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 1)))}:00";
 
     selectedCategory = widget.schedule?.categoryId ?? 1;
     alertEditController.text = widget.schedule?.alertBefore.toString() ?? "";
@@ -183,9 +183,9 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
 
         if (!val) {
           startTimeEditController.text =
-              "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 10)))}:00";
+              "${DateFormat("H").format(DateTime.now())}:00";
           endTimeEditController.text =
-              "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 11)))}:00";
+              "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 1)))}:00";
         } else {
           startTimeEditController.text = "";
           endTimeEditController.text = "";
@@ -363,34 +363,30 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                 Column(
                   children: [
                     InputContainer(
-                      child: Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            inputTitleText("시작"),
-                            DateTimeInput(
-                              dateController: startDateEditController,
-                              requiredTime: !isAllDay,
-                              timeEditController: startTimeEditController,
-                            )
-                          ],
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          inputTitleText("시작"),
+                          DateTimeInput(
+                            dateController: startDateEditController,
+                            requiredTime: !isAllDay,
+                            timeEditController: startTimeEditController,
+                          )
+                        ],
                       ),
                     ),
                     marginBox,
                     InputContainer(
-                      child: Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            inputTitleText("종료"),
-                            DateTimeInput(
-                              dateController: endDateEditController,
-                              requiredTime: !isAllDay,
-                              timeEditController: endTimeEditController,
-                            )
-                          ],
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          inputTitleText("종료"),
+                          DateTimeInput(
+                            dateController: endDateEditController,
+                            requiredTime: !isAllDay,
+                            timeEditController: endTimeEditController,
+                          )
+                        ],
                       ),
                     ),
                     marginBox,
