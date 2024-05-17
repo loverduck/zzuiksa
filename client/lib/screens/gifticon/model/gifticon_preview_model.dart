@@ -19,24 +19,14 @@ class GifticonPreview {
 
   factory GifticonPreview.fromJson(Map<String, dynamic> json) {
     return GifticonPreview(
-      gifticonId: json['gifticonId'],
-      url: json['url'],
-      name: json['name'],
-      store: json['store'],
-      endDate: json['endDate'],
-      isUsed: json['isUsed'],
-      remainMoney: json['remainMoney'],
+      gifticonId: json['gifticonId'] as int?,
+      url: json['url'] as String?,
+      name: json['name'] as String?,
+      store: json['store'] as String?,
+      endDate: json['endDate'] as String?,
+      isUsed: json['isUsed'] as String?,
+      remainMoney: json['remainMoney'] as int?,
     );
-  }
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['url'] = url;
-    data['name'] = name;
-    data['store'] = store;
-    data['endDate'] = endDate;
-    data['isUsed'] = isUsed;
-    data['remainMoney'] = remainMoney;
-    return data;
   }
 
   @override
