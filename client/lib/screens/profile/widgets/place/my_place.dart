@@ -44,7 +44,6 @@ class _MyPlaceState extends State<MyPlace> {
   void initState() {
     super.initState();
     myPlaceList = [];
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getPlaceList();
     });
@@ -126,8 +125,7 @@ class _MyPlaceState extends State<MyPlace> {
                                               iconSize: 28,
                                               color: Constants.main400,
                                               onPressed: () {
-                                                deletePlaceInfo(myPlaceList[index].placeId!);
-                                                setState(() {});
+                                                _deletePlaceInfo(myPlaceList[index].placeId!);
                                               },
                                             ),
                                           ),

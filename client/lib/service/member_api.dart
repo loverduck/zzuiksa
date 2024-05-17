@@ -15,14 +15,18 @@ class MemberApi with ChangeNotifier {
     getMemberInfo();
   }
 
-  String token = '';
+  static const storage = FlutterSecureStorage();
+  String? token;
+
+  Future<void> getToken() async {
+    dynamic userInfo = await storage.read(key: "login");
+    token = json.decode(userInfo)['accessToken'];
+  }
 
   Future<void> getMemberInfo() async {
-    try {
-      const storage = FlutterSecureStorage();
-      dynamic userInfo = await storage.read(key: 'login');
-      token = json.decode(userInfo)['accessToken'];
+    await getToken();
 
+    try {
       final res = await http.get(
         Uri.parse("$baseUrl/api/members"),
         headers: <String, String>{
@@ -46,11 +50,9 @@ class MemberApi with ChangeNotifier {
   }
 
   Future<void> updateMemberInfo(Member member) async {
-    try {
-      const storage = FlutterSecureStorage();
-      dynamic userInfo = await storage.read(key: 'login');
-      token = json.decode(userInfo)['accessToken'];
+    await getToken();
 
+    try {
       final res = await http.patch(
         Uri.parse("$baseUrl/api/members"),
         headers: <String, String>{

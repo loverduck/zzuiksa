@@ -7,13 +7,17 @@ import 'package:client/constants.dart';
 import 'package:client/screens/profile/model/place_model.dart';
 
 const storage = FlutterSecureStorage();
-String token = '';
+String? token;
+
+Future<void> getToken() async {
+  dynamic userInfo = await storage.read(key: "login");
+  token = json.decode(userInfo)['accessToken'];
+}
 
 Future<dynamic> getPlaceInfo(int placeId) async {
-  try {
-    dynamic userInfo = await storage.read(key: 'login');
-    token = json.decode(userInfo)['accessToken'];
+  await getToken();
 
+  try {
     final res = await http.get(
       Uri.parse("$baseUrl/api/places/$placeId"),
       headers: <String, String>{
@@ -35,10 +39,9 @@ Future<dynamic> getPlaceInfo(int placeId) async {
 }
 
 Future<void> createPlaceInfo(Place place) async {
-  try {
-    dynamic userInfo = await storage.read(key: 'login');
-    token = json.decode(userInfo)['accessToken'];
+  await getToken();
 
+  try {
     final res = await http.post(
       Uri.parse("$baseUrl/api/places"),
       headers: <String, String>{
@@ -60,10 +63,9 @@ Future<void> createPlaceInfo(Place place) async {
 
 
 Future<void> deletePlaceInfo(int placeId) async {
-  try {
-    dynamic userInfo = await storage.read(key: 'login');
-    token = json.decode(userInfo)['accessToken'];
+  await getToken();
 
+  try {
     final res = await http.delete(
       Uri.parse("$baseUrl/api/places/$placeId"),
       headers: <String, String>{
@@ -75,20 +77,17 @@ Future<void> deletePlaceInfo(int placeId) async {
     if (res.statusCode >= 200 && res.statusCode < 300) {
       print(utf8.decode(res.bodyBytes));
     } else {
-      throw Exception('create place info failed statusCode: ${res.statusCode}');
+      throw Exception('delete place info failed statusCode: ${res.statusCode}');
     }
   } catch (e) {
-    throw Exception("create place info error: $e");
+    throw Exception("delete place info error: $e");
   }
 }
 
   Future<dynamic> getPlaceList() async {
+    await getToken();
+
     try {
-      print('getPlaceList()');
-
-      dynamic userInfo = await storage.read(key: 'login');
-      token = json.decode(userInfo)['accessToken'];
-
       final res = await http.get(
         Uri.parse("$baseUrl/api/places"),
         headers: <String, String>{

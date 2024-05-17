@@ -8,17 +8,13 @@ import 'package:client/screens/schedule/schedule_form_screen.dart';
 class Timeline extends StatefulWidget {
   const Timeline({super.key});
 
-  // const Timeline({super.key, required this.dashboard});
-  // final Dashboard dashboard;
-
   @override
   State<Timeline> createState() => _TimelineState();
 }
 
 class _TimelineState extends State<Timeline> {
-
   late Dashboard dashboard;
-  late List<Summary> scheduleList = [];
+  late List<Summary> scheduleList;
 
   void _getTimeline() async {
     dashboard = await getTimeline();
@@ -30,9 +26,9 @@ class _TimelineState extends State<Timeline> {
   @override
   void initState() {
     super.initState();
-    // dashboard = widget.dashboard; // widget의 member를 초기화
+    // dashboard = widget.dashboard;
+    scheduleList = [];
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       _getTimeline();
     });
   }

@@ -22,8 +22,8 @@ class Member {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['memberId'] = memberId;
     data['name'] = name;
-    data['birthday'] = birthday;
-    data['profileImage'] = profileImage;
+    if (birthday!=null) data['birthday'] = birthday;
+    if (profileImage!=null) data['profileImage'] = profileImage;
     return data;
   }
 
