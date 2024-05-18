@@ -72,13 +72,22 @@ class _PlaceInputState extends State<PlaceInput> {
         _toPlace = place;
         widget.setPlace("to", _toPlace);
       }
-      getTransport(_selectedType);
+      if (place.name == null) {
+        transportTimeText = "";
+      } else {
+        getTransport(_selectedType);
+      }
     });
   }
 
   void getTransport(String item) async {
+    print("from: $_fromPlace, to: $_toPlace");
     setState(() {
-      transportTimeText = "계산 중입니다";
+      if (_fromPlace.name == null || _toPlace.name == null) {
+        transportTimeText = "";
+      } else {
+        transportTimeText = "계산 중입니다";
+      }
     });
 
     late String time;
@@ -91,6 +100,7 @@ class _PlaceInputState extends State<PlaceInput> {
         _toPlace.name != null &&
         _toPlace.name!.isNotEmpty) {
       routeRes = await getRoute(_selectedType, _fromPlace, _toPlace);
+      print(routeRes);
       if (routeRes?["status"] == "success") {
         seconds = routeRes?["data"]["time"];
         time = secondsConvertor(seconds);
@@ -100,6 +110,7 @@ class _PlaceInputState extends State<PlaceInput> {
 
       setState(() {
         transportTimeText = "약 $time";
+        print("error: $errorMsg, time: $time");
       });
     } else {
       setState(() {
@@ -213,7 +224,7 @@ class _PlaceInputState extends State<PlaceInput> {
               const SizedBox(
                 height: 10.0,
               ),
-              errorMsg.isNotEmpty
+              errorMsg.isEmpty
                   ? Text(
                       "예상 이동 시간: $transportTimeText",
                       textAlign: TextAlign.left,

@@ -401,57 +401,54 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                     setPlace: setPlace),
                 marginBox,
                 // 알림
-                // 장소가 있는 경우에만 입력 가능
-                if (toPlace?.name != null && toPlace!.name!.isNotEmpty) ...[
-                  InputContainer(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        inputTitleText("알림"),
-                        Row(
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              width: 80.0,
-                              constraints: const BoxConstraints(
-                                minHeight: 40.0,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                child: TextField(
-                                  keyboardType: TextInputType.number,
-                                  controller: alertEditController,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    isDense: true,
-                                  ),
-                                  style: const TextStyle(
-                                      fontSize: 24.0, height: 1.0),
+                InputContainer(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      inputTitleText("알림"),
+                      Row(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            width: 80.0,
+                            constraints: const BoxConstraints(
+                              minHeight: 40.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                controller: alertEditController,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  isDense: true,
                                 ),
+                                style: const TextStyle(
+                                    fontSize: 24.0, height: 1.0),
                               ),
                             ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            const Text(
-                              "분 전",
-                              style: TextStyle(fontSize: 24.0),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                          const SizedBox(
+                            width: 10.0,
+                          ),
+                          const Text(
+                            "분 전",
+                            style: TextStyle(fontSize: 24.0),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  marginBox,
-                ],
+                ),
+                marginBox,
 
                 // 반복 여부
                 InputContainer(

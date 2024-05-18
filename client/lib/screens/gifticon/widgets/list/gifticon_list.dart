@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:client/screens/gifticon/model/gifticon_preview_model.dart';
 import 'package:flutter/material.dart';
 import '../../../../constants.dart';
@@ -7,14 +9,35 @@ import 'package:client/styles.dart';
 class GifticonList extends StatefulWidget {
   final List<GifticonPreview> gifticons;
   final Function() onRefresh;
+  final String Function(GifticonPreview gifticon) getStatusStamp;
 
-  GifticonList({Key? key, required this.gifticons, required this.onRefresh}) : super(key: key);
+  GifticonList({Key? key, required this.gifticons, required this.onRefresh, required this.getStatusStamp}) : super(key: key);
 
   @override
   _GifticonListState createState() => _GifticonListState();
 }
 
 class _GifticonListState extends State<GifticonList> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _setupTimer();
+  }
+
+  void _setupTimer() {
+    _timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+      widget.onRefresh();  // 부모 위젯에서 제공된 데이터 새로고침 함수 호출
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();  // 타이머 사용 종료
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -43,7 +66,7 @@ class _GifticonListState extends State<GifticonList> {
             Expanded(
               child: TabBarView(
                 children: [
-                  buildGridView(widget.gifticons.where((i) => i.isUsed == 'UNUSED' || i.isUsed == 'INUSED').toList(), 2),
+                  buildGridView(widget.gifticons.where((i) => i.isUsed == 'UNUSED' || i.isUsed == 'INUSE').toList(), 2),
                   buildGridView(widget.gifticons.where((i) => i.isUsed == 'USED').toList(), 2),
                 ],
               ),

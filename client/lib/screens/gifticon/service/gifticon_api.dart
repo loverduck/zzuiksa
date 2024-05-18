@@ -106,8 +106,9 @@ Future<dynamic> patchGifticon(int gifticonId, Gifticon gifticon) async {
       body: jsonEncode(gifticon.toJson()),
     );
 
-    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
-    return json;
+    int patchedGifticonId = jsonDecode(utf8.decode(res.bodyBytes))['data']['gifticonId']; //기프티콘 id
+    print(patchedGifticonId);
+    return patchedGifticonId;
   } catch (e) {
     print('update gifticon error: $e');
   }
@@ -128,8 +129,8 @@ Future<dynamic> deleteGifticon(int gifticonId) async {
       },
     );
 
-    Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
-    return json;
+    String msg = jsonDecode(utf8.decode(res.bodyBytes))['data']['message'];
+    return msg;
   } catch (e) {
     print('delelte gifticon error: $e');
   }

@@ -27,6 +27,7 @@ class _GifticonListItemState extends State<GifticonListItem> {
           height: 120,
           width: 120,
           fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
         );
       } catch (e) {
         print("Failed to load image: $e");
