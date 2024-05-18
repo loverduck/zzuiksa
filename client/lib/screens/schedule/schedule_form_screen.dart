@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:client/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:intl/intl.dart';
 
 class ScheduleFormScreen extends StatefulWidget {
@@ -48,6 +49,8 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
   Repeat? _repeat;
 
   String? errorMsg;
+
+  final service = FlutterBackgroundService();
 
   final formKey = GlobalKey<FormState>();
 
@@ -264,6 +267,7 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
       Map<String, dynamic> res = await postSchedule(schedule);
 
       if (res["status"] == "success") {
+        service.invoke("updateSchedule");
         Navigator.pop(context);
       } else {
         setState(() {
@@ -394,11 +398,14 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
                 ),
                 // 장소 입력
                 PlaceInput(
-                    selectedType: selectedType,
-                    inputTitleText: inputTitleText,
-                    marginBox: marginBox,
-                    setType: setType,
-                    setPlace: setPlace),
+                  selectedType: selectedType,
+                  inputTitleText: inputTitleText,
+                  marginBox: marginBox,
+                  setType: setType,
+                  setPlace: setPlace,
+                  arrivalDate: endDateEditController.text,
+                  arrivalTime: endTimeEditController.text,
+                ),
                 marginBox,
                 // 알림
                 InputContainer(

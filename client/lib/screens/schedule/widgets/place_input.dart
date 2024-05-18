@@ -17,6 +17,8 @@ class PlaceInput extends StatefulWidget {
     required this.setPlace,
     this.toPlace,
     this.fromPlace,
+    this.arrivalDate,
+    this.arrivalTime,
   });
 
   final String selectedType;
@@ -26,6 +28,8 @@ class PlaceInput extends StatefulWidget {
   final Function setPlace;
   final Place? toPlace;
   final Place? fromPlace;
+  final String? arrivalDate;
+  final String? arrivalTime;
 
   @override
   State<PlaceInput> createState() => _PlaceInputState();
@@ -81,7 +85,7 @@ class _PlaceInputState extends State<PlaceInput> {
   }
 
   void getTransport(String item) async {
-    print("from: $_fromPlace, to: $_toPlace");
+    print("getTransport: $item");
     setState(() {
       if (_fromPlace.name == null || _toPlace.name == null) {
         transportTimeText = "";
@@ -99,11 +103,19 @@ class _PlaceInputState extends State<PlaceInput> {
         _fromPlace.name!.isNotEmpty &&
         _toPlace.name != null &&
         _toPlace.name!.isNotEmpty) {
-      routeRes = await getRoute(_selectedType, _fromPlace, _toPlace);
-      print(routeRes);
+      time = "";
+      routeRes = await getRoute(
+        _selectedType,
+        _fromPlace,
+        _toPlace,
+        widget.arrivalDate == null || widget.arrivalTime == null
+            ? null
+            : "${widget.arrivalDate}T${widget.arrivalTime}",
+      );
       if (routeRes?["status"] == "success") {
         seconds = routeRes?["data"]["time"];
         time = secondsConvertor(seconds);
+        errorMsg = "";
       } else {
         errorMsg = "잠시 후 다시 시도해주세요.";
       }
@@ -114,7 +126,8 @@ class _PlaceInputState extends State<PlaceInput> {
       });
     } else {
       setState(() {
-        errorMsg = "잠시 후 다시 시도해주세요.";
+        time = "";
+        errorMsg = "";
       });
     }
   }
