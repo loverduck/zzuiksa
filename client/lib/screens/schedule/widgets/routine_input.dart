@@ -32,7 +32,7 @@ class _RoutineInputState extends State<RoutineInput> {
   TextEditingController routineEndController = TextEditingController();
   TextEditingController dailyRepeatEditingController =
       TextEditingController(text: "1");
-  Repeat repeat = Repeat(cycle: "DAILY");
+  Repeat repeat = Repeat(cycle: "DAILY", repeatAt: 1);
   Timer? inputTimer;
   int weeklyRepeat = 2;
   int repeatDay = 1;
