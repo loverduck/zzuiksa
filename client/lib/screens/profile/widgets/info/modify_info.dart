@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:client/constants.dart';
 import 'package:client/widgets/header.dart';
-import 'package:client/widgets/input_box.dart';
+import 'package:client/screens/profile/widgets/info/input_box.dart';
 import 'package:client/widgets/custom_button.dart';
 import 'package:client/service/member_api.dart';
 
@@ -24,13 +24,12 @@ class _ModifyInfoState extends State<ModifyInfo> {
   var nickname = TextEditingController(); // 닉네임 입력 저장
   var birthday = TextEditingController(); // 생일 입력 저장
 
-
   @override
   void initState() {
     super.initState();
     member = widget.member; // widget의 member를 초기화
     nickname.text = member.name!;
-    if (member.birthday!=null) birthday.text = member.birthday!;
+    if (member.birthday != null) birthday.text = member.birthday!;
   }
 
   final List<PlatformFile> _files = [];
@@ -50,25 +49,29 @@ class _ModifyInfoState extends State<ModifyInfo> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final provider = Provider.of<MemberApi>(context);
+    final _key = GlobalKey<FormState>();
 
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(80.0),
-          child: Header(title:'내 정보 수정',
-            buttonList: [IconButton(
-              icon: Icon(Icons.check),
-              padding: EdgeInsets.all(32),
-              iconSize: 32,
-              onPressed: () async {
-                if (nickname.text.trim()!=null && birthday.text.trim()=='') {
-                  provider.updateMemberInfo(Member(name: nickname.text.trim(), birthday: null));
-                  Navigator.pop(context);
-                } else if (nickname.text.trim()!=null && birthday.text.trim()!='') {
-                  provider.updateMemberInfo(Member(name: nickname.text.trim(), birthday: birthday.text.trim()));
-                  Navigator.pop(context);
-                }
-              },
-            )],
+          child: Header(
+            title: '내 정보 수정',
+            buttonList: [
+              IconButton(
+                icon: Icon(Icons.check),
+                padding: EdgeInsets.all(32),
+                iconSize: 32,
+                onPressed: () async {
+                  print('_key.currentState!.validate(): ${_key.currentState!.validate()}');
+                  if (_key.currentState!.validate()) {
+                    provider.updateMemberInfo(Member(
+                        name: nickname.text.trim(),
+                        birthday: birthday.text.trim()));
+                    Navigator.pop(context);
+                  }
+                },
+              )
+            ],
           ),
         ),
         extendBodyBehindAppBar: true,
@@ -80,86 +83,43 @@ class _ModifyInfoState extends State<ModifyInfo> {
                 padding: EdgeInsets.all(20.0),
                 child: Center(
                     child: Column(children: <Widget>[
-                  IconButton(
-                    onPressed: () {},
-                    icon: Image.asset(
-                      'assets/images/avatar.png',
-                      width: 120,
-                      height: 120,
-                    ),
-                  ),
-
-                      Container(
-                        width: 340,
-                        height: 140,
-                        child: Scrollbar(
-                          thumbVisibility: true,
-                          child: ListView.builder(
-                            itemCount: _files.isEmpty ? 1 : _files.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return _files.isEmpty
-                                  ? const ListTile(
-                                  title: Text("파일을 업로드해주세요"))
-                                  : ListTile(
-                                title: Text(_files.elementAt(index).name),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    setState(() {
-                                      _files.removeAt(index);
-                                    });
-                                  },
-                                ),
-                              );
-                            },
-                          ),
+                  // Container(
+                  //   margin: EdgeInsets.all(18),
+                  //   child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //       children: [
+                  //         CustomButton(
+                  //           text: '사진 바꾸기',
+                  //           size: 'small',
+                  //           func: _pickFiles,
+                  //         ),
+                  //         CustomButton(
+                  //           text: '사진 초기화',
+                  //           size: 'small',
+                  //           color: 200,
+                  //           func: () {
+                  //             print('image initialize button clicked');
+                  //           },
+                  //         ),
+                  //       ]),
+                  // ),
+                  Form(
+                      key: _key,
+                      child: Column(children: [
+                        InputBox(
+                          controller: nickname,
+                          name: 'nickname',
+                          placeholder: '닉네임',
+                          prefixIcon: const Icon(Icons.person,
+                              size: 32, color: Constants.main500),
                         ),
-                      ),
-
-                  Container(
-                    margin: EdgeInsets.all(18),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          CustomButton(
-                            text: '사진 바꾸기',
-                            size: 'small',
-                            func: _pickFiles,
-                          ),
-                          CustomButton(
-                            text: '사진 초기화',
-                            size: 'small',
-                            color: 200,
-                            func: () {
-                              print('image initialize button clicked');
-                            },
-                          ),
-                        ]),
-                  ),
-                  InputBox(
-                    controller: nickname,
-                    name: 'nickname',
-                    placeholder: '닉네임',
-                    prefixIcon: IconButton(
-                      icon: Icon(Icons.person),
-                      iconSize: 32,
-                      color: Constants.main500,
-                      padding: EdgeInsets.only(left: 16, right: 16),
-                      onPressed: () {},
-                    ),
-                  ),
-                  InputBox(
-                    controller: birthday,
-                    name: 'birthday',
-                    placeholder: '생일 (YYYY-MM-DD 형식)',
-                    prefixIcon: IconButton(
-                      icon: Icon(Icons.cake),
-                      iconSize: 32,
-                      color: Constants.main500,
-                      padding: EdgeInsets.only(left: 16, right: 16),
-                      onPressed: () {},
-                    ),
-                  ),
+                        InputBox(
+                            controller: birthday,
+                            name: 'birthday',
+                            placeholder: '생일 (YYYY-MM-DD 형식)',
+                            prefixIcon: const Icon(Icons.cake,
+                                size: 32, color: Constants.main500)),
+                      ])),
                 ])),
               ),
             ],
