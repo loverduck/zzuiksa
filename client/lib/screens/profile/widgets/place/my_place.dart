@@ -20,6 +20,10 @@ class _MyPlaceState extends State<MyPlace> {
 
   void _deletePlaceInfo(int placeId) async {
     await deletePlaceInfo(placeId);
+    List<Place> placeList = await getPlaceList();
+    setState(() {
+      myPlaceList = placeList;
+    });
   }
 
   void _getPlaceList() async {
@@ -38,6 +42,16 @@ class _MyPlaceState extends State<MyPlace> {
         ),
       );
     }
+  }
+
+  Future<void> _searchPlace(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SearchPlace()),
+    );
+    setState(() {
+      myPlaceList = result;
+    });
   }
 
   @override
@@ -143,10 +157,12 @@ class _MyPlaceState extends State<MyPlace> {
                       borderRadius: BorderRadius.circular(30)),
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SearchPlace()));
+                      _searchPlace(context);
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => SearchPlace()));
+                      //
                     },
                     child: Icon(Icons.add, size: 32),
                   ),
@@ -155,3 +171,5 @@ class _MyPlaceState extends State<MyPlace> {
             )));
   }
 }
+
+
