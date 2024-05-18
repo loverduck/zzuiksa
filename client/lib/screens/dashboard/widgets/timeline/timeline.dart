@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:client/constants.dart';
 import 'package:client/screens/dashboard/model/dashboard_model.dart';
 import 'package:client/screens/dashboard/service/dashboard_api.dart';
-import 'package:flutter/material.dart';
-import 'timeline_card.dart';
-import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
+import 'timeline_card.dart';
 
 class Timeline extends StatefulWidget {
   const Timeline({super.key});
@@ -47,27 +47,44 @@ class _TimelineState extends State<Timeline> {
               IconButton(
                   icon: Icon(Icons.add_circle_outline),
                   iconSize: 32,
+                  color: Constants.main600,
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ScheduleFormScreen(
-                                selectedDay: DateTime.now())));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ScheduleFormScreen(selectedDay: DateTime.now()),
+                      ),
+                    );
                   }),
             ],
           ),
         ),
-        Container(
-            width: 340,
-            height: scheduleList.length * 220,
-            child: ListView.builder(
-                itemCount: scheduleList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Summary summary = scheduleList[index];
-                  // Summary summary = Summary.fromJson(scheduleList[index]);
-                  print(summary.toString());
-                  return TimelineCard(summary: summary);
-                })),
+        scheduleList.length == 0
+            ? Container(
+                width: 340,
+                height: 80,
+                margin: EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                    color: Constants.main100,
+                    border: Border.all(color: Constants.main600, width: 2.5),
+                    borderRadius: BorderRadius.circular(32)),
+                child: Center(
+                  child: Text('오늘의 일정을 모두 완료하셨나요?',
+                      style: textTheme.displayMedium),
+                ),
+              )
+            : Container(
+                width: 340,
+                height: scheduleList.length * 240,
+                child: ListView.builder(
+                    itemCount: scheduleList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Summary summary = scheduleList[index];
+                      print(summary);
+                      return TimelineCard(summary: summary);
+                    }),
+              ),
       ],
     );
   }
