@@ -17,13 +17,14 @@ class TimelineCard extends StatelessWidget {
   @override
   Widget build(context) {
     final textTheme = Theme.of(context).textTheme;
+    final Schedule schedule = summary.scheduleSummary!;
 
     return Container(
       width: 340,
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 8),
       decoration: BoxDecoration(
-          color: categoryType[summary.scheduleSummary?.categoryId]![1],
+          color: categoryType[schedule.categoryId]![1],
           border: Border.all(color: Constants.main600, width: 2.5),
           borderRadius: BorderRadius.circular(30)),
       child: Column(
@@ -33,44 +34,42 @@ class TimelineCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(summary.scheduleSummary!.title!,
-                    style: textTheme.displayMedium),
-                Text(categoryType[summary.scheduleSummary?.categoryId]![0],
+                Text(schedule.title!, style: textTheme.displayMedium),
+                Text(categoryType[schedule.categoryId]![0],
                     style: textTheme.displaySmall),
               ]),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [
-                  Icon(Icons.location_pin),
-                  Text(' 올리브영'),
+              if (schedule.toPlace!.name != null)
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    Icon(Icons.location_pin),
+                    Text(' ${schedule.toPlace!.name}'),
+                  ]),
+                  Row(children: [
+                    Icon(Icons.sunny),
+                    Text(' 18℃'),
+                  ]),
                 ]),
-                Row(children: [
-                  Icon(Icons.sunny),
-                  Text(' 18℃'),
-                ]),
-              ]),
             ],
           ),
+          if (schedule.startTime != null && schedule.endTime != null)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(schedule.startTime!, style: textTheme.bodyLarge),
+                Text(schedule.endTime!, style: textTheme.bodyLarge),
+              ],
+            ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(summary.scheduleSummary!.startTime!,
-                  style: textTheme.bodyLarge),
-              if (summary.scheduleSummary!.endTime != null)
-                Text(summary.scheduleSummary!.endTime!,
-                    style: textTheme.bodyLarge),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(children: [
-                Icon(Icons.alarm_on),
-                Text(' 출발할 시간이에요!', style: textTheme.displaySmall),
-              ]),
+              // Row(children: [
+              //   Icon(Icons.alarm_on),
+              //   Text(' 출발할 시간이에요!', style: textTheme.displaySmall),
+              // ]),
               ElevatedButton(
                   onPressed: () {
                     print('complete button clicked');
-                    endSchedule(summary.scheduleSummary!.scheduleId!);
+                    endSchedule(schedule.scheduleId!);
                   },
                   style: ButtonStyle(
                     fixedSize: MaterialStatePropertyAll(Size(80, 14)),
