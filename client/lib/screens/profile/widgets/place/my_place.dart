@@ -100,10 +100,12 @@ class _MyPlaceState extends State<MyPlace> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          myPlaceList[index].name!,
-                                          style: textTheme.displaySmall,
-                                        ),
+                                        Container(width: 160,
+                                            child: Text(
+                                              myPlaceList[index].name!,
+                                              style: textTheme.displaySmall,
+                                              overflow: TextOverflow.ellipsis,
+                                            )),
                                         Row(children: [
                                           Container(
                                             width: 50,
@@ -139,7 +141,9 @@ class _MyPlaceState extends State<MyPlace> {
                                               iconSize: 28,
                                               color: Constants.main400,
                                               onPressed: () {
-                                                _deletePlaceInfo(myPlaceList[index].placeId!);
+                                                _deletePlaceInfo(
+                                                    myPlaceList[index]
+                                                        .placeId!);
                                               },
                                             ),
                                           ),
@@ -158,11 +162,6 @@ class _MyPlaceState extends State<MyPlace> {
                   child: TextButton(
                     onPressed: () {
                       _searchPlace(context);
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => SearchPlace()));
-                      //
                     },
                     child: Icon(Icons.add, size: 32),
                   ),
@@ -171,5 +170,3 @@ class _MyPlaceState extends State<MyPlace> {
             )));
   }
 }
-
-
