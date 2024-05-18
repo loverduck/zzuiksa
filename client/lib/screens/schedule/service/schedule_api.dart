@@ -137,7 +137,8 @@ Future<dynamic> patchSchedule(Schedule schedule) async {
   }
 }
 
-Future<dynamic> getRoute(String type, Place from, Place to) async {
+Future<dynamic> getRoute(
+    String type, Place from, Place to, String? arrivalTime) async {
   try {
     final res = await http.post(
       Uri.parse(("$baseUrl/api/schedules/route")),
@@ -148,7 +149,8 @@ Future<dynamic> getRoute(String type, Place from, Place to) async {
       body: jsonEncode({
         "type": type,
         "from": {"lat": from.lat, "lng": from.lng},
-        "to": {"lat": to.lat, "lng": to.lng}
+        "to": {"lat": to.lat, "lng": to.lng},
+        "arrivalTime": arrivalTime,
       }),
     );
 

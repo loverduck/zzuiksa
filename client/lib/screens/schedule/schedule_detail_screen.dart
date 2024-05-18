@@ -6,6 +6,7 @@ import 'package:client/screens/schedule/widgets/detail/detail_container.dart';
 import 'package:client/screens/schedule/widgets/snackbar_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 
@@ -24,6 +25,7 @@ class ScheduleDetailScreen extends StatefulWidget {
 class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
   late int scheduleId;
   late Schedule schedule;
+  final service = FlutterBackgroundService();
 
   SizedBox textMargin = const SizedBox(
     width: 10.0,
@@ -83,8 +85,8 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  _deleteSchedule(context);
+                onPressed: () async {
+                  await _deleteSchedule(context);
                   if (Navigator.canPop(context)) {
                     Navigator.pop(context);
                   }
@@ -121,12 +123,13 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
     }
   }
 
-  void _deleteSchedule(BuildContext context) async {
+  Future<void> _deleteSchedule(BuildContext context) async {
     Map<String, dynamic> res = await deleteSchedule(scheduleId);
 
     if (!mounted) return;
 
     if (res['status'] == 'success') {
+      service.invoke("updateSchedule");
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -155,7 +158,6 @@ class _ScheduleDetailScreenState extends State<ScheduleDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("detail: $schedule");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.main200,
