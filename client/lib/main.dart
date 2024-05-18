@@ -1,3 +1,4 @@
+import 'package:client/screens/schedule/widgets/background/near_places.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -21,7 +22,6 @@ import 'screens/gifticon/gifticon_detail_screen.dart';
 import 'screens/gifticon/gifticon_select_screen.dart';
 import 'screens/profile/widgets/place/detail_place.dart';
 
-
 // void main() => runApp(const MyApp());
 
 void main() async {
@@ -38,6 +38,8 @@ void main() async {
   AuthRepository.initialize(
       appKey: dotenv.get("KAKAO_JAVASCRIPT_KEY"), baseUrl: baseUrl);
 
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeService();
   // runApp(const MyApp());
   runApp(
     MultiProvider(
@@ -71,7 +73,7 @@ class MyApp extends StatelessWidget {
         '/gifticon': (context) => const GifticonListScreen(),
         '/gifticon/select': (context) => const GifticonSelectScreen(),
         '/gifticon/detail': (context) => const GifticonDetailScreen(),
-        '/place/detail' : (context) => const PlaceDetailScreen(),
+        '/place/detail': (context) => const PlaceDetailScreen(),
       },
       home: const LoginScreen(),
     );
