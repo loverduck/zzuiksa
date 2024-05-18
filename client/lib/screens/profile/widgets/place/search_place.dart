@@ -100,6 +100,12 @@ class _SearchPlaceState extends State<SearchPlace> {
     });
   }
 
+  void _createPlaceInfo() async {
+    await createPlaceInfo(selectedPlace!);
+    List<Place> placeList = await getPlaceList();
+    Navigator.pop(context, placeList);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -129,12 +135,7 @@ class _SearchPlaceState extends State<SearchPlace> {
                 icon: Icon(Icons.check),
                 padding: EdgeInsets.all(32),
                 iconSize: 32,
-                onPressed: () {
-                  print('complete button clicked');
-                  createPlaceInfo(selectedPlace!);
-                  Navigator.pop(context, MaterialPageRoute(builder: (context) => MyPlace()));
-                  // Navigator.pop(context);
-                },
+                onPressed: _createPlaceInfo,
               )
             ],
           ),
