@@ -62,9 +62,10 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
       File imageFile = await ImageUtils.loadImage(gifticon.url!);
       return Image.file(
         imageFile,
-        height: 150,
-        width: 150,
+        height: 180,
+        width: 180,
         fit: BoxFit.cover,
+        alignment: Alignment.topCenter,
       );
     } catch (e) {
       print("이미지 로딩에 실패했습니다: $e");
@@ -92,10 +93,17 @@ class _GifticonDetailScreenState extends State<GifticonDetailScreen> {
               child: Text('삭제하기'),
               onPressed: () async {
                 try {
-                  bool deleted = await deleteGifticon(gifticon.gifticonId!);
-                  if (deleted) {
+                  String msg = await deleteGifticon(gifticon.gifticonId!);
+                  if (msg == "Success") {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('기프티콘이 삭제되었습니다.'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    Navigator.of(context).pushReplacementNamed('/gifticon');
                   }
                 } catch (e) {
                   Navigator.of(context).pop();

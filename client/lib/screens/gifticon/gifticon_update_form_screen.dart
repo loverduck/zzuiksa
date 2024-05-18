@@ -38,11 +38,11 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
     }
 
     try {
-      Gifticon updatedGifticon = await patchGifticon(_gifticon.gifticonId!, _gifticon);
+      int updatedGifticonId = await patchGifticon(_gifticon.gifticonId!, _gifticon);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("기프티콘 정보가 성공적으로 수정되었습니다."),
       ));
-      Navigator.of(context).pop(updatedGifticon);
+      Navigator.of(context).pop(updatedGifticonId);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("기프티콘 정보 수정에 실패했습니다. 오류: $e"),
@@ -52,9 +52,9 @@ class _GifticonUpdateScreenState extends State<GifticonUpdateScreen> {
   }
 
   Future<Widget> _loadImage() async {
-    if (_gifticon?.url != null) {
+    if (_gifticon.url != null) {
       try {
-        File imageFile = await ImageUtils.loadImage(_gifticon!.url!);
+        File imageFile = await ImageUtils.loadImage(_gifticon.url!);
         return Image.file(
           imageFile,
           height: 300,

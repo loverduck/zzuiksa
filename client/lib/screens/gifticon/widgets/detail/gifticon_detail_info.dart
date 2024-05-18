@@ -30,7 +30,12 @@ class _GifticonDetailInfoState extends State<GifticonDetailInfo> {
   Widget build(BuildContext context) {
     final endDate = widget.gifticon.endDate;
     final DateTime? endDateParsed = endDate != null ? DateTime.tryParse(endDate) : null;
-    final int daysLeft = endDateParsed != null ? endDateParsed.difference(DateTime.now()).inDays : 0;
+    // 현재 날짜에서 시간을 제거하여 단순 날짜 비교 수행
+    final today = DateTime.now();
+    final todayDateOnly = DateTime(today.year, today.month, today.day);
+    final endDateOnly = endDateParsed != null ? DateTime(endDateParsed.year, endDateParsed.month, endDateParsed.day) : null;
+
+    final int daysLeft = endDateOnly != null ? endDateOnly.difference(todayDateOnly).inDays : -1;
     final String daysLeftText = daysLeft >= 0 ? "D - $daysLeft" : "사용 기한이 지난 기프티콘입니다.";
 
     TextStyle dDayStyle = TextStyle(
@@ -64,10 +69,11 @@ class _GifticonDetailInfoState extends State<GifticonDetailInfo> {
             '${widget.gifticon.endDate ?? 'N/A'} 까지 써야 해요!',
             style: myTheme.textTheme.displayMedium,
           ),
-          Text(
-            '남은 금액 : ${widget.gifticon.remainMoney ?? 'N/A'} 원',
-            style: myTheme.textTheme.displayMedium,
-          ),
+          if (widget.gifticon.remainMoney != null) // remainMoney가 null이 아닐 때만 표시
+            Text(
+              '남은 금액 : ${widget.gifticon.remainMoney} 원',
+              style: myTheme.textTheme.displayMedium,
+            ),
           const SizedBox(height: 16),
           Container(
             width: double.infinity,
@@ -85,7 +91,7 @@ class _GifticonDetailInfoState extends State<GifticonDetailInfo> {
           Center(
             child: UseButton(
               onPressed: () {
-                if (widget.gifticon.remainMoney != null && widget.gifticon.remainMoney! > 0) {
+                if ((widget.gifticon.remainMoney != null && widget.gifticon.remainMoney! > 0) || (widget.gifticon.remainMoney == null && widget.gifticon.isUsed == "UNUSED")) {
                   _showBarcodeModal(context, widget.gifticon);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(

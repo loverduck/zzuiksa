@@ -31,6 +31,30 @@ class _BarcodeModalState extends State<BarcodeModal> {
     super.dispose();
   }
 
+  void _completeUsage() async {
+    if (widget.gifticon.remainMoney != null) {
+      // 금액권인 경우 처리
+      final int inputAmount = int.tryParse(_amountController.text) ?? 0;
+      int finalAmountUsed = inputAmount;
+
+      if (inputAmount > widget.gifticon.remainMoney!) {
+        finalAmountUsed = widget.gifticon.remainMoney!; // 입력 금액을 remainMoney에 맞춤
+      }
+
+      int newRemaining = widget.gifticon.remainMoney! - finalAmountUsed;
+      widget.gifticon.remainMoney = newRemaining >= 0 ? newRemaining : 0;
+      widget.gifticon.isUsed = widget.gifticon.remainMoney! > 0 ? 'INUSE' : 'USED';
+    } else {
+      widget.gifticon.isUsed = 'USED';
+    }
+
+    int res = await patchGifticon(widget.gifticon.gifticonId!, widget.gifticon);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("기프티콘 정보가 성공적으로 수정되었습니다."),
+    ));
+    Navigator.of(context).pop();  // 모달 창 닫기
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -60,27 +84,6 @@ class _BarcodeModalState extends State<BarcodeModal> {
               style: TextStyle(fontSize: 24),
             ),
             SizedBox(height: 20),
-            // if (widget.nowGifticon.remainMoney != null) ...[
-            //   Text(
-            //     '남은 금액: ${widget.nowGifticon.remainMoney} 원',
-            //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            //   ),
-            //   SizedBox(height: 10),
-            //   TextFormField(
-            //     controller: _amountController,
-            //     decoration: InputDecoration(
-            //       labelText: '사용한 금액',
-            //       border: OutlineInputBorder(),
-            //     ),
-            //     keyboardType: TextInputType.number,
-            //     validator: (value) {
-            //       if (value == null || int.tryParse(value) == null || int.parse(value) > widget.remainMoney!) {
-            //         return '유효한 금액을 입력해주세요';
-            //       }
-            //       return null;
-            //     },
-            //   ),
-            // ],
             if (remainingMoney != null) ...[
               Text(
                 '남은 금액: ${widget.gifticon.remainMoney} 원',
@@ -126,12 +129,7 @@ class _BarcodeModalState extends State<BarcodeModal> {
                 ),
                 TextButton(
                   child: Text('사용 완료'),
-                  onPressed: () {
-                    if (_validateAmount()) {
-                      _patchGifticon(widget.gifticon);
-                      Navigator.of(context).pop();
-                    }
-                  },
+                  onPressed: _completeUsage,  // 함수 직접 호출 대신 참조
                 ),
               ],
             )
@@ -140,22 +138,21 @@ class _BarcodeModalState extends State<BarcodeModal> {
       ),
     );
   }
-
-  bool _validateAmount() {
-    final amount = int.tryParse(_amountController.text);
-    return amount != null && amount <= widget.gifticon.remainMoney!;
-  }
-
-  Future<void> _patchGifticon(Gifticon nowGifticon) async {
-    widget.gifticon.remainMoney = remainingMoney;
-    widget.gifticon.isUsed = remainingMoney! > 0 ? 'INUSE' : 'USED';
-
-    var res = await patchGifticon(widget.gifticon.gifticonId!, widget.gifticon);
-    if (res != null && res['status'] == 'success') {
-      Navigator.of(context).pop();
-      print('Gifticon updated successfully.');
-    } else {
-      print('Failed to update gifticon.');
-    }
-  }
+//
+//   bool _validateAmount() {
+//     final amount = int.tryParse(_amountController.text);
+//     return amount != null && amount <= widget.gifticon.remainMoney!;
+//   }
+//
+//   Future<void> _patchGifticon(Gifticon nowGifticon) async {
+//     if (widget.gifticon.remainMoney != null ) {
+//       widget.gifticon.remainMoney = remainingMoney;
+//       widget.gifticon.isUsed = remainingMoney! > 0 ? 'INUSE' : 'USED';
+//     } else {
+//       widget.gifticon.isUsed = 'USED';
+//     }
+//
+//     int res = await patchGifticon(widget.gifticon.gifticonId!, widget.gifticon);
+//     print('기프티콘 정보가 업데이트되었습니다.');
+//   }
 }
