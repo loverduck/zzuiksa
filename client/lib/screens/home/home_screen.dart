@@ -6,6 +6,8 @@ import 'package:client/screens/schedule/schedule_calendar_screen.dart';
 import 'package:client/widgets/location_model.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:client/widgets/footer.dart';
 import 'package:client/service/member_api.dart';
@@ -18,6 +20,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final FlutterLocalNotificationsPlugin _local =
+      FlutterLocalNotificationsPlugin();
   int bottomIndex = 0;
 
   setBottomIndex(int index) {
@@ -50,11 +54,30 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _permissionWithNotification() async {
+    if (await Permission.notification.isDenied &&
+        !await Permission.notification.isPermanentlyDenied) {
+      await [Permission.notification].request();
+    }
+  }
+
+  void _initialization() async {
+    AndroidInitializationSettings android =
+        const AndroidInitializationSettings("@mipmap/ic_launcher");
+
+    InitializationSettings settings = InitializationSettings(android: android);
+
+    await _local.initialize(settings);
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkLocationService(context);
     });
+    _permissionWithNotification();
+    _initialization();
+
     super.initState();
   }
 
