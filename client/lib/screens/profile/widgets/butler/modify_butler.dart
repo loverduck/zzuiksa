@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:client/constants.dart';
 import 'package:client/widgets/header.dart';
-import 'package:client/widgets/input_box.dart';
+import 'package:client/screens/profile/widgets/info/input_box.dart';
 import 'package:client/widgets/dropdown_box.dart';
 
 class ModifyButler extends StatefulWidget {
@@ -45,11 +45,11 @@ class _ModifyButlerState extends State<ModifyButler> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                      InputBox(
-                        controller: nickname,
-                        name: 'nickname',
-                        placeholder: '집사 닉네임',
-                      ),
+                      // InputBox(
+                      //   controller: nickname,
+                      //   name: 'nickname',
+                      //   placeholder: '집사 닉네임',
+                      // ),
                       DropdownBox(
                         name: 'speachStyle',
                         dropdownList: ['귀여운 말투', '근엄한 말투', '딱딱한 말투'],

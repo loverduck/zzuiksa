@@ -22,20 +22,20 @@ class MyInfo extends StatelessWidget {
       child: Column(
         children: [
           Table(
-            columnWidths: {
+            columnWidths: const {
               0: FixedColumnWidth(80.0),
               1: FixedColumnWidth(160.0),
             },
             children: [
               TableRow(children: [
-                Text('닉네임',
+                const Text('닉네임',
                     style: TextStyle(color: Constants.main400, fontSize: 22),
                     textAlign: TextAlign.center),
                 Text(member.name!,
                     style: textTheme.displaySmall, textAlign: TextAlign.center)
               ]),
               TableRow(children: [
-                Text('생일',
+                const Text('생일',
                     style: TextStyle(color: Constants.main400, fontSize: 22),
                     textAlign: TextAlign.center),
                 Text(member.birthday==null? '생일을 설정해주세요' : member.birthday!,
@@ -43,7 +43,7 @@ class MyInfo extends StatelessWidget {
               ]),
             ],
           ),
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
           CustomButton(
             text: '수정하기',
             func: () {
