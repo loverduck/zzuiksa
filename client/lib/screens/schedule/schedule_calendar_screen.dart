@@ -3,6 +3,7 @@ import 'package:client/screens/schedule/schedule_detail_screen.dart';
 import 'package:client/screens/schedule/schedule_form_screen.dart';
 import 'package:client/screens/schedule/service/schedule_api.dart';
 import 'package:client/screens/schedule/utils/local_time_convertor.dart';
+import 'package:client/screens/schedule/widgets/loading_dialog.dart';
 import 'package:client/screens/schedule/widgets/snackbar_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       };
 
       try {
-        showLoadingDialog(context);
+        LoadingDialog.showDialog(context);
 
         Map<String, dynamic> res = await postRecognize(body);
 
@@ -95,7 +96,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     monthSchedules = {};
 
     Future.delayed(Duration.zero, () {
-      showLoadingDialog(context);
+      LoadingDialog.showDialog(context);
     });
 
     if (!mounted) return;
@@ -140,32 +141,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     } finally {
       Navigator.pop(context);
     }
-  }
-
-  void showLoadingDialog(BuildContext context) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false,
-      pageBuilder: (BuildContext buildContext, Animation<double> animation,
-          Animation<double> secondaryAnimation) {
-        return const SizedBox();
-      },
-      barrierColor: Colors.black.withOpacity(0.5),
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
-          opacity: CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOut,
-          ),
-          child: const Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 6.0,
-              valueColor: AlwaysStoppedAnimation(Constants.pink400),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -262,21 +237,26 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16.0),
                             ),
-                            child: TextField(
-                              controller: scheduleSentenceEditController,
-                              decoration: const InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 12.0),
-                                hintText: "일정을 입력해주세요",
-                                hintStyle: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: fontSizeSmall,
+                            child: Stack(
+                              alignment: Alignment.centerRight,
+                              children: [
+                                TextField(
+                                  controller: scheduleSentenceEditController,
+                                  decoration: const InputDecoration(
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(12.0, 0, 60.0, 0),
+                                    hintText: "일정을 입력해주세요",
+                                    hintStyle: TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: fontSizeSmall,
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: fontSizeSmall,
+                                  ),
                                 ),
-                                border: InputBorder.none,
-                              ),
-                              style: const TextStyle(
-                                fontSize: fontSizeSmall,
-                              ),
+                              ],
                             ),
                           ),
                         ],

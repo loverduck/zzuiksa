@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:client/constants.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
 import 'package:client/screens/schedule/widgets/input_delete_icon.dart';
+import 'package:client/screens/schedule/widgets/loading_dialog.dart';
 import 'package:client/widgets/location_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
   late KakaoMapController mapController;
   List<dynamic> places = [];
   int? selectedPlaceIndex;
+  bool isSearching = false;
 
   LatLng center = LatLng(37.50129420028603, 127.03961032272223);
   Set<Marker> markers = {};
@@ -49,9 +51,16 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
   void onChangeKeywordHandler(keyword) {
     selectedPlaceIndex = null;
 
-    const duration = Duration(milliseconds: 1000);
+    if (keyword.isEmpty) return;
+
+    const duration = Duration(milliseconds: 1500);
     searchTimer?.cancel();
-    searchTimer = Timer(duration, () => searchPlaces(keyword));
+    searchTimer = Timer(duration, () {
+      setState(() {
+        isSearching = true;
+      });
+      searchPlaces(keyword);
+    });
   }
 
   void onSelectPlaceHandler(place) {
@@ -98,6 +107,7 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
 
       setState(() {
         list.addAll(result.list);
+        isSearching = false;
       });
     } catch (e) {
       print("search error: $e");
@@ -111,20 +121,25 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
       locationModel = Provider.of<LocationModel>(context);
 
       Future.delayed(Duration.zero, () async {
-        await locationModel.getCurrentLocation();
-        Position currentPosition = locationModel.currentPostion;
+        Map<String, dynamic> permission = await checkLocationPermission();
 
-        _isLocationInitialized = true;
+        if (permission["status"] == "granted") {
+          await locationModel.getCurrentLocation();
+          Position currentPosition = locationModel.currentPostion;
 
-        setState(() {
-          center = LatLng(currentPosition.latitude, currentPosition.longitude);
-          markers.add(Marker(
-            markerId: "current",
-            latLng: center,
-          ));
+          _isLocationInitialized = true;
 
-          mapController.setCenter(center);
-        });
+          setState(() {
+            center =
+                LatLng(currentPosition.latitude, currentPosition.longitude);
+            markers.add(Marker(
+              markerId: "current",
+              latLng: center,
+            ));
+
+            mapController.setCenter(center);
+          });
+        }
         // }
       });
     }
@@ -197,65 +212,78 @@ class _SchedulePlaceSearchScreenState extends State<SchedulePlaceSearchScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListView.builder(
-                controller: scrollController,
-                itemCount: list.length,
-                itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      const Icon(Icons.location_on),
-                      Expanded(
-                        child: AutoScrollTag(
-                          key: ValueKey(index),
-                          index: index,
-                          controller: scrollController,
-                          child: ListTile(
-                            title: Text(
-                              list[index].placeName ?? "",
-                              style: const TextStyle(
-                                fontSize: 24.0,
+              child: isSearching
+                  ? Column(
+                      children: [
+                        const SizedBox(
+                          height: 24.0,
+                        ),
+                        SizedBox(
+                          width: 36.0,
+                          height: 36.0,
+                          child: LoadingDialog.showIndicator(),
+                        ),
+                      ],
+                    )
+                  : ListView.builder(
+                      controller: scrollController,
+                      itemCount: list.length,
+                      itemBuilder: (context, index) {
+                        return Row(
+                          children: [
+                            const Icon(Icons.location_on),
+                            Expanded(
+                              child: AutoScrollTag(
+                                key: ValueKey(index),
+                                index: index,
+                                controller: scrollController,
+                                child: ListTile(
+                                  title: Text(
+                                    list[index].placeName ?? "",
+                                    style: const TextStyle(
+                                      fontSize: 24.0,
+                                    ),
+                                  ),
+                                  subtitle: Row(
+                                    children: [
+                                      Text(
+                                        list[index].addressName ?? "",
+                                        style: const TextStyle(
+                                          fontSize: 18.0,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 20.0,
+                                      ),
+                                      Text(
+                                        "${list[index].distance}m",
+                                        style: const TextStyle(
+                                          fontSize: 18.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: selectedPlaceIndex == index
+                                      ? const Icon(Icons.check)
+                                      : null,
+                                  onTap: () {
+                                    setState(() {
+                                      selectedPlaceIndex = index;
+
+                                      onSelectPlaceHandler(list[index]);
+                                      mapController.setCenter(LatLng(
+                                          double.parse(list[index].y!),
+                                          double.parse(list[index].x!)));
+                                      mapController.setLevel(3);
+                                    });
+                                  },
+                                ),
                               ),
                             ),
-                            subtitle: Row(
-                              children: [
-                                Text(
-                                  list[index].addressName ?? "",
-                                  style: const TextStyle(
-                                    fontSize: 18.0,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20.0,
-                                ),
-                                Text(
-                                  "${list[index].distance}m",
-                                  style: const TextStyle(
-                                    fontSize: 18.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            trailing: selectedPlaceIndex == index
-                                ? const Icon(Icons.check)
-                                : null,
-                            onTap: () {
-                              setState(() {
-                                selectedPlaceIndex = index;
-
-                                onSelectPlaceHandler(list[index]);
-                                mapController.setCenter(LatLng(
-                                    double.parse(list[index].y!),
-                                    double.parse(list[index].x!)));
-                                mapController.setLevel(3);
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+                          ],
+                        );
+                      },
+                    ),
             ),
           ),
           boxMargin,
