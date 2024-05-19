@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:client/constants.dart';
 import 'package:client/screens/schedule/model/schedule_model.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 const storage = FlutterSecureStorage();
 String? token;
+final service = FlutterBackgroundService();
 
 Future<void> getToken() async {
   try {
@@ -35,7 +37,12 @@ Future<dynamic> postSchedule(Schedule schedule) async {
     );
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
 
-    print(json);
+    if (json["status"] == "success") {
+      if (schedule.alertBefore != null) {
+        service.invoke("setAlert",
+            {"schedule": schedule, "scheduleId": json["data"]["scheduleId"]});
+      }
+    }
 
     return json;
   } catch (e) {
@@ -113,6 +120,9 @@ Future<dynamic> deleteSchedule(int scheduleId) async {
     );
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
 
+    if (json["status"] == "success") {
+      service.invoke("cancelAlert", {"scheduleId": scheduleId});
+    }
     return json;
   } catch (e) {
     print("delete schedule error: $e");
@@ -130,6 +140,15 @@ Future<dynamic> patchSchedule(Schedule schedule) async {
       body: jsonEncode(schedule.toJson()),
     );
     Map<String, dynamic> json = jsonDecode(utf8.decode(res.bodyBytes));
+
+    if (json["status"] == "success") {
+      if (schedule.isDone!) {
+        service.invoke("cancelAlert", {"scheduleId": schedule.scheduleId});
+      } else {
+        service.invoke("setAlert",
+            {"schedule": schedule, "scheduleId": schedule.scheduleId});
+      }
+    }
 
     return json;
   } catch (e) {
@@ -150,7 +169,7 @@ Future<dynamic> getRoute(
         "type": type,
         "from": {"lat": from.lat, "lng": from.lng},
         "to": {"lat": to.lat, "lng": to.lng},
-        "arrivalTime": arrivalTime,
+        "arrivalTime": arrivalTime == null ? null : "$arrivalTime:00",
       }),
     );
 
