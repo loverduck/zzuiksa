@@ -86,63 +86,41 @@ void onStart(ServiceInstance service) async {
 
   if (todayScheduls.isNotEmpty) {
     Timer.periodic(
-      const Duration(seconds: 5),
+      const Duration(minutes: 5),
       (timer) async {
         Position currentPosition = await Geolocator.getCurrentPosition();
 
-        if (service is AndroidServiceInstance) {
-          if (await service.isForegroundService()) {
-            for (Summary schedule in todayScheduls) {
-              if (schedule.scheduleSummary!.toPlace?.name != null &&
-                  !schedule.scheduleSummary!.isDone!) {
-                Map<String, dynamic> res = await searchPlace(
-                    schedule.scheduleSummary!.toPlace!, currentPosition);
-                if (res["status"] == "success") {
-                  Place near = res["place"];
-                  await _local.show(
-                      schedule.scheduleSummary!.scheduleId!,
-                      "${near.name}을 지나고 있어요!",
-                      "${schedule.scheduleSummary?.title!}을 잊지 마세요",
-                      details);
+        if (lastPosition != null) {
+          double distance = Geolocator.distanceBetween(
+              lastPosition!.latitude,
+              lastPosition!.longitude,
+              currentPosition.latitude,
+              currentPosition.longitude);
+
+          if (distance >= diffMin && distance <= diffMax) {
+            if (service is AndroidServiceInstance) {
+              if (await service.isForegroundService()) {
+                for (Summary schedule in todayScheduls) {
+                  if (schedule.scheduleSummary!.toPlace?.name != null &&
+                      schedule.scheduleSummary!.isDone == false) {
+                    Map<String, dynamic> res = await searchPlace(
+                        schedule.scheduleSummary!.toPlace!, currentPosition);
+                    if (res["status"] == "success") {
+                      Place near = res["place"];
+                      await _local.show(
+                          schedule.scheduleSummary!.scheduleId!,
+                          "${schedule.scheduleSummary?.title!} 하셨나요?",
+                          "${near.name} 근처를 지나고 있어요!",
+                          details);
+                    }
+                  }
                 }
               }
             }
           }
         }
 
-        // if (lastPosition != null) {
-        //   double distance = Geolocator.distanceBetween(
-        //       lastPosition!.latitude,
-        //       lastPosition!.longitude,
-        //       currentPosition.latitude,
-        //       currentPosition.longitude);
-
-        //   if (distance >= diffMin && distance <= diffMax) {
-        //     print("움직이는 중");
-
-        //     if (service is AndroidServiceInstance) {
-        //       if (await service.isForegroundService()) {
-        //         for (Summary schedule in todayScheduls) {
-        //           if (schedule.scheduleSummary!.toPlace?.name != null &&
-        //               schedule.scheduleSummary!.isDone == false) {
-        //             Map<String, dynamic> res = await searchPlace(
-        //                 schedule.scheduleSummary!.toPlace!, currentPosition);
-        //             if (res["status"] == "success") {
-        //               Place near = res["place"];
-        //               await _local.show(
-        //                   schedule.scheduleSummary!.scheduleId!,
-        //                   "${near.name}을 지나고 있어요!",
-        //                   "${schedule.scheduleSummary?.title!}을 잊지 마세요!",
-        //                   details);
-        //             }
-        //           }
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
-
-        // lastPosition = currentPosition;
+        lastPosition = currentPosition;
       },
     );
   }
