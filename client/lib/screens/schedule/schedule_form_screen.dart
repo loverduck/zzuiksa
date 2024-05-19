@@ -65,9 +65,9 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
     endDateEditController.text =
         widget.schedule?.endDate ?? widget.selectedDay.toString().split(" ")[0];
     startTimeEditController.text = widget.schedule?.startTime ??
-        "${DateFormat("H").format(DateTime.now())}:00";
-    endTimeEditController.text = widget.schedule?.endTime ??
         "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 1)))}:00";
+    endTimeEditController.text = widget.schedule?.endTime ??
+        "${DateFormat("H").format(DateTime.now().add(const Duration(hours: 2)))}:00";
 
     selectedCategory = widget.schedule?.categoryId ?? 1;
     alertEditController.text = widget.schedule?.alertBefore.toString() ?? "";
@@ -267,7 +267,16 @@ class _ScheduleFormScreenState extends State<ScheduleFormScreen> {
       Map<String, dynamic> res = await postSchedule(schedule);
 
       if (res["status"] == "success") {
-        service.invoke("updateSchedule");
+        DateTime startDate =
+            DateFormat("yyyy-MM-dd").parse(startDateEditController.text);
+        DateTime endDate =
+            DateFormat("yyyy-MM-dd").parse(endDateEditController.text);
+        if (startDate.isBefore(DateTime.now()) &&
+            endDate.isAfter(DateTime.now()) &&
+            toPlace?.name != null) {
+          print("오늘");
+          service.invoke("updateSchedule");
+        }
         Navigator.pop(context);
       } else {
         setState(() {
