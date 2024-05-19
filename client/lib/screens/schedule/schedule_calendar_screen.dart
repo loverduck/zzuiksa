@@ -7,7 +7,6 @@ import 'package:client/screens/schedule/widgets/loading_dialog.dart';
 import 'package:client/screens/schedule/widgets/snackbar_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:client/constants.dart';
