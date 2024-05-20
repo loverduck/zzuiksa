@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysql
+    restart: unless-stopped
+    volumes:
+      - /home/ubuntu/mysql/data:/var/lib/mysql
+      # - /home/ubuntu/mysql/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+    environment:
+      TZ: ${TZ}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    networks:
+      - backend
+
+  mysql-test:
+    image: mysql:8.3.0
+    container_name: mysql-test
+    restart: unless-stopped
+    volumes:
+      - /home/ubuntu/mysql-test/data:/var/lib/mysql
+      # - /home/ubuntu/mysql/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - 4406:3306
+    environment:
+      TZ: ${TZ}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    networks:
+      - backend
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis
+    volumes:
+      - /home/ubuntu/redis/data:/data
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - backend
+
+  api:
+    image: loverduck97/zzuiksa-backend:latest
+    container_name: api
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 4000:8080
+    networks:
+      - backend
+    depends_on:
+      - h2
+
+  h2:
+    container_name: h2
+    image: oscarfonts/h2:latest
+    ports:
+      - 1521:1521
+      - 8081:81
+    environment:
+      H2_OPTIONS: -ifNotExists
+    volumes:
+      - /home/ubuntu/h2:/opt/h2-data
+    restart: always
+    networks:
+      - backend
+
+networks:
+  backend:

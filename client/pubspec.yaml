@@ -1,0 +1,63 @@
+name: client
+description: "A new Flutter project."
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.4 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  flutter_native_splash: ^2.3.1
+  flutter_dotenv: ^5.1.0
+  kakao_flutter_sdk: ^1.3.1
+
+  file_picker: ^8.0.3
+  image_picker: ^0.8.3+2
+  image_cropper: ^5.0.1
+  table_calendar: ^3.1.1
+  intl: ^0.19.0
+  timezone: ^0.9.3
+  http: ^1.2.1
+  flutter_secure_storage: ^9.1.1
+  kakao_map_plugin: ^0.3.0
+  scroll_to_index: ^3.0.1
+  provider: ^6.1.2
+  barcode_widget: ^2.0.0
+  path_provider: ^2.0.9
+  path: ^1.8.0
+  geolocator: ^11.1.0
+  app_settings: ^5.1.1
+  permission_handler: ^11.3.1
+  speech_to_text: ^6.6.0
+  flutter_background_service: ^5.0.5
+  flutter_local_notifications: ^17.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - local.env
+    - assets/images/
+    - assets/stamps/
+  fonts:
+    - family: OwnglyphChongchong
+      fonts:
+        - asset: assets/fonts/OwnglyphChongchong.ttf
+    - family: BMJua
+      fonts:
+        - asset: assets/fonts/BMJUA.ttf
+
+flutter_native_splash:
+  color: "#FFBB70"
+  image: assets/images/splash.png
+  android_12:
+    color: "#FFBB70"
+    icon_background_color: "#FFBB70"
+    image: assets/images/splash.png
