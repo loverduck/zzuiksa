@@ -1,0 +1,687 @@
+<html><head><title>시연 시나리오</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body class="pdf ko-KR" lang="ko-KR"><article id="fb32134b-70fe-47a6-8ad8-932b522d9290" class="page sans"><header><h1 class="page-title">시연 시나리오</h1><p class="page-description"></p></header><div class="page-body"><ol type="1" id="daac33c6-5bcd-4737-8018-3a50b4eff091" class="numbered-list" start="1"><li>회원 가입 / 로그인<p id="cd7a02d8-bec0-45c0-b509-9c4e2f590bed" class="">유저는 카카오 로그인이나 게스트 로그인을 통해 서비스에 가입이 가능합니다.</p><figure id="d2cd4797-7ddc-43e4-ac2e-305a273f25a3" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/ec55ad6c-b580-4ee7-95c1-3407dfbc044f/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=d438985ee9cfba0a2ceb4d1e5906f0e0801edaeef50484463d2be8d9b09dc765&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure></li></ol><p id="e5a1938e-3236-4d5d-b3e5-89847782eec7" class="">
+</p><ol type="1" id="97f0442d-ba10-4815-b607-4e3d202f252b" class="numbered-list" start="2"><li>일정 등록<p id="cb5f0f93-aaa8-4145-bdf5-60567f8b6150" class="">일정을 등록하려는 날짜를 선택한 뒤, + 버튼을 클릭하여 일정 등록 페이지로 이동합니다.</p><figure id="e6957c77-4092-458c-a7bf-03d0fdba6313" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/f293402a-bcd6-4925-8eb5-70d5b5d9ded9/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=b44b54eaf2cdbf206108a26d432913b949ce5e2d42543f7215986937b8fb94df&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure><p id="28a9f6ac-ff14-4d1d-be98-2efa60e9917c" class="">
+</p><p id="b40250d3-5cc0-4cd4-a681-ddf3749b40eb" class="">일정 등록 페이지에서 일정 정보(제목, 시간, 장소, 알림 등)를 입력하고 저장 버튼을 눌러 일정을 새로 등록합니다.</p><figure id="edc3ff93-9396-4c1e-9876-7d5727850a71" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/26a53281-188f-4ab0-8e89-318b2be6b401/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=2e1a5b3f41436cbe5c406e63a2e343a88a36ad70a261ea5d71c5039a5a065c06&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure><figure id="b687ea94-88e4-47f7-bf5c-c81abe8ac577" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/2a7add01-f6cd-4cff-b1b9-0d786992f075/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=9704ac0667a47b423d1bbd6f3d7524222ada0474de118a90dce807395b6e886b&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure><p id="488d8057-535a-49fe-b0c1-36979117b2cd" class="">
+</p></li></ol><p id="828a9ce5-cde0-496e-8646-7cc51cdeef7c" class="">
+</p><ol type="1" id="530e0d74-1d2e-437b-8b15-4a71e7987ff9" class="numbered-list" start="3"><li>일정 등록 (문장으로)<p id="6274dcc4-411f-43ef-87b4-3246a39fd98f" class="">일정을 등록하려는 날짜를 선택한 뒤, 팝업 창 하단의 input박스에 문장으로 일정 정보를 입력합니다.</p><p id="4fb402e5-7259-4148-8999-0e00ba13a3d1" class="">ex) 저녁7시 강남역에서 회식</p><figure id="6af0bdc7-fe28-4dbe-a3da-cfe4f7d614d5" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/dab406a3-6d80-4107-bec8-5729c38c9093/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=fab99e3cec0824cc7ee2a85559a78680d250113e3bf6e407f12a65e52628c87a&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure><p id="e3243cf7-f050-46f5-8b6e-d03f2b32034e" class="">
+</p><p id="98d20c60-66fe-4826-8e9e-4d6c92fa5d88" class="">입력 후 + 버튼을 누르면 문장을 인식하여 해당하는 일정을 자동으로 등록합니다.</p><figure id="27718676-f159-48a8-b5d3-cd45587fb855" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/4abeb55b-86ec-4606-8c7e-a3d93f2c0367/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=0c6cdb57e8172d98e7eb16bc006efb2011cb1231c04b71cd40dbd9acb16fbc9d&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure><p id="ced41e6c-88a3-4ca2-ad07-b453cf768145" class="">
+</p></li></ol><p id="53e17d45-8640-4f1b-84ea-284c136c122f" class="">
+</p><ol type="1" id="71b93b46-01ef-43a2-b0c4-3fb8455aa30b" class="numbered-list" start="4"><li>대시보드<p id="9464d92d-51ef-4a90-9f8e-44c5f597b73e" class="">대시보드 화면을 통해 오늘의 일정과 진행도, 일정별 날씨와 기온을 확인할 수 있습니다.</p><figure id="4a78a04b-d2e6-4734-86ee-e99c657c7d6a" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/ce1a9a3a-73e2-412b-9297-7b5e2b8f09bb/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=69bbb56e2fa162d80a287bfcadea78c30a0329bc191175008c2d85f54513ee56&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure></li></ol><p id="f8f43dbb-e17d-4f6e-9bfc-e10e17705b20" class="">
+</p><ol type="1" id="efa4ee0b-4b40-493d-8c14-eadee936a223" class="numbered-list" start="5"><li>기프티콘<p id="24cfa823-1292-409e-b07f-46769125cdc3" class="">+ 버튼을 클릭해 기프티콘 이미지를 업로드합니다.</p><figure id="648460ee-4981-4786-8dfd-c7f3c8d57dcc" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/dc49885e-0d67-4ac0-bbc7-07e0e8da315d/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=dce5574a689cfcb67b5d9bcbb2e2870c9825f45ac5efe66d7fa759617d405567&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure><p id="85a7a850-fab8-4a79-9254-0eac6306c306" class="">
+</p><p id="730de993-ace8-4158-aab5-838cf129dff9" class="">이미지에서 텍스트를 인식하여 기프티콘의 정보를 자동으로 불러오고 저장할 수 있습니다.</p><figure id="3547096f-bf40-4b7b-9b63-c05d6e72e463" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/a522f022-4e9e-4250-8ee9-0ecc94a938a2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=7a1770048e170296400a83ca603a31d4ff169e25b54324e2a203e735b5ebe925&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure><figure id="f162ce2d-40a4-4011-9ca8-a64ba5fc3362" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/d891232d-df1f-4243-99a7-008d7f03d868/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=367e330cca0fca1491b525a535226d36f9d7d3b0c879d6dc879a17437596b84e&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure><figure id="eb8274b1-f28d-45b2-b4c2-47b95d415bb2" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/fdffa1a5-57ac-46f5-89b9-54690f6530ea/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=d32a2f5d2363c7d49c19f2bd567d23c00a56d3d3d20b4b3a489cb7602b946cb3&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure><p id="618232ce-a418-4544-9b10-fa902ba6bc12" class="">
+</p><p id="ddc638ca-43a1-46fe-8635-6d0357db9222" class="">기프티콘을 클릭한 뒤, 사용하기 버튼을 클릭하면 바코드가 확대되고 사용완료 버튼을 클릭하면 기프티콘의 상태가 사용완료로 변경됩니다.</p><figure id="f8a1ecd5-3d03-468d-a898-91b835192c78" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/367c9aa6-441e-4c35-b8d1-63d587677fb2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=b19147bb436f74929badf02ab0a4eb894f42975f1f72b95d42788cfab5de328e&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure><figure id="fd9d02a5-dad0-43d7-ac8d-3589885eb7ed" class="image"><img style="width:192px" src="https://prod-files-secure.s3.us-west-2.amazonaws.com/418674da-9d00-44fb-aae0-c1d59b179e41/5ae212de-0af0-431c-b96e-623a4973a06c/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240520%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20240520T012126Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=4985d7e846304be2705d442caa52616bfe0818caf0d66bbc1d43ee90ae683cdd&amp;X-Amz-SignedHeaders=host&amp;x-id=GetObject"/></figure></li></ol></div></article></body></html>
