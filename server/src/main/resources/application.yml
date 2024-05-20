@@ -1,0 +1,65 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: zzuiksa
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 10000
+            read-timeout: 10000
+            logger-level: full
+
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    disable-swagger-default-url: true
+  paths-to-match:
+    - /api/**
+
+management:
+  endpoints:
+    web:
+      base-path: /api
+  endpoint:
+    health:
+      show-details: always
+
+
+
+token:
+  issuer: zzuiksa
+  secret: ${TOKEN_SECRET}
+  time-to-live: 1209600 # 2 weeks
+
+oauth:
+  kakao:
+    auth-url: https://kauth.kakao.com
+    url: https://kapi.kakao.com
+    client:
+      id: ${KAKAO_CLIENT_KEY}
+      secret: ${KAKAO_CLIENT_SECRET}
+
+api:
+  tmap:
+    url: https://apis.openapi.sk.com
+    app-key: ${TMAP_APP_KEY}
+  weather:
+    url: https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst
+    key: ${OPENAPI_KEY}
+  openai:
+    api-key: ${OPENAI_API_KEY}
+    model: gpt-3.5-turbo-0125
